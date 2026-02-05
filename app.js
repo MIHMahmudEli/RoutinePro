@@ -66,7 +66,12 @@ async function initialize() {
 
 // Slider Sync
 if (filterSeats) {
-    filterSeats.addEventListener('input', (e) => seatValDisplay.innerText = e.target.value);
+    const sliderFill = document.getElementById('slider-fill');
+    filterSeats.addEventListener('input', (e) => {
+        const val = e.target.value;
+        seatValDisplay.innerText = val;
+        if (sliderFill) sliderFill.style.width = `${val}%`;
+    });
 }
 
 /**

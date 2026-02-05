@@ -116,13 +116,23 @@
                             </div>
                         </div>
 
-                        <div class="space-y-1.5">
+                        <div class="space-y-2">
                             <div class="flex justify-between items-end">
                                 <label class="text-[9px] font-black text-slate-600 uppercase pl-1">Max Capacity</label>
-                                <span id="seat-val" class="text-xs font-black text-emerald-400 uppercase">100</span>
+                                <div class="flex items-center gap-2">
+                                    <span id="seat-val"
+                                        class="text-xs font-900 text-[var(--accent-primary)] uppercase">100</span>
+                                    <span
+                                        class="text-[9px] text-slate-600 font-bold uppercase tracking-widest">Seats</span>
+                                </div>
                             </div>
-                            <input type="range" id="filter-seats" min="0" max="100" value="100"
-                                class="w-full h-1 bg-white/5 rounded-lg appearance-none cursor-pointer accent-emerald-500">
+                            <div class="relative flex items-center h-8">
+                                <div id="slider-fill"
+                                    class="absolute left-0 h-1.5 bg-[var(--accent-primary)] rounded-full shadow-[0_0_15px_var(--accent-glow)] z-0"
+                                    style="width: 100%"></div>
+                                <input type="range" id="filter-seats" min="0" max="100" value="100"
+                                    class="prism-slider relative z-10 w-full bg-transparent border-none">
+                            </div>
                         </div>
 
                         <div class="space-y-1.5 pt-2">
@@ -203,8 +213,7 @@
                     <div id="routine-scroll-wrapper" class="overflow-x-auto scrollbar-hide">
                         <div id="routine-actual-grid" class="min-w-[900px] relative">
                             <!-- Headers -->
-                            <div
-                                class="grid grid-cols-[80px_1fr_1fr_1fr_1fr_1fr_1fr_1fr] sticky top-0 z-20 bg-[#05070a]">
+                            <div class="grid grid-cols-[80px_1fr_1fr_1fr_1fr_1fr_1fr_1fr] sticky top-0 z-20">
                                 <div class="day-label !border-none"></div>
                                 <div class="day-label">SUN</div>
                                 <div class="day-label">MON</div>
