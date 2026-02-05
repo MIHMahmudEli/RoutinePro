@@ -1,6 +1,6 @@
 /**
- * Routine Pro — Core Application Logic
- * Optimized for performance and high-fidelity rendering.
+ * Routine Pro — Elite Core
+ * Version 5.0 (Prism Ultra Architecture)
  */
 
 let allCourses = [];
@@ -9,6 +9,7 @@ let possibleRoutines = []; // [[{courseTitle, section}, ...]]
 let currentRoutineIndex = 0;
 let isExplorerMode = false;
 
+// DOM Elements
 const searchInput = document.getElementById('course-search');
 const suggestions = document.getElementById('search-suggestions');
 const selectedList = document.getElementById('selected-courses-list');
@@ -22,385 +23,259 @@ const prevBtn = document.getElementById('prev-routine');
 const nextBtn = document.getElementById('next-routine');
 const exitExplorerBtn = document.getElementById('exit-explorer');
 
-// Filter Inputs
+// Global Filter Inputs
 const filterStart = document.getElementById('filter-start');
 const filterEnd = document.getElementById('filter-end');
 const filterSeats = document.getElementById('filter-seats');
 const seatValDisplay = document.getElementById('seat-val');
 
 /**
- * Data Initialization
+ * INITIALIZATION
  */
-async function initializeApp() {
+async function initialize() {
     try {
-        const response = await fetch('courses.json');
-        if (!response.ok) throw new Error('Data fetch failed');
-        allCourses = await response.json();
+        const res = await fetch('courses.json');
+        if (!res.ok) throw new Error('Data unavailable');
+        allCourses = await res.json();
 
-        // Populate Time Filters
         const times = [
             { v: 480, l: '08:00 AM' }, { v: 540, l: '09:00 AM' }, { v: 600, l: '10:00 AM' },
             { v: 660, l: '11:00 AM' }, { v: 720, l: '12:00 PM' }, { v: 780, l: '01:00 PM' },
             { v: 840, l: '02:00 PM' }, { v: 900, l: '03:00 PM' }, { v: 960, l: '04:00 PM' },
             { v: 1020, l: '05:00 PM' }, { v: 1080, l: '06:00 PM' }, { v: 1140, l: '07:00 PM' },
-            { v: 1200, l: '08:00 PM' }, { v: 1260, l: '09:00 PM' }, { v: 1320, l: '10:00 PM' }
+            { v: 1200, l: '08:00 PM' }
         ];
 
         filterStart.innerHTML = times.map(t => `<option value="${t.v}">${t.l}</option>`).join('');
         filterEnd.innerHTML = times.map((t, i) => `<option value="${t.v}" ${i === times.length - 1 ? 'selected' : ''}>${t.l}</option>`).join('');
 
-    } catch (error) {
-        console.error('Initialization Error:', error);
+        syncWorkspace();
+    } catch (e) {
+        console.error('Boot Error:', e);
     }
 }
 
-// Slider Display update
+// Slider Sync
 if (filterSeats) {
-    filterSeats.addEventListener('input', (e) => {
-        seatValDisplay.innerText = e.target.value;
-    });
+    filterSeats.addEventListener('input', (e) => seatValDisplay.innerText = e.target.value);
 }
 
 /**
- * Search & Suggestions
+ * SEARCH LOGIC
  */
 searchInput.addEventListener('input', (e) => {
-    const query = e.target.value.toLowerCase().trim();
-    if (query.length < 2) {
-        suggestions.classList.add('hidden');
-        return;
-    }
+    const q = e.target.value.toLowerCase().trim();
+    if (q.length < 2) { suggestions.classList.add('hidden'); return; }
 
-    const filtered = allCourses.filter(c =>
-        c.baseTitle.toLowerCase().includes(query) ||
-        (c.code && c.code.toLowerCase().includes(query))
-    ).slice(0, 10);
+    const results = allCourses.filter(c =>
+        c.baseTitle.toLowerCase().includes(q) || (c.code && c.code.toLowerCase().includes(q))
+    ).slice(0, 8);
 
-    if (filtered.length > 0) {
-        suggestions.innerHTML = filtered.map(course => `
-            <div class="suggestion-item group" onclick="handleAddCourse('${course.baseTitle.replace(/'/g, "\\'")}', '${course.code}')">
-                <div class="flex justify-between items-center gap-4">
-                    <div class="flex-1">
-                        <div class="text-white font-[700] text-[11px] group-hover:text-sky-400 transition-colors">${course.baseTitle}</div>
-                        <div class="text-slate-600 text-[8px] uppercase font-black tracking-widest mt-1">
-                            ${course.code ? course.code + ' • ' : ''} ${course.sections.length} Dept Sections
+    if (results.length > 0) {
+        suggestions.innerHTML = results.map(c => `
+            <div class="p-4 hover:bg-emerald-500/5 cursor-pointer border-b border-white/5 group transition-colors" 
+                 onclick="handleAddCourse('${c.baseTitle.replace(/'/g, "\\'")}', '${c.code}')">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <div class="text-white text-sm font-bold group-hover:text-emerald-400 transition-colors uppercase">${c.baseTitle}</div>
+                        <div class="text-[10px] text-slate-500 uppercase font-black mt-1 tracking-widest">
+                            ${c.code || 'CORE'} • ${c.sections.length} Dept Sections
                         </div>
                     </div>
-                    <div class="h-8 px-4 bg-sky-500/10 text-sky-400 text-[8px] flex items-center rounded-xl font-black border border-sky-500/10 transition-all group-hover:bg-sky-500 group-hover:text-white uppercase">+ Add</div>
+                    <div class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500 group-hover:bg-emerald-500 group-hover:text-black transition-all">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                    </div>
                 </div>
             </div>
         `).join('');
         suggestions.classList.remove('hidden');
+        lucide.createIcons();
     } else {
         suggestions.classList.add('hidden');
     }
 });
 
 /**
- * Event Handlers
+ * ACTIONS
  */
 window.handleAddCourse = (title, code) => {
     if (isExplorerMode) stopExplorer();
     const course = allCourses.find(c => c.baseTitle === title && c.code === code);
-    if (!course) return;
-
-    if (selectedCourses.some(sc => sc.course.baseTitle === title && sc.course.code === code)) {
-        searchInput.value = '';
-        suggestions.classList.add('hidden');
-        return;
+    if (!course || selectedCourses.some(sc => sc.course.baseTitle === title)) {
+        searchInput.value = ''; suggestions.classList.add('hidden'); return;
     }
-
     selectedCourses.push({ course, selectedSectionIndex: 0 });
-    searchInput.value = '';
-    suggestions.classList.add('hidden');
+    searchInput.value = ''; suggestions.classList.add('hidden');
     syncWorkspace();
 };
 
-window.handleRemoveCourse = (index) => {
+window.handleRemoveCourse = (idx) => {
     if (isExplorerMode) stopExplorer();
-    selectedCourses.splice(index, 1);
+    selectedCourses.splice(idx, 1);
     syncWorkspace();
 };
 
-window.handleSectionChange = (courseIndex, sectionIndex) => {
+window.handleSectionChange = (cIdx, sIdx) => {
     if (isExplorerMode) stopExplorer();
-    selectedCourses[courseIndex].selectedSectionIndex = parseInt(sectionIndex);
+    selectedCourses[cIdx].selectedSectionIndex = parseInt(sIdx);
     syncWorkspace();
 };
 
 /**
- * Automated Routine Generation Logic
+ * GENERATION ENGINE
  */
 generateAllBtn.addEventListener('click', () => {
-    if (selectedCourses.length < 1) {
-        alert("Please add at least 1 course to generate routines.");
-        return;
-    }
+    if (selectedCourses.length < 1) return alert("Select courses first.");
 
-    const minStartTime = parseInt(filterStart.value);
-    const maxEndTime = parseInt(filterEnd.value);
-    const maxSeats = parseInt(filterSeats.value);
-
-    // Status filters
-    const allowedStatuses = Array.from(document.querySelectorAll('.status-check:checked')).map(el => el.value);
-
-    // Day filters
+    const minS = parseInt(filterStart.value);
+    const maxE = parseInt(filterEnd.value);
+    const maxC = parseInt(filterSeats.value);
     const allowedDays = Array.from(document.querySelectorAll('.day-check:checked')).map(el => el.value.substring(0, 3));
-
-    // Sort preference
-    const sortPref = document.querySelector('input[name="sort-gap"]:checked').value;
 
     possibleRoutines = [];
 
-    function findCombinations(courseIdx, currentCombo) {
-        if (courseIdx === selectedCourses.length) {
-            possibleRoutines.push([...currentCombo]);
-            return;
-        }
+    function find(idx, current) {
+        if (idx === selectedCourses.length) { possibleRoutines.push([...current]); return; }
 
-        const courseObj = selectedCourses[courseIdx].course;
-        for (const section of courseObj.sections) {
-            // 1. Status & Seat Filter
-            // Note: Our current JSON has 'count' and 'capacity'. Status is derivation.
-            const isFull = section.count >= section.capacity;
-            const currentStatus = isFull ? 'Closed' : 'Open'; // Default logic
-            // (If your courses.json adds explicit status, use that)
-            if (!allowedStatuses.includes(currentStatus)) continue;
+        const course = selectedCourses[idx].course;
+        for (const sec of course.sections) {
+            if (parseInt(sec.count) > maxC && maxC < 100) continue;
 
-            if (section.count > maxSeats) continue;
-
-            // 2. Schedule Filters (Time & Day)
-            let timeValid = true;
-            let dayValid = true;
-            for (const sch of section.schedules) {
-                const sMin = toMinutes(sch.start);
-                const eMin = toMinutes(sch.end);
-
-                if (sMin < minStartTime || eMin > maxEndTime) {
-                    timeValid = false;
-                    break;
-                }
-
-                if (!allowedDays.includes(sch.day.substring(0, 3))) {
-                    dayValid = false;
-                    break;
+            let validTime = true;
+            for (const s of sec.schedules) {
+                if (toMin(s.start) < minS || toMin(s.end) > maxE || !allowedDays.includes(s.day.substring(0, 3))) {
+                    validTime = false; break;
                 }
             }
-            if (!timeValid || !dayValid) continue;
+            if (!validTime) continue;
+            if (hasConflict(sec, current)) continue;
 
-            // 3. Conflict Check
-            if (!hasConflict(section, currentCombo)) {
-                currentCombo.push({ courseTitle: courseObj.baseTitle, section });
-                findCombinations(courseIdx + 1, currentCombo);
-                currentCombo.pop();
-            }
+            current.push({ courseTitle: course.baseTitle, section: sec });
+            find(idx + 1, current);
+            current.pop();
         }
     }
 
-    function hasConflict(newSection, existingCombo) {
-        return existingCombo.some(item => {
-            const secA = newSection;
+    function hasConflict(secA, existing) {
+        return existing.some(item => {
             const secB = item.section;
-            return secA.schedules.some(schA => {
-                return secB.schedules.some(schB => {
-                    if (schA.day !== schB.day) return false;
-                    const sA = toMinutes(schA.start);
-                    const eA = toMinutes(schA.end);
-                    const sB = toMinutes(schB.start);
-                    const eB = toMinutes(schB.end);
-                    return (sA < eB && eA > sB);
-                });
-            });
+            return secA.schedules.some(schA => secB.schedules.some(schB => {
+                if (schA.day !== schB.day) return false;
+                return (toMin(schA.start) < toMin(schB.end) && toMin(schA.end) > toMin(schB.start));
+            }));
         });
     }
 
-    findCombinations(0, []);
+    find(0, []);
+    if (possibleRoutines.length === 0) return alert("No valid scenarios for these settings.");
 
-    // 4. Sort if requested
-    if (sortPref === 'min') {
-        possibleRoutines.sort((a, b) => calculateGaps(a) - calculateGaps(b));
-    }
-
-    if (possibleRoutines.length === 0) {
-        alert("No routines match your filters. Try relaxing the time or status constraints.");
-        return;
-    }
-
-    isExplorerMode = true;
-    currentRoutineIndex = 0;
+    isExplorerMode = true; currentRoutineIndex = 0;
     syncWorkspace();
-
-    // Auto scroll to routine canvas
-    document.getElementById('explorer-nav').scrollIntoView({ behavior: 'smooth' });
+    explorerNav.scrollIntoView({ behavior: 'smooth' });
 });
 
-function calculateGaps(routine) {
-    let totalGap = 0;
-    const dayGroups = {};
-
-    routine.forEach(item => {
-        item.section.schedules.forEach(s => {
-            if (!dayGroups[s.day]) dayGroups[s.day] = [];
-            dayGroups[s.day].push({ s: toMinutes(s.start), e: toMinutes(s.end) });
-        });
-    });
-
-    Object.values(dayGroups).forEach(slots => {
-        slots.sort((x, y) => x.s - y.s);
-        for (let i = 0; i < slots.length - 1; i++) {
-            totalGap += Math.max(0, slots[i + 1].s - slots[i].e);
-        }
-    });
-    return totalGap;
-}
-
-function stopExplorer() {
-    isExplorerMode = false;
-    syncWorkspace();
-}
-
-exitExplorerBtn.addEventListener('click', stopExplorer);
-prevBtn.addEventListener('click', () => { if (currentRoutineIndex > 0) { currentRoutineIndex--; updateExplorerUI(); } });
-nextBtn.addEventListener('click', () => { if (currentRoutineIndex < possibleRoutines.length - 1) { currentRoutineIndex++; updateExplorerUI(); } });
-
-function updateExplorerUI() {
-    routineCounter.innerText = `Scenario ${currentRoutineIndex + 1}/${possibleRoutines.length}`;
-    renderRoutine();
-    renderSidebar();
-    calculateCredits();
-}
-
 /**
- * UI Sync Logic
+ * RENDERING CORE
  */
 function syncWorkspace() {
     explorerNav.classList.toggle('hidden', !isExplorerMode);
     explorerNav.classList.toggle('flex', isExplorerMode);
 
     if (isExplorerMode) {
-        updateExplorerUI();
-    } else {
-        renderSidebar();
-        calculateCredits();
-        renderRoutine();
+        routineCounter.innerText = `${currentRoutineIndex + 1} / ${possibleRoutines.length}`;
     }
+
+    renderSidebar();
+    renderRoutine();
+    calculateCredits();
     lucide.createIcons();
 }
 
 function renderSidebar() {
     if (selectedCourses.length === 0) {
-        selectedList.innerHTML = `<div class="text-center py-20 opacity-10 bg-black/20 rounded-2xl border border-dashed border-white/5 mx-2"><i data-lucide="layers" class="w-8 h-8 text-white mx-auto mb-4"></i><p class="text-slate-500 text-[8px] font-black uppercase tracking-[0.2em]">Queue Empty</p></div>`;
+        selectedList.innerHTML = `<div class="text-center py-12 opacity-20 border-2 border-dashed border-white/5 rounded-2xl"><i data-lucide="command" class="w-8 h-8 mx-auto mb-2"></i><p class="text-[10px] font-bold uppercase tracking-widest">Awaiting Input</p></div>`;
         return;
     }
+
     selectedList.innerHTML = selectedCourses.map((sc, i) => {
-        // Context-Aware Section Sync
         const section = isExplorerMode
             ? possibleRoutines[currentRoutineIndex].find(item => item.courseTitle === sc.course.baseTitle).section
             : sc.course.sections[sc.selectedSectionIndex];
 
         const isFull = parseInt(section.count) >= parseInt(section.capacity);
-        const statusColor = isFull ? 'text-rose-400 bg-rose-400/10' : 'text-emerald-400 bg-emerald-400/10';
 
         return `
-            <div class="course-card animate-fade">
-                ${!isExplorerMode ? `
-                <button onclick="handleRemoveCourse(${i})" class="absolute top-3 right-4 text-slate-700 hover:text-rose-400 transition-colors">
-                    <i data-lucide="x" class="w-3 h-3"></i>
-                </button>` : ''}
-                <div class="space-y-3">
-                    <h3 class="text-white text-[10px] font-black leading-tight uppercase tracking-wider pr-6">${sc.course.baseTitle}</h3>
-                    
-                    <div class="grid grid-cols-4 gap-1 py-1.5 border-y border-white/5 bg-black/20 rounded-lg">
-                        <div class="text-center border-r border-white/5">
-                            <div class="text-[6px] text-slate-600 font-black uppercase tracking-tighter">Sec</div>
-                            <div class="text-[9px] text-white font-bold leading-none">${section.section}</div>
-                        </div>
-                        <div class="text-center border-r border-white/5">
-                            <div class="text-[6px] text-slate-600 font-black uppercase tracking-tighter">Enr</div>
-                            <div class="text-[9px] text-white font-bold leading-none">${section.count}</div>
-                        </div>
-                        <div class="text-center border-r border-white/5">
-                            <div class="text-[6px] text-slate-600 font-black uppercase tracking-tighter">Cap</div>
-                            <div class="text-[9px] text-white font-bold leading-none">${section.capacity}</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-[6px] text-slate-600 font-black uppercase tracking-tighter">Pill</div>
-                            <div class="text-[7px] ${statusColor} px-1.5 rounded-sm font-black inline-block uppercase leading-none">${section.status.substring(0, 3)}</div>
-                        </div>
+            <div class="sidebar-item group">
+                ${!isExplorerMode ? `<button onclick="handleRemoveCourse(${i})" class="absolute top-4 right-4 text-slate-600 hover:text-rose-500"><i data-lucide="x" class="w-4 h-4"></i></button>` : ''}
+                <h3 class="text-xs font-900 uppercase text-white tracking-tight pr-6">${sc.course.baseTitle}</h3>
+                
+                <div class="grid grid-cols-4 gap-2 mt-4 py-2 border-y border-white/5">
+                    <div class="text-center"><p class="text-[8px] text-slate-600 font-black uppercase">Sec</p><p class="text-[11px] font-bold">${section.section}</p></div>
+                    <div class="text-center"><p class="text-[8px] text-slate-600 font-black uppercase">Enr</p><p class="text-[11px] font-bold">${section.count}</p></div>
+                    <div class="text-center"><p class="text-[8px] text-slate-600 font-black uppercase">Cap</p><p class="text-[11px] font-bold">${section.capacity}</p></div>
+                    <div class="text-center">
+                        <p class="text-[8px] text-slate-600 font-black uppercase">Stat</p>
+                        <span class="status-tag ${isFull ? 'tag-closed' : 'tag-open'}">${isFull ? 'Full' : 'Open'}</span>
                     </div>
-
-                    ${!isExplorerMode ? `
-                    <div class="flex flex-col gap-1.5">
-                        <select class="section-select w-full !text-[9px] !py-2" onchange="handleSectionChange(${i}, this.value)">
-                            ${sc.course.sections.map((s, si) => `
-                                <option value="${si}" ${si === sc.selectedSectionIndex ? 'selected' : ''}>
-                                    Section ${s.section}
-                                </option>
-                            `).join('')}
-                        </select>
-                    </div>` : `
-                    <div class="flex items-center gap-1.5 text-[8px] font-black text-sky-400 uppercase tracking-widest">
-                        <i data-lucide="shield-check" class="w-3 h-3"></i>
-                        Vested Selection
-                    </div>
-                    `}
                 </div>
+
+                ${!isExplorerMode ? `
+                <select class="prism-input !py-1.5 !text-[10px] !rounded-lg mt-3" onchange="handleSectionChange(${i}, this.value)">
+                    ${sc.course.sections.map((s, si) => `<option value="${si}" ${si === sc.selectedSectionIndex ? 'selected' : ''}>Switch to Sec ${s.section}</option>`).join('')}
+                </select>` : `
+                <div class="mt-3 flex items-center gap-2 text-[10px] font-black text-emerald-400 uppercase tracking-widest"><i data-lucide="shield-check" class="w-4 h-4"></i> Locked in Scenario</div>`}
             </div>
         `;
     }).join('');
 }
 
-function calculateCredits() {
-    const target = isExplorerMode ? possibleRoutines[currentRoutineIndex] : selectedCourses;
-    const credits = target.reduce((sum, item) => {
-        const title = (isExplorerMode ? item.courseTitle : item.course.baseTitle).toLowerCase();
-        return sum + (title.includes('lab') ? 1 : 3);
-    }, 0);
-    totalCreditsEl.innerText = credits;
-}
-
 function renderRoutine() {
     const buckets = document.querySelectorAll('.day-bucket');
     buckets.forEach(b => b.innerHTML = '');
-    let globalHasConflict = false;
-    const scheduleByDay = {};
-    const itemsToRender = isExplorerMode ? possibleRoutines[currentRoutineIndex] : selectedCourses;
+    let globalConflict = false;
+    const items = isExplorerMode ? possibleRoutines[currentRoutineIndex] : selectedCourses;
+    const dayData = {};
 
-    itemsToRender.forEach(item => {
-        const courseTitle = isExplorerMode ? item.courseTitle : item.course.baseTitle;
+    items.forEach(item => {
+        const title = isExplorerMode ? item.courseTitle : item.course.baseTitle;
         const section = isExplorerMode ? item.section : item.course.sections[item.selectedSectionIndex];
-        section.schedules.forEach(sched => {
-            const range = getTimeRange(sched.start, sched.end);
-            if (!range) return;
-            const { top, height } = range;
-            const day = sched.day;
-            if (!scheduleByDay[day]) scheduleByDay[day] = [];
-            const isConflicting = !isExplorerMode && scheduleByDay[day].some(s => (top >= s.top && top < s.top + s.height) || (top + height > s.top && top + height <= s.top + s.height) || (s.top >= top && s.top < top + height));
-            if (isConflicting) globalHasConflict = true;
+
+        section.schedules.forEach(sch => {
+            const start = toMin(sch.start);
+            const end = toMin(sch.end);
+            const top = start - (8 * 60);
+            const height = end - start;
+
+            if (!dayData[sch.day]) dayData[sch.day] = [];
+            const conflict = !isExplorerMode && dayData[sch.day].some(e => (top < e.end && (top + height) > e.start));
+            if (conflict) globalConflict = true;
 
             const block = document.createElement('div');
-            block.className = `class-block ${sched.type.toLowerCase()} ${isConflicting ? 'conflict' : ''}`;
+            block.className = `class-block ${sch.type.toLowerCase()}`;
             block.style.top = `${top}px`;
             block.style.height = `${height}px`;
             block.innerHTML = `
-                <div class="course-name-clean">${courseTitle}</div>
-                <div class="flex flex-col gap-1">
-                    <div class="time-clean">${sched.start} — ${sched.end}</div>
-                    <div class="flex items-center gap-2">
-                        <div class="text-[7px] text-white/40 font-black uppercase tracking-widest">S-${section.section}</div>
-                        <div class="text-[7px] text-white/40 font-black uppercase tracking-widest">R-${sched.room}</div>
-                    </div>
+                <div class="class-name">${title}</div>
+                <div class="class-info">${sch.start} - ${sch.end}</div>
+                <div class="flex justify-between items-center mt-auto opacity-60">
+                    <span class="text-[9px] font-black">SEC ${section.section}</span>
+                    <span class="text-[9px] font-black">RM ${sch.room}</span>
                 </div>
             `;
-            const bucket = document.querySelector(`.day-bucket[data-day="${day}"]`);
-            if (bucket) { bucket.appendChild(block); scheduleByDay[day].push({ top, height }); }
+            const b = document.querySelector(`.day-bucket[data-day="${sch.day}"]`);
+            if (b) { b.appendChild(block); dayData[sch.day].push({ start: top, end: top + height }); }
         });
     });
-    conflictBadge.classList.toggle('hidden', !globalHasConflict);
-    conflictBadge.classList.toggle('flex', globalHasConflict);
+    conflictBadge.classList.toggle('hidden', !globalConflict);
 }
 
-function toMinutes(s) {
+function calculateCredits() {
+    const target = isExplorerMode ? possibleRoutines[currentRoutineIndex] : selectedCourses;
+    totalCreditsEl.innerText = target.reduce((s, it) => s + ((it.courseTitle || it.course.baseTitle).toLowerCase().includes('lab') ? 1 : 3), 0);
+}
+
+// Helpers
+function toMin(s) {
     try {
         const [t, m] = s.trim().split(' ');
         let [h, min] = t.split(':').map(Number);
@@ -409,46 +284,27 @@ function toMinutes(s) {
     } catch (e) { return 0; }
 }
 
-function getTimeRange(startStr, endStr) {
-    if (!startStr || !endStr || startStr === 'nan' || startStr === 'None') return null;
-    const start = toMinutes(startStr); const end = toMinutes(endStr);
-    return { top: Math.max(0, start - (8 * 60)), height: Math.max(30, end - start) };
-}
+function stopExplorer() { isExplorerMode = false; syncWorkspace(); }
 
-exportBtn.addEventListener('click', async () => {
-    const originalGrid = document.getElementById('routine-actual-grid');
-    const originalText = exportBtn.innerHTML;
-    exportBtn.innerHTML = '<i class="animate-spin w-5 h-5" data-lucide="loader-2"></i> Capturing...';
-    exportBtn.disabled = true;
+// Nav
+prevBtn.onclick = () => { if (currentRoutineIndex > 0) { currentRoutineIndex--; syncWorkspace(); } };
+nextBtn.onclick = () => { if (currentRoutineIndex < possibleRoutines.length - 1) { currentRoutineIndex++; syncWorkspace(); } };
+exitExplorerBtn.onclick = stopExplorer;
+
+// Export
+exportBtn.onclick = async () => {
+    const el = document.getElementById('routine-actual-grid');
+    const text = exportBtn.innerHTML;
+    exportBtn.innerHTML = '<i class="animate-spin" data-lucide="loader-2"></i>';
     lucide.createIcons();
     try {
-        const scrollWrapper = document.getElementById('routine-scroll-wrapper');
-        const scrollLeft = scrollWrapper.scrollLeft; scrollWrapper.scrollLeft = 0;
-        const canvas = await html2canvas(originalGrid, {
-            scale: 2, backgroundColor: '#0b0f19', useCORS: true,
-            width: originalGrid.offsetWidth, height: originalGrid.offsetHeight,
-            onclone: (clonedDoc) => {
-                const clonedGrid = clonedDoc.getElementById('routine-actual-grid');
-                if (clonedGrid) {
-                    clonedGrid.style.width = originalGrid.offsetWidth + 'px';
-                    clonedGrid.style.height = originalGrid.offsetHeight + 'px';
-                    clonedGrid.querySelectorAll('.course-name-clean').forEach(lbl => {
-                        lbl.style.display = 'block'; lbl.style.webkitLineClamp = 'unset'; lbl.style.lineClamp = 'unset';
-                        lbl.style.overflow = 'visible'; lbl.style.maxHeight = 'none'; lbl.style.fontSize = '7px';
-                    });
-                    clonedGrid.querySelectorAll('*').forEach(el => { el.style.transition = 'none'; el.style.animation = 'none'; });
-                }
-            }
-        });
-        scrollWrapper.scrollLeft = scrollLeft;
+        const canvas = await html2canvas(el, { scale: 2, backgroundColor: '#05070a', useCORS: true });
         const link = document.createElement('a');
-        link.download = `AIUB_Routine_${new Date().getTime()}.png`;
-        link.href = canvas.toDataURL("image/png", 1.0);
+        link.download = `RoutinePro_${Date.now()}.png`;
+        link.href = canvas.toDataURL();
         link.click();
-    } catch (e) { console.error('Export Error:', e); alert('Visual capture failed.'); } finally {
-        exportBtn.innerHTML = originalText; exportBtn.disabled = false; lucide.createIcons();
-    }
-});
+    } finally { exportBtn.innerHTML = text; lucide.createIcons(); }
+};
 
 document.addEventListener('click', (e) => { if (!searchInput.contains(e.target) && !suggestions.contains(e.target)) suggestions.classList.add('hidden'); });
-initializeApp().then(() => syncWorkspace());
+initialize();

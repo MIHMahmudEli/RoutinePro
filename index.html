@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Routine Pro — Obsidian Command</title>
+    <title>RoutinePro — Elite Scheduling</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
@@ -12,356 +12,248 @@
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 </head>
 
-<body class="antialiased p-3 md:p-6 lg:p-8">
+<body class="p-4 lg:p-8">
 
-    <div class="max-w-[1600px] mx-auto space-y-6">
+    <div class="max-w-[1600px] mx-auto space-y-6 animate-pop">
 
-        <!-- Unified Stealth Header -->
-        <header class="obsidian-panel flex flex-col md:flex-row justify-between items-center p-4 px-8 gap-4">
+        <!-- Top Navigation / Status -->
+        <header class="prism-card p-5 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-4">
                 <div
-                    class="w-10 h-10 bg-sky-500/10 rounded-xl flex items-center justify-center border border-white/5 shadow-inner">
-                    <i data-lucide="zap" class="w-5 h-5 text-sky-400"></i>
+                    class="w-12 h-12 bg-emerald-500/10 rounded-xl flex items-center justify-center border border-emerald-500/20">
+                    <i data-lucide="layout-grid" class="w-6 h-6 text-emerald-400"></i>
                 </div>
                 <div>
-                    <h1 class="text-xl font-black text-white tracking-tighter uppercase italic">Routine<span
-                            class="text-sky-500">Pro</span></h1>
-                    <div class="flex items-center gap-2 mt-0.5">
-                        <span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span>
-                        <span
-                            class="text-[8px] font-black text-slate-500 uppercase tracking-widest leading-none">Command
-                            Center v3.0</span>
-                    </div>
+                    <h1 class="text-xl font-900 tracking-tighter">ROUTINE<span
+                            class="text-emerald-400 italic">PRO</span></h1>
+                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em]">Next-Gen Course Architect
+                    </p>
                 </div>
             </div>
 
-            <div class="flex items-center gap-8 bg-black/40 px-6 py-2 rounded-2xl border border-white/5">
-                <div class="flex flex-col items-center">
-                    <div class="text-[7px] font-black text-slate-600 uppercase tracking-widest mb-0.5">Core Status</div>
-                    <div class="flex items-center gap-1.5">
-                        <div class="w-1 h-1 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981]"></div>
-                        <span class="text-[10px] font-extrabold text-white tracking-widest">ACTIVE</span>
-                    </div>
+            <div class="flex items-center gap-6">
+                <div class="bg-black/30 border border-white/5 rounded-xl px-4 py-2 flex items-center gap-3">
+                    <span class="text-[10px] font-black text-slate-600 uppercase">Credits</span>
+                    <span id="total-credits" class="text-xl font-900 text-white leading-none">0</span>
                 </div>
-                <div class="w-px h-6 bg-white/5"></div>
-                <div class="flex flex-col items-center">
-                    <div class="text-[7px] font-black text-slate-600 uppercase tracking-widest mb-0.5">Credits
-                        Allocation</div>
-                    <div id="total-credits" class="text-xl font-black text-white leading-none">0</div>
-                </div>
+                <button id="export-btn"
+                    class="prism-btn !bg-white/5 !text-white border border-white/10 hover:!bg-white/10">
+                    <i data-lucide="download" class="w-4 h-4"></i> EXPORT PNG
+                </button>
             </div>
         </header>
 
-        <main class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-[350px_1fr] gap-6">
 
-            <!-- Control Rail (Sidebar) -->
-            <aside class="lg:col-span-3 space-y-4">
+            <!-- Sidebar -->
+            <aside class="space-y-6">
 
-                <!-- Search Module -->
-                <section class="obsidian-panel p-5">
-                    <div class="relative search-rail">
-                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <i data-lucide="search" class="w-4 h-4 text-slate-600"></i>
-                        </div>
-                        <input type="text" id="course-search" placeholder="Search Code or Title..."
-                            class="w-full bg-transparent border-none py-3 pl-11 pr-4 focus:outline-none text-[11px] font-bold text-white placeholder:text-slate-700">
-                        <div id="search-suggestions" class="absolute top-full left-0 right-0 hidden"></div>
+                <!-- Selection Panel -->
+                <section class="prism-card p-6 space-y-5">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-sm font-800 uppercase tracking-widest text-slate-400">Course Queue</h2>
+                        <i data-lucide="plus" class="w-4 h-4 text-emerald-500"></i>
                     </div>
 
-                    <div id="selected-courses-list" class="mt-4 space-y-2">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                            <i data-lucide="search" class="w-4 h-4 text-slate-600"></i>
+                        </div>
+                        <input type="text" id="course-search" class="prism-input pl-11"
+                            placeholder="Search code or title...">
+                        <div id="search-suggestions"
+                            class="absolute top-full left-0 right-0 z-[100] mt-2 prism-card overflow-hidden hidden shadow-2xl">
+                        </div>
+                    </div>
+
+                    <div id="selected-courses-list"
+                        class="space-y-3 min-h-[100px] max-h-[400px] overflow-y-auto pr-2 scrollbar-hide">
                         <!-- Empty State -->
-                        <div class="text-center py-12 opacity-10">
-                            <i data-lucide="layout" class="w-8 h-8 mx-auto mb-2"></i>
-                            <p class="text-[8px] font-black uppercase tracking-[0.3em]">Initialize Builder</p>
+                        <div class="text-center py-12 opacity-20 border-2 border-dashed border-white/5 rounded-2xl">
+                            <i data-lucide="command" class="w-8 h-8 mx-auto mb-2"></i>
+                            <p class="text-[10px] font-bold uppercase tracking-widest">Awaiting Input</p>
                         </div>
                     </div>
 
                     <div id="conflict-badge"
-                        class="hidden mt-4 items-center justify-center gap-2 w-full py-3 bg-rose-500/10 border border-rose-500/20 rounded-xl text-rose-500 text-[9px] font-black tracking-widest uppercase">
-                        <i data-lucide="alert-octagon" class="w-3 h-3"></i> Conflict Detected
+                        class="hidden animate-bounce flex items-center justify-center gap-2 py-3 bg-rose-500/10 border border-rose-500/20 rounded-xl text-rose-500 text-[10px] font-black uppercase tracking-widest">
+                        <i data-lucide="zap-off" class="w-4 h-4"></i> Conflict Detected
                     </div>
                 </section>
 
-                <!-- Parameter Suite -->
-                <section class="obsidian-panel p-5 space-y-5">
-                    <div>
-                        <div class="flex items-center justify-between mb-3 border-b border-white[0.02] pb-2">
-                            <h3 class="text-[10px] font-black text-white uppercase tracking-[0.25em]">Constraints</h3>
-                            <i data-lucide="sliders" class="w-3 h-3 text-slate-700"></i>
+                <!-- Configuration Panel -->
+                <section class="prism-card p-6 space-y-6">
+                    <h2 class="text-sm font-800 uppercase tracking-widest text-slate-400">Parameters</h2>
+
+                    <!-- Filters -->
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="space-y-1.5">
+                                <label class="text-[9px] font-black text-slate-600 uppercase pl-1">Starts After</label>
+                                <select id="filter-start" class="prism-input !py-2 !text-xs cursor-pointer"></select>
+                            </div>
+                            <div class="space-y-1.5">
+                                <label class="text-[9px] font-black text-slate-600 uppercase pl-1">Ends Before</label>
+                                <select id="filter-end" class="prism-input !py-2 !text-xs cursor-pointer"></select>
+                            </div>
                         </div>
 
-                        <div class="space-y-4">
-                            <!-- Time Constraints -->
-                            <div class="bg-black/20 p-3 rounded-xl border border-white/5">
-                                <label
-                                    class="text-[7px] font-black text-slate-500 uppercase mb-2 block tracking-widest">Time
-                                    Window</label>
-                                <div class="flex items-center gap-2">
-                                    <select id="filter-start" class="section-select flex-1 !py-1.5"></select>
-                                    <div class="w-2 h-px bg-white/10"></div>
-                                    <select id="filter-end" class="section-select flex-1 !py-1.5"></select>
-                                </div>
+                        <div class="space-y-1.5">
+                            <div class="flex justify-between items-end">
+                                <label class="text-[9px] font-black text-slate-600 uppercase pl-1">Max Capacity</label>
+                                <span id="seat-val" class="text-xs font-black text-emerald-400 uppercase">100</span>
                             </div>
+                            <input type="range" id="filter-seats" min="0" max="100" value="100"
+                                class="w-full h-1 bg-white/5 rounded-lg appearance-none cursor-pointer accent-emerald-500">
+                        </div>
 
-                            <!-- Range Sliders -->
-                            <div class="grid grid-cols-2 gap-3">
-                                <div
-                                    class="bg-black/20 p-3 rounded-xl border border-white/5 flex flex-col justify-between h-[80px]">
-                                    <label class="text-[7px] font-black text-slate-500 uppercase tracking-widest">Cap
-                                        Filter</label>
-                                    <div class="flex items-baseline gap-1">
-                                        <span id="seat-val"
-                                            class="text-xl font-black text-white leading-none">100</span>
-                                        <span class="text-[7px] text-slate-700 font-black">LMT</span>
-                                    </div>
-                                    <input type="range" id="filter-seats" min="0" max="100" value="100"
-                                        class="w-full h-1 mt-1 bg-white/5 accent-sky-500 rounded-lg appearance-none cursor-pointer">
-                                </div>
-
-                                <div
-                                    class="bg-black/20 p-3 rounded-xl border border-white/5 flex flex-col justify-between h-[80px]">
-                                    <label class="text-[7px] font-black text-slate-500 uppercase tracking-widest">Logic
-                                        Mode</label>
-                                    <div class="flex gap-2">
-                                        <label class="flex-1 cursor-pointer">
-                                            <input type="radio" name="sort-gap" value="min" class="hidden peer">
-                                            <div
-                                                class="h-8 flex flex-col items-center justify-center rounded-lg border border-white/5 bg-white/5 peer-checked:bg-sky-500/20 peer-checked:border-sky-500/50 transition-all">
-                                                <span
-                                                    class="text-[7px] font-bold text-slate-500 peer-checked:text-sky-300 uppercase">Tight</span>
-                                            </div>
-                                        </label>
-                                        <label class="flex-1 cursor-pointer">
-                                            <input type="radio" name="sort-gap" value="none" checked
-                                                class="hidden peer">
-                                            <div
-                                                class="h-8 flex flex-col items-center justify-center rounded-lg border border-white/5 bg-white/5 peer-checked:bg-sky-500/20 peer-checked:border-sky-500/50 transition-all">
-                                                <span
-                                                    class="text-[7px] font-bold text-slate-500 peer-checked:text-sky-400 uppercase">Std</span>
-                                            </div>
-                                        </label>
-                                    </div>
-                                </div>
+                        <div class="space-y-1.5 pt-2">
+                            <label class="text-[9px] font-black text-slate-600 uppercase pl-1 mb-2 block">Available
+                                Days</label>
+                            <div class="grid grid-cols-4 gap-2">
+                                <label><input type="checkbox" value="Sunday" checked class="day-check day-toggle">
+                                    <div class="day-chip w-full">S</div>
+                                </label>
+                                <label><input type="checkbox" value="Monday" checked class="day-check day-toggle">
+                                    <div class="day-chip w-full">M</div>
+                                </label>
+                                <label><input type="checkbox" value="Tuesday" checked class="day-check day-toggle">
+                                    <div class="day-chip w-full">T</div>
+                                </label>
+                                <label><input type="checkbox" value="Wednesday" checked class="day-check day-toggle">
+                                    <div class="day-chip w-full">W</div>
+                                </label>
+                                <label><input type="checkbox" value="Thursday" checked class="day-check day-toggle">
+                                    <div class="day-chip w-full">T</div>
+                                </label>
+                                <label><input type="checkbox" value="Friday" class="day-check day-toggle">
+                                    <div class="day-chip w-full">F</div>
+                                </label>
+                                <label><input type="checkbox" value="Saturday" class="day-check day-toggle">
+                                    <div class="day-chip w-full">S</div>
+                                </label>
                             </div>
+                        </div>
 
-                            <!-- Day Binary Filters -->
-                            <div class="bg-black/20 p-3 rounded-xl border border-white/5">
-                                <label
-                                    class="text-[7px] font-black text-slate-500 uppercase mb-2 block tracking-widest">Active
-                                    Days</label>
-                                <div class="grid grid-cols-7 gap-1">
-                                    <label class="cursor-pointer">
-                                        <input type="checkbox" value="Sunday" checked class="day-check hidden peer">
-                                        <div
-                                            class="h-7 flex items-center justify-center rounded-md border border-white/5 bg-white/5 peer-checked:bg-sky-500/80 text-[8px] font-black text-slate-600 peer-checked:text-white transition-all">
-                                            S</div>
-                                    </label>
-                                    <label class="cursor-pointer">
-                                        <input type="checkbox" value="Monday" checked class="day-check hidden peer">
-                                        <div
-                                            class="h-7 flex items-center justify-center rounded-md border border-white/5 bg-white/5 peer-checked:bg-sky-500/80 text-[8px] font-black text-slate-600 peer-checked:text-white transition-all">
-                                            M</div>
-                                    </label>
-                                    <label class="cursor-pointer">
-                                        <input type="checkbox" value="Tuesday" checked class="day-check hidden peer">
-                                        <div
-                                            class="h-7 flex items-center justify-center rounded-md border border-white/5 bg-white/5 peer-checked:bg-sky-500/80 text-[8px] font-black text-slate-600 peer-checked:text-white transition-all">
-                                            T</div>
-                                    </label>
-                                    <label class="cursor-pointer">
-                                        <input type="checkbox" value="Wednesday" checked class="day-check hidden peer">
-                                        <div
-                                            class="h-7 flex items-center justify-center rounded-md border border-white/5 bg-white/5 peer-checked:bg-sky-500/80 text-[8px] font-black text-slate-600 peer-checked:text-white transition-all">
-                                            W</div>
-                                    </label>
-                                    <label class="cursor-pointer">
-                                        <input type="checkbox" value="Thursday" checked class="day-check hidden peer">
-                                        <div
-                                            class="h-7 flex items-center justify-center rounded-md border border-white/5 bg-white/5 peer-checked:bg-sky-500/80 text-[8px] font-black text-slate-600 peer-checked:text-white transition-all">
-                                            T</div>
-                                    </label>
-                                    <label class="cursor-pointer">
-                                        <input type="checkbox" value="Friday" class="day-check hidden peer">
-                                        <div
-                                            class="h-7 flex items-center justify-center rounded-md border border-white/5 bg-white/5 peer-checked:bg-sky-500/80 text-[8px] font-black text-slate-600 peer-checked:text-white transition-all">
-                                            F</div>
-                                    </label>
-                                    <label class="cursor-pointer">
-                                        <input type="checkbox" value="Saturday" class="day-check hidden peer">
-                                        <div
-                                            class="h-7 flex items-center justify-center rounded-md border border-white/5 bg-white/5 peer-checked:bg-sky-500/80 text-[8px] font-black text-slate-600 peer-checked:text-white transition-all">
-                                            S</div>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <!-- Hidden Status Logic -->
-                            <div class="hidden">
-                                <input type="checkbox" value="Open" checked class="status-check">
-                                <input type="checkbox" value="Reserved" checked class="status-check">
-                                <input type="checkbox" value="Cancel" checked class="status-check">
-                                <input type="checkbox" value="Freshman" checked class="status-check">
-                                <input type="checkbox" value="Closed" checked class="status-check">
-                            </div>
-
-                            <button id="generate-all-btn"
-                                class="w-full py-4 rounded-xl font-black text-white text-[10px] tracking-[0.25em] flex items-center justify-center gap-2 active:shadow-inner transition-all hover:brightness-110">
-                                <i data-lucide="zap" class="w-3 h-3 fill-white"></i> COMPILE ROUTINE
-                            </button>
+                        <!-- Hidden Status Hub -->
+                        <div class="hidden">
+                            <input type="checkbox" value="Open" checked class="status-check">
+                            <input type="checkbox" value="Reserved" checked class="status-check">
+                            <input type="checkbox" value="Cancel" checked class="status-check">
+                            <input type="checkbox" value="Freshman" checked class="status-check">
+                            <input type="checkbox" value="Closed" checked class="status-check">
+                            <input type="radio" name="sort-gap" value="none" checked>
+                            <input type="radio" name="sort-gap" value="min">
                         </div>
                     </div>
-                </section>
 
-                <button id="export-btn"
-                    class="w-full py-4 obsidian-panel border-white/5 bg-white/[0.02] text-[8px] font-black text-slate-500 tracking-[0.3em] hover:bg-white/[0.05] hover:text-white transition-all flex items-center justify-center gap-2">
-                    <i data-lucide="camera" class="w-3 h-3"></i> SNAPSHOT CONSOLE
-                </button>
+                    <button id="generate-all-btn" class="prism-btn w-full py-4">
+                        <i data-lucide="cog" class="w-4 h-4"></i> GENERATE POSSIBILITIES
+                    </button>
+                </section>
             </aside>
 
-            <!-- Workspace Rack (Main Canvas) -->
-            <div class="lg:col-span-9 space-y-4">
+            <!-- Main Display -->
+            <main class="space-y-4">
 
-                <!-- Explorer Navigation Console -->
+                <!-- Explorer UI -->
                 <div id="explorer-nav"
-                    class="hidden obsidian-panel p-3 px-6 justify-between items-center border-emerald-500/20 bg-emerald-500/5">
+                    class="hidden prism-card border-emerald-500/20 bg-emerald-500/5 p-4 flex items-center justify-between">
                     <div class="flex items-center gap-6">
                         <button id="prev-routine"
-                            class="w-10 h-10 rounded-xl bg-black/40 hover:bg-black/60 text-white flex items-center justify-center border border-white/5">
+                            class="w-10 h-10 rounded-lg bg-black/40 hover:bg-black/60 flex items-center justify-center transition-all border border-white/5">
                             <i data-lucide="arrow-left" class="w-4 h-4 text-emerald-400"></i>
                         </button>
-                        <div class="text-left">
-                            <div id="routine-counter"
-                                class="text-white font-black text-lg leading-tight tracking-tighter">0 / 0</div>
-                            <div class="text-[7px] text-emerald-500 font-black uppercase tracking-[0.2em]">Validated
-                                Scenarios</div>
+                        <div class="text-center">
+                            <div id="routine-counter" class="text-lg font-900 leading-tight">0 / 0</div>
+                            <p class="text-[9px] font-black text-emerald-600 uppercase tracking-widest">Valid Scenario
+                            </p>
                         </div>
                         <button id="next-routine"
-                            class="w-10 h-10 rounded-xl bg-black/40 hover:bg-black/60 text-white flex items-center justify-center border border-white/5">
+                            class="w-10 h-10 rounded-lg bg-black/40 hover:bg-black/60 flex items-center justify-center transition-all border border-white/5">
                             <i data-lucide="arrow-right" class="w-4 h-4 text-emerald-400"></i>
                         </button>
                     </div>
                     <button id="exit-explorer"
-                        class="text-[8px] font-black text-rose-400 bg-rose-400/5 border border-rose-500/20 px-5 py-3 rounded-xl hover:bg-rose-500 hover:text-white transition-all flex items-center gap-2 uppercase tracking-widest leading-none">
-                        <i data-lucide="x-circle" class="w-3 h-3"></i> Termination Explorer
+                        class="text-[9px] font-black text-rose-500 uppercase tracking-widest bg-rose-500/10 border border-rose-500/20 px-4 py-2 rounded-lg hover:bg-rose-500 hover:text-white transition-all">
+                        Exit View
                     </button>
                 </div>
 
-                <!-- Main Canvas Area -->
-                <section id="routine-capture-area" class="obsidian-panel p-1 overflow-hidden bg-black/40">
+                <!-- Canvas -->
+                <div class="grid-container overflow-hidden">
                     <div id="routine-scroll-wrapper" class="overflow-x-auto scrollbar-hide">
-                        <div id="routine-actual-grid" class="min-w-[1100px] p-8 bg-[#020617] rounded-[1.5rem] m-1">
+                        <div id="routine-actual-grid" class="min-w-[900px] relative">
+                            <!-- Headers -->
                             <div
-                                class="grid grid-cols-[80px_1fr_1fr_1fr_1fr_1fr_1fr_1fr] mb-6 border-b border-white/[0.03]">
-                                <div></div>
-                                <div class="text-center"><span class="day-label">Sun</span></div>
-                                <div class="text-center"><span class="day-label">Mon</span></div>
-                                <div class="text-center"><span class="day-label">Tue</span></div>
-                                <div class="text-center"><span class="day-label">Wed</span></div>
-                                <div class="text-center"><span class="day-label">Thu</span></div>
-                                <div class="text-center"><span class="day-label">Fri</span></div>
-                                <div class="text-center"><span class="day-label">Sat</span></div>
+                                class="grid grid-cols-[80px_1fr_1fr_1fr_1fr_1fr_1fr_1fr] sticky top-0 z-20 bg-[#05070a]">
+                                <div class="day-label !border-none"></div>
+                                <div class="day-label">SUN</div>
+                                <div class="day-label">MON</div>
+                                <div class="day-label">TUE</div>
+                                <div class="day-label">WED</div>
+                                <div class="day-label">THU</div>
+                                <div class="day-label">FRI</div>
+                                <div class="day-label">SAT</div>
                             </div>
 
-                            <div class="relative h-[850px]">
-                                <!-- Dynamic Time Rail -->
+                            <div class="relative h-[800px] mt-4">
+                                <!-- Time Rail -->
                                 <div
-                                    class="absolute left-0 top-0 bottom-0 w-[80px] flex flex-col pt-1 border-r border-white/[0.02]">
-                                    <div
-                                        class="text-[8px] font-black text-slate-800 h-[60px] flex items-start pt-1 tracking-tighter">
-                                        08:00 AM</div>
-                                    <div
-                                        class="text-[8px] font-black text-slate-800 h-[60px] flex items-start pt-1 tracking-tighter">
-                                        09:00 AM</div>
-                                    <div
-                                        class="text-[8px] font-black text-slate-800 h-[60px] flex items-start pt-1 tracking-tighter">
-                                        10:00 AM</div>
-                                    <div
-                                        class="text-[8px] font-black text-slate-800 h-[60px] flex items-start pt-1 tracking-tighter">
-                                        11:00 AM</div>
-                                    <div
-                                        class="text-[8px] font-black text-slate-800 h-[60px] flex items-start pt-1 tracking-tighter">
-                                        12:00 PM</div>
-                                    <div
-                                        class="text-[8px] font-black text-slate-800 h-[60px] flex items-start pt-1 tracking-tighter">
-                                        01:00 PM</div>
-                                    <div
-                                        class="text-[8px] font-black text-slate-800 h-[60px] flex items-start pt-1 tracking-tighter">
-                                        02:00 PM</div>
-                                    <div
-                                        class="text-[8px] font-black text-slate-800 h-[60px] flex items-start pt-1 tracking-tighter">
-                                        03:00 PM</div>
-                                    <div
-                                        class="text-[8px] font-black text-slate-800 h-[60px] flex items-start pt-1 tracking-tighter">
-                                        04:00 PM</div>
-                                    <div
-                                        class="text-[8px] font-black text-slate-800 h-[60px] flex items-start pt-1 tracking-tighter">
-                                        05:00 PM</div>
-                                    <div
-                                        class="text-[8px] font-black text-slate-800 h-[60px] flex items-start pt-1 tracking-tighter">
-                                        06:00 PM</div>
-                                    <div
-                                        class="text-[8px] font-black text-slate-800 h-[60px] flex items-start pt-1 tracking-tighter">
-                                        07:00 PM</div>
-                                    <div
-                                        class="text-[8px] font-black text-slate-800 h-[60px] flex items-start pt-1 tracking-tighter">
-                                        08:00 PM</div>
-                                    <div
-                                        class="text-[8px] font-black text-slate-800 h-[60px] flex items-start pt-1 tracking-tighter">
-                                        09:00 PM</div>
-                                    <div
-                                        class="text-[8px] font-black text-slate-800 h-[60px] flex items-start pt-1 tracking-tighter">
-                                        10:00 PM</div>
+                                    class="absolute left-0 top-0 bottom-0 w-[80px] flex flex-col border-r border-white/5">
+                                    <div class="h-[60px] flex items-start justify-end pr-4 time-label">08:00 AM</div>
+                                    <div class="h-[60px] flex items-start justify-end pr-4 time-label">09:00 AM</div>
+                                    <div class="h-[60px] flex items-start justify-end pr-4 time-label">10:00 AM</div>
+                                    <div class="h-[60px] flex items-start justify-end pr-4 time-label">11:00 AM</div>
+                                    <div class="h-[60px] flex items-start justify-end pr-4 time-label">12:00 PM</div>
+                                    <div class="h-[60px] flex items-start justify-end pr-4 time-label">01:00 PM</div>
+                                    <div class="h-[60px] flex items-start justify-end pr-4 time-label">02:00 PM</div>
+                                    <div class="h-[60px] flex items-start justify-end pr-4 time-label">03:00 PM</div>
+                                    <div class="h-[60px] flex items-start justify-end pr-4 time-label">04:00 PM</div>
+                                    <div class="h-[60px] flex items-start justify-end pr-4 time-label">05:00 PM</div>
+                                    <div class="h-[60px] flex items-start justify-end pr-4 time-label">06:00 PM</div>
+                                    <div class="h-[60px] flex items-start justify-end pr-4 time-label">07:00 PM</div>
+                                    <div class="h-[60px] flex items-start justify-end pr-4 time-label">08:00 PM</div>
                                 </div>
 
-                                <!-- Integrated Grid Mesh -->
-                                <div
-                                    class="ml-[80px] grid grid-cols-7 h-full absolute inset-0 pointer-events-none opacity-[0.03]">
-                                    <div class="border-l border-white h-full"></div>
-                                    <div class="border-l border-white h-full"></div>
-                                    <div class="border-l border-white h-full"></div>
-                                    <div class="border-l border-white h-full"></div>
-                                    <div class="border-l border-white h-full"></div>
-                                    <div class="border-l border-white h-full"></div>
-                                    <div class="border-l border-white h-full"></div>
-                                </div>
-                                <div class="ml-[80px] h-full absolute inset-0 pointer-events-none opacity-[0.03]">
-                                    <div class="border-t border-white w-full h-[60px]"></div>
-                                    <div class="border-t border-white w-full h-[60px]"></div>
-                                    <div class="border-t border-white w-full h-[60px]"></div>
-                                    <div class="border-t border-white w-full h-[60px]"></div>
-                                    <div class="border-t border-white w-full h-[60px]"></div>
-                                    <div class="border-t border-white w-full h-[60px]"></div>
-                                    <div class="border-t border-white w-full h-[60px]"></div>
-                                    <div class="border-t border-white w-full h-[60px]"></div>
-                                    <div class="border-t border-white w-full h-[60px]"></div>
-                                    <div class="border-t border-white w-full h-[60px]"></div>
-                                    <div class="border-t border-white w-full h-[60px]"></div>
-                                    <div class="border-t border-white w-full h-[60px]"></div>
-                                    <div class="border-t border-white w-full h-[60px]"></div>
-                                    <div class="border-t border-white w-full h-[60px]"></div>
-                                    <div class="border-t border-white w-full h-[60px]"></div>
+                                <!-- Horizontal Guide Lines -->
+                                <div class="ml-[80px] absolute inset-0 pointer-events-none">
+                                    <div class="h-[60px] border-b border-white/[0.03]"></div>
+                                    <div class="h-[60px] border-b border-white/[0.03]"></div>
+                                    <div class="h-[60px] border-b border-white/[0.03]"></div>
+                                    <div class="h-[60px] border-b border-white/[0.03]"></div>
+                                    <div class="h-[60px] border-b border-white/[0.03]"></div>
+                                    <div class="h-[60px] border-b border-white/[0.03]"></div>
+                                    <div class="h-[60px] border-b border-white/[0.03]"></div>
+                                    <div class="h-[60px] border-b border-white/[0.03]"></div>
+                                    <div class="h-[60px] border-b border-white/[0.03]"></div>
+                                    <div class="h-[60px] border-b border-white/[0.03]"></div>
+                                    <div class="h-[60px] border-b border-white/[0.03]"></div>
+                                    <div class="h-[60px] border-b border-white/[0.03]"></div>
+                                    <div class="h-[60px] border-b border-white/[0.03]"></div>
                                 </div>
 
+                                <!-- Columns for Classes -->
                                 <div id="class-container"
-                                    class="ml-[80px] h-full absolute inset-0 grid grid-cols-7 pointer-events-none">
-                                    <div class="day-bucket relative h-full pointer-events-auto" data-day="Sunday"></div>
-                                    <div class="day-bucket relative h-full pointer-events-auto" data-day="Monday"></div>
-                                    <div class="day-bucket relative h-full pointer-events-auto" data-day="Tuesday">
+                                    class="ml-[80px] absolute inset-0 grid grid-cols-7 pointer-events-none">
+                                    <div class="relative h-full day-bucket pointer-events-auto" data-day="Sunday"></div>
+                                    <div class="relative h-full day-bucket pointer-events-auto" data-day="Monday"></div>
+                                    <div class="relative h-full day-bucket pointer-events-auto" data-day="Tuesday">
                                     </div>
-                                    <div class="day-bucket relative h-full pointer-events-auto" data-day="Wednesday">
+                                    <div class="relative h-full day-bucket pointer-events-auto" data-day="Wednesday">
                                     </div>
-                                    <div class="day-bucket relative h-full pointer-events-auto" data-day="Thursday">
+                                    <div class="relative h-full day-bucket pointer-events-auto" data-day="Thursday">
                                     </div>
-                                    <div class="day-bucket relative h-full pointer-events-auto" data-day="Friday"></div>
-                                    <div class="day-bucket relative h-full pointer-events-auto" data-day="Saturday">
+                                    <div class="relative h-full day-bucket pointer-events-auto" data-day="Friday"></div>
+                                    <div class="relative h-full day-bucket pointer-events-auto" data-day="Saturday">
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </section>
-            </div>
-        </main>
+                </div>
+            </main>
+        </div>
     </div>
 
     <script src="app.js"></script>
