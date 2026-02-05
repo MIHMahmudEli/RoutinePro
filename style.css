@@ -1,0 +1,255 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+    --bg-deep: #030712;
+    --card-glass: rgba(17, 24, 39, 0.7);
+    --border-glass: rgba(255, 255, 255, 0.08);
+    --accent-indigo: #6366f1;
+    --accent-emerald: #10b981;
+    --accent-rose: #f43f5e;
+}
+
+body {
+    background-color: var(--bg-deep);
+    color: #e5e7eb;
+    font-family: 'Outfit', sans-serif;
+    background-image:
+        radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 100% 100%, rgba(16, 185, 129, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(17, 24, 39, 1) 0%, transparent 100%);
+    background-attachment: fixed;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Premium Glass Cards */
+.glass-panel {
+    background: var(--card-glass);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--border-glass);
+    border-radius: 24px;
+    box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.7);
+}
+
+/* Sidebar Components */
+.course-card {
+    background: rgba(31, 41, 65, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    /* Smaller radius */
+    padding: 14px 18px;
+    /* Compact padding */
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    animation: slideInUp 0.5s ease-out forwards;
+}
+
+.course-card:hover {
+    background: rgba(31, 41, 55, 0.6);
+    transform: translateX(6px);
+    border-color: rgba(99, 102, 241, 0.3);
+}
+
+.course-card h3 {
+    word-break: break-word;
+    white-space: normal;
+}
+
+.course-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 25%;
+    height: 50%;
+    width: 4px;
+    background: var(--accent-emerald);
+    border-radius: 0 4px 4px 0;
+}
+
+.section-select {
+    background: #020617;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 10px 36px 10px 16px;
+    border-radius: 12px;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236366f1'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 14px;
+    cursor: pointer;
+}
+
+/* SUPER CLEAN ROUTINE BLOCKS - REFINED */
+.class-block {
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    padding: 8px;
+    /* Reduced padding */
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    z-index: 10;
+    overflow: hidden;
+}
+
+.class-block:hover {
+    z-index: 100;
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.class-block.theory {
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.95) 0%, rgba(49, 46, 129, 0.95) 100%);
+    box-shadow: 0 4px 20px rgba(49, 46, 129, 0.3);
+}
+
+.class-block.lab {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.95) 0%, rgba(6, 78, 59, 0.95) 100%);
+    box-shadow: 0 4px 20px rgba(6, 78, 59, 0.3);
+}
+
+.class-block.conflict {
+    background: linear-gradient(135deg, #f43f5e 0%, #9f1239 100%) !important;
+    animation: pulse-danger 2s infinite;
+}
+
+@keyframes pulse-danger {
+    0% {
+        filter: brightness(1);
+    }
+
+    50% {
+        filter: brightness(1.2);
+    }
+
+    100% {
+        filter: brightness(1);
+    }
+}
+
+.block-header {
+    width: 100%;
+}
+
+.course-name-clean {
+    font-size: 7.5px;
+    /* Slightly smaller for better fit */
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    line-height: 1.1;
+    color: #ffffff;
+    margin-bottom: 6px;
+    word-break: break-word;
+    /* Allow breaking long words */
+    hyphens: auto;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.time-clean {
+    font-size: 8px;
+    /* Reduced from 10px */
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.9);
+    background: rgba(0, 0, 0, 0.25);
+    padding: 2px 6px;
+    border-radius: 6px;
+    display: inline-block;
+    letter-spacing: 0.02em;
+}
+
+.block-footer-clean {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 4px;
+    padding-top: 6px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.meta-pill {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 8px;
+    /* Reduced */
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.meta-val {
+    color: #ffffff;
+    font-weight: 900;
+}
+
+/* UI Elements */
+.day-label {
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: #475569;
+}
+
+.time-label {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.4;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.grid-v {
+    border-left: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.grid-h {
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    height: 60px;
+}
+
+#export-btn {
+    background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%);
+    box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+}
+
+#export-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px rgba(99, 102, 241, 0.5);
+}
+
+/* Suggestion Dropdown */
+.suggestion-item {
+    padding: 18px 24px;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    transition: all 0.2s;
+}
+
+.suggestion-item:hover {
+    background: rgba(99, 102, 241, 0.1);
+}

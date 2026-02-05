@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Routine Pro — The Ultimate AIUB Routine Builder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+</head>
+
+<body class="antialiased min-h-screen overflow-x-hidden p-6 md:p-10">
+
+    <div class="max-w-[1400px] mx-auto space-y-10">
+
+        <!-- Premium Header Area -->
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-4">
+            <div>
+                <div class="flex items-center gap-3 mb-2">
+                    <div
+                        class="bg-indigo-500 w-8 h-8 rounded-xl rotate-12 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                        <i data-lucide="calendar" class="w-5 h-5 text-white -rotate-12"></i>
+                    </div>
+                    <span class="text-xs font-black tracking-[0.3em] text-indigo-400 uppercase">Spring 2025-26</span>
+                </div>
+                <h1 class="text-5xl md:text-6xl font-[900] tracking-tighter text-white">
+                    Routine<span class="text-indigo-500">Pro</span>
+                </h1>
+                <p class="text-slate-400 font-medium mt-2 max-w-md italic opacity-80">Building your future, one section
+                    at a time.</p>
+            </div>
+
+            <div class="glass-panel p-6 flex gap-8 items-center border border-white/10 shadow-indigo-500/10 shadow-2xl">
+                <div class="flex flex-col">
+                    <span class="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Workspace
+                        Legend</span>
+                    <div class="flex gap-4">
+                        <div class="flex items-center gap-2">
+                            <div class="w-3 h-3 rounded-full bg-indigo-500 shadow-lg shadow-indigo-500/40"></div>
+                            <span class="text-xs font-bold text-slate-300">Theory</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-3 h-3 rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/40"></div>
+                            <span class="text-xs font-bold text-slate-300">Lab</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-px h-10 bg-white/10"></div>
+                <div class="flex flex-col">
+                    <span class="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">Total
+                        Credits</span>
+                    <span id="total-credits" class="text-3xl font-black text-white">0</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+
+            <div class="lg:col-span-4 space-y-8">
+                <section class="glass-panel p-8 relative overflow-hidden border-white/5">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 blur-3xl rounded-full -mr-16 -mt-16">
+                    </div>
+                    <div class="flex justify-between items-center mb-8">
+                        <h2 class="text-2xl font-[800] text-white tracking-tight">Add Courses</h2>
+                        <i data-lucide="plus-circle" class="w-6 h-6 text-indigo-400/50"></i>
+                    </div>
+
+                    <div class="relative mb-8 search-glow transition-all">
+                        <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+                            <i data-lucide="search" class="w-5 h-5 text-slate-500"></i>
+                        </div>
+                        <input type="text" id="course-search" placeholder="Search course by name or code..."
+                            class="w-full bg-slate-900/50 border border-white/5 rounded-2xl py-5 pl-14 pr-6 focus:outline-none transition-all text-sm text-white placeholder:text-slate-600">
+                        <div id="search-suggestions"
+                            class="absolute top-full left-0 right-0 mt-4 glass-panel border-indigo-500/20 shadow-2xl z-[100] max-h-80 overflow-y-auto hidden">
+                        </div>
+                    </div>
+
+                    <div class="space-y-4 mb-8">
+                        <div id="selected-courses-list"
+                            class="space-y-6 min-h-[300px] max-h-[500px] overflow-y-auto pr-2 scrollbar-hide">
+                            <div class="text-center py-20">
+                                <i data-lucide="layers" class="w-12 h-12 text-slate-800 mx-auto mb-4"></i>
+                                <p class="text-slate-500 text-sm font-medium">Search to start building...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="conflict-badge"
+                        class="hidden items-center justify-center gap-3 w-full py-4 bg-rose-500/10 border border-rose-500/20 rounded-2xl text-rose-400 font-bold text-sm shadow-lg shadow-rose-900/10">
+                        <i data-lucide="alert-circle" class="w-5 h-5"></i>
+                        CONFLICT DETECTED
+                    </div>
+                </section>
+
+                <section class="glass-panel p-8">
+                    <button id="export-btn"
+                        class="group w-full py-5 rounded-2xl font-black text-white flex items-center justify-center gap-3 active:scale-[0.98] transition-all">
+                        <i data-lucide="camera" class="w-6 h-6 group-hover:rotate-12 transition-transform"></i>
+                        DOWNLOAD HIGH-RES PNG
+                    </button>
+                    <p
+                        class="text-[10px] text-slate-600 mt-6 text-center font-bold uppercase tracking-[0.2em] opacity-50 italic">
+                        Generated for Excellence — AIUB 25</p>
+                </section>
+            </div>
+
+            <div class="lg:col-span-8">
+                <section id="routine-capture-area"
+                    class="glass-panel overflow-hidden border-white/5 p-1 bg-white/[0.02]">
+                    <div class="bg-[#0b0f19] rounded-[22px] overflow-hidden">
+                        <div class="p-8 border-b border-white/5 flex justify-between items-center bg-indigo-500/5">
+                            <div>
+                                <h2 class="text-xl font-black text-white tracking-tight uppercase">Class Routine Canvas
+                                </h2>
+                            </div>
+                            <i data-lucide="cpu" class="w-6 h-6 text-indigo-500/30"></i>
+                        </div>
+
+                        <!-- The Grid Canvas -->
+                        <div id="routine-scroll-wrapper" class="overflow-x-auto">
+                            <div id="routine-actual-grid" class="min-w-[900px] p-8 pb-12 bg-[#0b0f19]">
+                                <div class="grid grid-cols-[100px_1fr_1fr_1fr_1fr_1fr_1fr_1fr] mb-8">
+                                    <div></div>
+                                    <div class="text-center"><span class="day-label">Sun</span></div>
+                                    <div class="text-center"><span class="day-label">Mon</span></div>
+                                    <div class="text-center"><span class="day-label">Tue</span></div>
+                                    <div class="text-center"><span class="day-label">Wed</span></div>
+                                    <div class="text-center"><span class="day-label">Thu</span></div>
+                                    <div class="text-center"><span class="day-label">Fri</span></div>
+                                    <div class="text-center"><span class="day-label">Sat</span></div>
+                                </div>
+
+                                <div class="relative h-[900px]">
+                                    <div
+                                        class="absolute left-0 top-0 bottom-0 w-[100px] flex flex-col pt-1 text-[11px] text-slate-500 font-[800] uppercase">
+                                        <div class="time-label">08:00 AM</div>
+                                        <div class="time-label">09:00 AM</div>
+                                        <div class="time-label">10:00 AM</div>
+                                        <div class="time-label">11:00 AM</div>
+                                        <div class="time-label">12:00 PM</div>
+                                        <div class="time-label">01:00 PM</div>
+                                        <div class="time-label">02:00 PM</div>
+                                        <div class="time-label">03:00 PM</div>
+                                        <div class="time-label">04:00 PM</div>
+                                        <div class="time-label">05:00 PM</div>
+                                        <div class="time-label">06:00 PM</div>
+                                        <div class="time-label">07:00 PM</div>
+                                        <div class="time-label">08:00 PM</div>
+                                        <div class="time-label">09:00 PM</div>
+                                        <div class="time-label">10:00 PM</div>
+                                    </div>
+
+                                    <div
+                                        class="ml-[100px] grid grid-cols-7 h-full absolute inset-0 pointer-events-none">
+                                        <div class="grid-v"></div>
+                                        <div class="grid-v"></div>
+                                        <div class="grid-v"></div>
+                                        <div class="grid-v"></div>
+                                        <div class="grid-v"></div>
+                                        <div class="grid-v"></div>
+                                        <div class="grid-v"></div>
+                                    </div>
+                                    <div class="ml-[100px] h-full absolute inset-0 pointer-events-none">
+                                        <div class="grid-h"></div>
+                                        <div class="grid-h"></div>
+                                        <div class="grid-h"></div>
+                                        <div class="grid-h"></div>
+                                        <div class="grid-h"></div>
+                                        <div class="grid-h"></div>
+                                        <div class="grid-h"></div>
+                                        <div class="grid-h"></div>
+                                        <div class="grid-h"></div>
+                                        <div class="grid-h"></div>
+                                        <div class="grid-h"></div>
+                                        <div class="grid-h"></div>
+                                        <div class="grid-h"></div>
+                                        <div class="grid-h"></div>
+                                        <div class="grid-h"></div>
+                                    </div>
+
+                                    <div id="class-container"
+                                        class="ml-[100px] h-full absolute inset-0 grid grid-cols-7 pointer-events-none">
+                                        <div class="day-bucket relative h-full pointer-events-auto" data-day="Sunday">
+                                        </div>
+                                        <div class="day-bucket relative h-full pointer-events-auto" data-day="Monday">
+                                        </div>
+                                        <div class="day-bucket relative h-full pointer-events-auto" data-day="Tuesday">
+                                        </div>
+                                        <div class="day-bucket relative h-full pointer-events-auto"
+                                            data-day="Wednesday"></div>
+                                        <div class="day-bucket relative h-full pointer-events-auto" data-day="Thursday">
+                                        </div>
+                                        <div class="day-bucket relative h-full pointer-events-auto" data-day="Friday">
+                                        </div>
+                                        <div class="day-bucket relative h-full pointer-events-auto" data-day="Saturday">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
