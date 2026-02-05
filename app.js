@@ -234,10 +234,13 @@ function renderSidebar() {
                 </div>
 
                 ${!isExplorerMode ? `
-                <select class="prism-input !py-1.5 !text-[10px] !rounded-lg mt-3" onchange="handleSectionChange(${i}, this.value)">
-                    ${sc.course.sections.map((s, si) => `<option value="${si}" ${si === sc.selectedSectionIndex ? 'selected' : ''}>Switch to Sec ${s.section}</option>`).join('')}
-                </select>` : `
-                <div class="mt-3 flex items-center gap-2 text-[10px] font-black text-emerald-400 uppercase tracking-widest"><i data-lucide="shield-check" class="w-4 h-4"></i> Locked in Scenario</div>`}
+                <div class="select-wrapper mt-3">
+                    <select class="prism-input !py-1.5 !text-[10px] !rounded-lg" onchange="handleSectionChange(${i}, this.value)">
+                        ${sc.course.sections.map((s, si) => `<option value="${si}" ${si === sc.selectedSectionIndex ? 'selected' : ''}>Switch to Sec ${s.section}</option>`).join('')}
+                    </select>
+                    <i data-lucide="chevron-down" class="select-arrow w-3 h-3"></i>
+                </div>` : `
+                <div class="mt-3 flex items-center gap-2 text-[10px] font-black text-[var(--accent-secondary)] uppercase tracking-widest"><i data-lucide="shield-check" class="w-4 h-4"></i> Locked in Scenario</div>`}
             </div>
         `;
     }).join('');
@@ -308,16 +311,39 @@ exitExplorerBtn.onclick = stopExplorer;
 // Export
 exportBtn.onclick = async () => {
     const el = document.getElementById('routine-actual-grid');
-    const text = exportBtn.innerHTML;
-    exportBtn.innerHTML = '<i class="animate-spin" data-lucide="loader-2"></i>';
+    const originalHTML = exportBtn.innerHTML;
+
+    // UI feedback without breaking layout
+    exportBtn.disabled = true;
+    exportBtn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> GENERATING...`;
     lucide.createIcons();
+
     try {
-        const canvas = await html2canvas(el, { scale: 2, backgroundColor: '#05070a', useCORS: true });
+        // Get current theme background color
+        const themeBg = getComputedStyle(document.body).getPropertyValue('--bg-surface').trim() || '#0a0d14';
+
+        const canvas = await html2canvas(el, {
+            scale: 2,
+            backgroundColor: themeBg,
+            useCORS: true,
+            logging: false,
+            scrollX: 0,
+            scrollY: 0,
+            x: 0,
+            y: 0
+        });
+
         const link = document.createElement('a');
         link.download = `RoutinePro_${Date.now()}.png`;
         link.href = canvas.toDataURL();
         link.click();
-    } finally { exportBtn.innerHTML = text; lucide.createIcons(); }
+    } catch (err) {
+        console.error("Export failed:", err);
+    } finally {
+        exportBtn.disabled = false;
+        exportBtn.innerHTML = originalHTML;
+        lucide.createIcons();
+    }
 };
 
 document.addEventListener('click', (e) => { if (!searchInput.contains(e.target) && !suggestions.contains(e.target)) suggestions.classList.add('hidden'); });
