@@ -343,6 +343,29 @@ select.prism-input option {
     box-shadow: 0 0 15px var(--accent-glow);
 }
 
+.status-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border-glass);
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.day-toggle:checked+.status-chip {
+    background: var(--accent-secondary);
+    color: #000;
+    border-color: var(--accent-secondary);
+    box-shadow: 0 0 15px rgba(14, 165, 233, 0.2);
+}
+
 /* Animations */
 @keyframes slideUp {
     from {

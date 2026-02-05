@@ -123,31 +123,36 @@
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-2 gap-3">
-                            <div class="space-y-1.5">
-                                <label class="text-[9px] font-black text-slate-600 uppercase pl-1">Section
-                                    Status</label>
-                                <div class="select-wrapper">
-                                    <select id="filter-status" class="prism-input !py-2 !text-xs cursor-pointer">
-                                        <option value="all">All Statuses</option>
-                                        <option value="Open" selected>Open Only</option>
-                                        <option value="Reserved">Reserved Only</option>
-                                        <option value="Freshman">Freshman Only</option>
-                                        <option value="Closed">Closed Only</option>
-                                        <option value="Cancle">Cancle Only</option>
-                                    </select>
-                                    <i data-lucide="chevron-down" class="select-arrow w-3 h-3"></i>
-                                </div>
+                        <div class="space-y-1.5">
+                            <label class="text-[9px] font-black text-slate-600 uppercase pl-1">Sort by Gaps</label>
+                            <div class="select-wrapper">
+                                <select id="filter-sort" class="prism-input !py-2 !text-xs cursor-pointer">
+                                    <option value="none">Default (Random)</option>
+                                    <option value="gaps">Min Gaps (Compact)</option>
+                                </select>
+                                <i data-lucide="chevron-down" class="select-arrow w-3 h-3"></i>
                             </div>
-                            <div class="space-y-1.5">
-                                <label class="text-[9px] font-black text-slate-600 uppercase pl-1">Sort by Gaps</label>
-                                <div class="select-wrapper">
-                                    <select id="filter-sort" class="prism-input !py-2 !text-xs cursor-pointer">
-                                        <option value="none">Default</option>
-                                        <option value="gaps">Min Gaps (Compact)</option>
-                                    </select>
-                                    <i data-lucide="chevron-down" class="select-arrow w-3 h-3"></i>
-                                </div>
+                        </div>
+
+                        <div class="space-y-1.5">
+                            <label class="text-[9px] font-black text-slate-600 uppercase pl-1 mb-2 block">Section
+                                Status</label>
+                            <div class="grid grid-cols-3 gap-2">
+                                <label><input type="checkbox" value="Open" checked class="status-check day-toggle">
+                                    <div class="status-chip w-full">Open</div>
+                                </label>
+                                <label><input type="checkbox" value="Reserved" checked class="status-check day-toggle">
+                                    <div class="status-chip w-full">Reserved</div>
+                                </label>
+                                <label><input type="checkbox" value="Freshman" checked class="status-check day-toggle">
+                                    <div class="status-chip w-full">Freshman</div>
+                                </label>
+                                <label><input type="checkbox" value="Closed" class="status-check day-toggle">
+                                    <div class="status-chip w-full">Closed</div>
+                                </label>
+                                <label><input type="checkbox" value="Cancle" class="status-check day-toggle">
+                                    <div class="status-chip w-full">Cancle</div>
+                                </label>
                             </div>
                         </div>
 

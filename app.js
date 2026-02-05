@@ -37,7 +37,6 @@ const filterStart = document.getElementById('filter-start');
 const filterEnd = document.getElementById('filter-end');
 const filterSeats = document.getElementById('filter-seats');
 const seatValDisplay = document.getElementById('seat-val');
-const filterStatus = document.getElementById('filter-status');
 const filterSort = document.getElementById('filter-sort');
 
 /**
@@ -146,7 +145,7 @@ generateAllBtn.addEventListener('click', () => {
     const minS = parseInt(filterStart.value);
     const maxE = parseInt(filterEnd.value);
     const maxC = parseInt(filterSeats.value);
-    const statusFilter = filterStatus.value;
+    const allowedStatuses = Array.from(document.querySelectorAll('.status-check:checked')).map(el => el.value);
     const sortType = filterSort.value;
     const allowedDays = Array.from(document.querySelectorAll('.day-check:checked')).map(el => el.value.substring(0, 3));
 
@@ -158,7 +157,7 @@ generateAllBtn.addEventListener('click', () => {
         const course = selectedCourses[idx].course;
         for (const sec of course.sections) {
             if (parseInt(sec.count) > maxC && maxC < 100) continue;
-            if (statusFilter !== 'all' && sec.status !== statusFilter) continue;
+            if (allowedStatuses.length > 0 && !allowedStatuses.includes(sec.status)) continue;
 
             let validTime = true;
             for (const s of sec.schedules) {
