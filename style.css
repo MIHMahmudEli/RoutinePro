@@ -4,16 +4,57 @@
     --bg-base: #030508;
     --bg-surface: #0a0d14;
     --accent-primary: #10b981;
-    /* Emerald */
     --accent-secondary: #0ea5e9;
-    /* Sky */
     --accent-glow: rgba(16, 185, 129, 0.15);
     --border-glass: rgba(255, 255, 255, 0.06);
     --text-primary: #ffffff;
     --text-secondary: #94a3b8;
     --text-muted: #475569;
     --font-main: 'Inter', sans-serif;
-    --safe-padding: 24px;
+}
+
+[data-theme="nebula"] {
+    --bg-base: #0a0515;
+    --bg-surface: #120b25;
+    --accent-primary: #a855f7;
+    /* Purple */
+    --accent-secondary: #ec4899;
+    /* Pink */
+    --accent-glow: rgba(168, 85, 247, 0.15);
+    --border-glass: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="crimson"] {
+    --bg-base: #0f0202;
+    --bg-surface: #1a0505;
+    --accent-primary: #f43f5e;
+    /* Rose */
+    --accent-secondary: #fb923c;
+    /* Orange */
+    --accent-glow: rgba(244, 63, 94, 0.15);
+    --border-glass: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="ocean"] {
+    --bg-base: #01080e;
+    --bg-surface: #021526;
+    --accent-primary: #06b6d4;
+    /* Cyan */
+    --accent-secondary: #3b82f6;
+    /* Blue */
+    --accent-glow: rgba(6, 182, 212, 0.15);
+    --border-glass: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="sandstone"] {
+    --bg-base: #0e0d0b;
+    --bg-surface: #1c1a17;
+    --accent-primary: #f59e0b;
+    /* Amber */
+    --accent-secondary: #d97706;
+    /* Orange-800 */
+    --accent-glow: rgba(245, 158, 11, 0.15);
+    --border-glass: rgba(255, 255, 255, 0.08);
 }
 
 * {
@@ -93,7 +134,7 @@ body {
     outline: none;
     border-color: var(--accent-primary);
     background: rgba(0, 0, 0, 0.5);
-    box-shadow: 0 0 0 4px var(--accent-glow);
+    box-shadow: 0 0 15px var(--accent-glow);
 }
 
 .prism-btn {
@@ -117,7 +158,7 @@ body {
 .prism-btn:hover {
     filter: brightness(1.1);
     transform: scale(1.02);
-    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+    box-shadow: 0 8px 25px var(--accent-glow);
 }
 
 .prism-btn:active {
@@ -188,12 +229,12 @@ body {
 }
 
 .class-block.theory {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.03));
+    background: linear-gradient(135deg, var(--accent-glow), transparent);
     border-left: 3px solid var(--accent-primary);
 }
 
 .class-block.lab {
-    background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(14, 165, 233, 0.03));
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), transparent);
     border-left: 3px solid var(--accent-secondary);
 }
 

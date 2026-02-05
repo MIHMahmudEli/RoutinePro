@@ -9,6 +9,15 @@ let possibleRoutines = []; // [[{courseTitle, section}, ...]]
 let currentRoutineIndex = 0;
 let isExplorerMode = false;
 
+// Theme Engine
+window.setTheme = (theme) => {
+    document.body.setAttribute('data-theme', theme);
+    localStorage.setItem('routine-pro-theme', theme);
+};
+// Restore Theme
+const savedTheme = localStorage.getItem('routine-pro-theme');
+if (savedTheme) document.body.setAttribute('data-theme', savedTheme);
+
 // DOM Elements
 const searchInput = document.getElementById('course-search');
 const suggestions = document.getElementById('search-suggestions');
