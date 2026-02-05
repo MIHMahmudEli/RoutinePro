@@ -37,6 +37,8 @@ const filterStart = document.getElementById('filter-start');
 const filterEnd = document.getElementById('filter-end');
 const filterSeats = document.getElementById('filter-seats');
 const seatValDisplay = document.getElementById('seat-val');
+const filterStatus = document.getElementById('filter-status');
+const filterSort = document.getElementById('filter-sort');
 
 /**
  * INITIALIZATION
@@ -144,6 +146,8 @@ generateAllBtn.addEventListener('click', () => {
     const minS = parseInt(filterStart.value);
     const maxE = parseInt(filterEnd.value);
     const maxC = parseInt(filterSeats.value);
+    const statusFilter = filterStatus.value;
+    const sortType = filterSort.value;
     const allowedDays = Array.from(document.querySelectorAll('.day-check:checked')).map(el => el.value.substring(0, 3));
 
     possibleRoutines = [];
@@ -154,6 +158,7 @@ generateAllBtn.addEventListener('click', () => {
         const course = selectedCourses[idx].course;
         for (const sec of course.sections) {
             if (parseInt(sec.count) > maxC && maxC < 100) continue;
+            if (statusFilter !== 'all' && sec.status !== statusFilter) continue;
 
             let validTime = true;
             for (const s of sec.schedules) {
@@ -182,6 +187,11 @@ generateAllBtn.addEventListener('click', () => {
 
     find(0, []);
     if (possibleRoutines.length === 0) return alert("No valid scenarios for these settings.");
+
+    // Sorting Engine
+    if (sortType === 'gaps') {
+        possibleRoutines.sort((a, b) => calculateGaps(a) - calculateGaps(b));
+    }
 
     isExplorerMode = true; currentRoutineIndex = 0;
     syncWorkspace();
@@ -216,7 +226,7 @@ function renderSidebar() {
             ? possibleRoutines[currentRoutineIndex].find(item => item.courseTitle === sc.course.baseTitle).section
             : sc.course.sections[sc.selectedSectionIndex];
 
-        const isFull = parseInt(section.count) >= parseInt(section.capacity);
+        const statusClass = `tag-${section.status.toLowerCase()}`;
 
         return `
             <div class="sidebar-item group">
@@ -229,7 +239,7 @@ function renderSidebar() {
                     <div class="text-center"><p class="text-[8px] text-slate-600 font-black uppercase">Cap</p><p class="text-[11px] font-bold">${section.capacity}</p></div>
                     <div class="text-center">
                         <p class="text-[8px] text-slate-600 font-black uppercase">Stat</p>
-                        <span class="status-tag ${isFull ? 'tag-closed' : 'tag-open'}">${isFull ? 'Full' : 'Open'}</span>
+                        <span class="status-tag ${statusClass}">${section.status}</span>
                     </div>
                 </div>
 
@@ -299,6 +309,27 @@ function toMin(s) {
         if (h === 12) h = 0; if (m === 'PM') h += 12;
         return h * 60 + min;
     } catch (e) { return 0; }
+}
+
+function calculateGaps(routine) {
+    let totalGaps = 0;
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    days.forEach(day => {
+        let schs = [];
+        routine.forEach(item => {
+            item.section.schedules.forEach(s => {
+                if (s.day === day) schs.push({ start: toMin(s.start), end: toMin(s.end) });
+            });
+        });
+        if (schs.length > 1) {
+            schs.sort((a, b) => a.start - b.start);
+            for (let i = 0; i < schs.length - 1; i++) {
+                const gap = schs[i + 1].start - schs[i].end;
+                if (gap > 0) totalGaps += gap;
+            }
+        }
+    });
+    return totalGaps;
 }
 
 function stopExplorer() { isExplorerMode = false; syncWorkspace(); }

@@ -123,6 +123,34 @@
                             </div>
                         </div>
 
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="space-y-1.5">
+                                <label class="text-[9px] font-black text-slate-600 uppercase pl-1">Section
+                                    Status</label>
+                                <div class="select-wrapper">
+                                    <select id="filter-status" class="prism-input !py-2 !text-xs cursor-pointer">
+                                        <option value="all">All Statuses</option>
+                                        <option value="Open" selected>Open Only</option>
+                                        <option value="Reserved">Reserved Only</option>
+                                        <option value="Freshman">Freshman Only</option>
+                                        <option value="Closed">Closed Only</option>
+                                        <option value="Cancle">Cancle Only</option>
+                                    </select>
+                                    <i data-lucide="chevron-down" class="select-arrow w-3 h-3"></i>
+                                </div>
+                            </div>
+                            <div class="space-y-1.5">
+                                <label class="text-[9px] font-black text-slate-600 uppercase pl-1">Sort by Gaps</label>
+                                <div class="select-wrapper">
+                                    <select id="filter-sort" class="prism-input !py-2 !text-xs cursor-pointer">
+                                        <option value="none">Default</option>
+                                        <option value="gaps">Min Gaps (Compact)</option>
+                                    </select>
+                                    <i data-lucide="chevron-down" class="select-arrow w-3 h-3"></i>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="space-y-2">
                             <div class="flex justify-between items-end">
                                 <label class="text-[9px] font-black text-slate-600 uppercase pl-1">Max Capacity</label>
@@ -235,19 +263,19 @@
                                 <!-- Time Rail -->
                                 <div
                                     class="absolute left-0 top-0 bottom-0 w-[80px] flex flex-col border-r border-white/5">
-                                    <div class="h-[60px] flex items-start justify-end pr-4 time-label">08:00 AM</div>
-                                    <div class="h-[60px] flex items-start justify-end pr-4 time-label">09:00 AM</div>
+                                    <div class="h-[60px] flex items-start justify-end pr-4 time-label">8:00 AM</div>
+                                    <div class="h-[60px] flex items-start justify-end pr-4 time-label">9:00 AM</div>
                                     <div class="h-[60px] flex items-start justify-end pr-4 time-label">10:00 AM</div>
                                     <div class="h-[60px] flex items-start justify-end pr-4 time-label">11:00 AM</div>
                                     <div class="h-[60px] flex items-start justify-end pr-4 time-label">12:00 PM</div>
-                                    <div class="h-[60px] flex items-start justify-end pr-4 time-label">01:00 PM</div>
-                                    <div class="h-[60px] flex items-start justify-end pr-4 time-label">02:00 PM</div>
-                                    <div class="h-[60px] flex items-start justify-end pr-4 time-label">03:00 PM</div>
-                                    <div class="h-[60px] flex items-start justify-end pr-4 time-label">04:00 PM</div>
-                                    <div class="h-[60px] flex items-start justify-end pr-4 time-label">05:00 PM</div>
-                                    <div class="h-[60px] flex items-start justify-end pr-4 time-label">06:00 PM</div>
-                                    <div class="h-[60px] flex items-start justify-end pr-4 time-label">07:00 PM</div>
-                                    <div class="h-[60px] flex items-start justify-end pr-4 time-label">08:00 PM</div>
+                                    <div class="h-[60px] flex items-start justify-end pr-4 time-label">1:00 PM</div>
+                                    <div class="h-[60px] flex items-start justify-end pr-4 time-label">2:00 PM</div>
+                                    <div class="h-[60px] flex items-start justify-end pr-4 time-label">3:00 PM</div>
+                                    <div class="h-[60px] flex items-start justify-end pr-4 time-label">4:00 PM</div>
+                                    <div class="h-[60px] flex items-start justify-end pr-4 time-label">5:00 PM</div>
+                                    <div class="h-[60px] flex items-start justify-end pr-4 time-label">6:00 PM</div>
+                                    <div class="h-[60px] flex items-start justify-end pr-4 time-label">7:00 PM</div>
+                                    <div class="h-[60px] flex items-start justify-end pr-4 time-label">8:00 PM</div>
                                 </div>
 
                                 <!-- Horizontal Guide Lines -->

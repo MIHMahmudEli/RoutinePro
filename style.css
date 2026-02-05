@@ -374,7 +374,14 @@ select.prism-input option {
     color: var(--accent-primary);
 }
 
-.tag-closed {
+.tag-reserved,
+.tag-freshman {
+    background: rgba(14, 165, 233, 0.1);
+    color: var(--accent-secondary);
+}
+
+.tag-closed,
+.tag-cancle {
     background: rgba(244, 63, 94, 0.1);
     color: #f43f5e;
 }
