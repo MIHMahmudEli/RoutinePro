@@ -78,13 +78,15 @@ searchInput.addEventListener('input', (e) => {
 
     if (filtered.length > 0) {
         suggestions.innerHTML = filtered.map(course => `
-            <div class="suggestion-item" onclick="handleAddCourse('${course.baseTitle.replace(/'/g, "\\'")}', '${course.code}')">
-                <div class="flex justify-between items-start group gap-4">
-                    <span class="text-white font-[700] text-sm group-hover:text-sky-400 transition-colors flex-1 min-w-0">${course.baseTitle}</span>
-                    <div class="bg-sky-500/10 text-sky-400 text-[9px] px-2 py-1 rounded-md font-black shrink-0 mt-0.5">+ ADD</div>
-                </div>
-                <div class="text-slate-500 text-[10px] uppercase font-black tracking-widest mt-1 opacity-60">
-                    ${course.code ? course.code + ' • ' : ''} ${course.sections.length} Sections
+            <div class="suggestion-item group" onclick="handleAddCourse('${course.baseTitle.replace(/'/g, "\\'")}', '${course.code}')">
+                <div class="flex justify-between items-center gap-4">
+                    <div class="flex-1">
+                        <div class="text-white font-[700] text-[11px] group-hover:text-sky-400 transition-colors">${course.baseTitle}</div>
+                        <div class="text-slate-600 text-[8px] uppercase font-black tracking-widest mt-1">
+                            ${course.code ? course.code + ' • ' : ''} ${course.sections.length} Dept Sections
+                        </div>
+                    </div>
+                    <div class="h-8 px-4 bg-sky-500/10 text-sky-400 text-[8px] flex items-center rounded-xl font-black border border-sky-500/10 transition-all group-hover:bg-sky-500 group-hover:text-white uppercase">+ Add</div>
                 </div>
             </div>
         `).join('');
@@ -287,7 +289,7 @@ function syncWorkspace() {
 
 function renderSidebar() {
     if (selectedCourses.length === 0) {
-        selectedList.innerHTML = `<div class="text-center py-20 opacity-40"><i data-lucide="layers" class="w-12 h-12 text-slate-700 mx-auto mb-4"></i><p class="text-slate-500 text-sm font-medium">Search to build your routine</p></div>`;
+        selectedList.innerHTML = `<div class="text-center py-20 opacity-10 bg-black/20 rounded-2xl border border-dashed border-white/5 mx-2"><i data-lucide="layers" class="w-8 h-8 text-white mx-auto mb-4"></i><p class="text-slate-500 text-[8px] font-black uppercase tracking-[0.2em]">Queue Empty</p></div>`;
         return;
     }
     selectedList.innerHTML = selectedCourses.map((sc, i) => {
@@ -302,38 +304,34 @@ function renderSidebar() {
         return `
             <div class="course-card animate-fade">
                 ${!isExplorerMode ? `
-                <button onclick="handleRemoveCourse(${i})" class="absolute top-3 right-4 text-slate-600 hover:text-rose-500 transition-colors">
+                <button onclick="handleRemoveCourse(${i})" class="absolute top-3 right-4 text-slate-700 hover:text-rose-400 transition-colors">
                     <i data-lucide="x" class="w-3 h-3"></i>
                 </button>` : ''}
                 <div class="space-y-3">
-                    <h3 class="text-white text-[11px] font-black leading-tight uppercase tracking-wider pr-6">${sc.course.baseTitle}</h3>
+                    <h3 class="text-white text-[10px] font-black leading-tight uppercase tracking-wider pr-6">${sc.course.baseTitle}</h3>
                     
-                    <div class="grid grid-cols-4 gap-1 py-2 border-y border-white/5">
+                    <div class="grid grid-cols-4 gap-1 py-1.5 border-y border-white/5 bg-black/20 rounded-lg">
                         <div class="text-center border-r border-white/5">
-                            <div class="text-[7px] text-slate-500 font-black uppercase tracking-tighter mb-0.5">Sec</div>
-                            <div class="text-[9px] text-white font-bold">${section.section}</div>
+                            <div class="text-[6px] text-slate-600 font-black uppercase tracking-tighter">Sec</div>
+                            <div class="text-[9px] text-white font-bold leading-none">${section.section}</div>
                         </div>
                         <div class="text-center border-r border-white/5">
-                            <div class="text-[7px] text-slate-500 font-black uppercase tracking-tighter mb-0.5">Count</div>
-                            <div class="text-[9px] text-white font-bold">${section.count}</div>
+                            <div class="text-[6px] text-slate-600 font-black uppercase tracking-tighter">Enr</div>
+                            <div class="text-[9px] text-white font-bold leading-none">${section.count}</div>
                         </div>
                         <div class="text-center border-r border-white/5">
-                            <div class="text-[7px] text-slate-500 font-black uppercase tracking-tighter mb-0.5">Cap</div>
-                            <div class="text-[9px] text-white font-bold">${section.capacity}</div>
+                            <div class="text-[6px] text-slate-600 font-black uppercase tracking-tighter">Cap</div>
+                            <div class="text-[9px] text-white font-bold leading-none">${section.capacity}</div>
                         </div>
                         <div class="text-center">
-                            <div class="text-[7px] text-slate-500 font-black uppercase tracking-tighter mb-0.5">Status</div>
-                            <div class="text-[8px] ${statusColor} px-1 py-0.5 rounded-sm font-black inline-block uppercase">${section.status}</div>
+                            <div class="text-[6px] text-slate-600 font-black uppercase tracking-tighter">Pill</div>
+                            <div class="text-[7px] ${statusColor} px-1.5 rounded-sm font-black inline-block uppercase leading-none">${section.status.substring(0, 3)}</div>
                         </div>
                     </div>
 
                     ${!isExplorerMode ? `
                     <div class="flex flex-col gap-1.5">
-                        <div class="flex items-center gap-2 text-[8px] font-black text-slate-500 uppercase tracking-widest">
-                            <i data-lucide="hash" class="w-3 h-3 text-sky-500/50"></i>
-                            Change Section
-                        </div>
-                        <select class="section-select w-full !py-2 !text-[10px]" onchange="handleSectionChange(${i}, this.value)">
+                        <select class="section-select w-full !text-[9px] !py-2" onchange="handleSectionChange(${i}, this.value)">
                             ${sc.course.sections.map((s, si) => `
                                 <option value="${si}" ${si === sc.selectedSectionIndex ? 'selected' : ''}>
                                     Section ${s.section}
@@ -341,9 +339,9 @@ function renderSidebar() {
                             `).join('')}
                         </select>
                     </div>` : `
-                    <div class="flex items-center gap-2 text-[8px] font-black text-sky-400 uppercase tracking-widest">
-                        <i data-lucide="check-circle-2" class="w-3 h-3"></i>
-                        Active in Scenario ${currentRoutineIndex + 1}
+                    <div class="flex items-center gap-1.5 text-[8px] font-black text-sky-400 uppercase tracking-widest">
+                        <i data-lucide="shield-check" class="w-3 h-3"></i>
+                        Vested Selection
                     </div>
                     `}
                 </div>
@@ -384,7 +382,16 @@ function renderRoutine() {
             block.className = `class-block ${sched.type.toLowerCase()} ${isConflicting ? 'conflict' : ''}`;
             block.style.top = `${top}px`;
             block.style.height = `${height}px`;
-            block.innerHTML = `<div class="block-header"><div class="course-name-clean">${courseTitle}</div><div class="time-clean">${sched.start} — ${sched.end}</div></div><div class="block-footer-clean"><div class="meta-pill">SEC: <span class="meta-val">${section.section}</span></div><div class="meta-pill">RM: <span class="meta-val">${sched.room}</span></div></div>`;
+            block.innerHTML = `
+                <div class="course-name-clean">${courseTitle}</div>
+                <div class="flex flex-col gap-1">
+                    <div class="time-clean">${sched.start} — ${sched.end}</div>
+                    <div class="flex items-center gap-2">
+                        <div class="text-[7px] text-white/40 font-black uppercase tracking-widest">S-${section.section}</div>
+                        <div class="text-[7px] text-white/40 font-black uppercase tracking-widest">R-${sched.room}</div>
+                    </div>
+                </div>
+            `;
             const bucket = document.querySelector(`.day-bucket[data-day="${day}"]`);
             if (bucket) { bucket.appendChild(block); scheduleByDay[day].push({ top, height }); }
         });
