@@ -445,7 +445,536 @@ select.prism-input option {
     transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Responsive tweaks */
+/* ===================================
+   RESPONSIVE DESIGN - MOBILE & TABLETS
+   =================================== */
+
+/* Tablet Devices (768px - 1023px) */
+@media (max-width: 1023px) {
+    body {
+        padding: 12px !important;
+    }
+
+    .max-w-\[1600px\] {
+        max-width: 100% !important;
+    }
+
+    /* Header Adjustments */
+    header {
+        flex-direction: column !important;
+        gap: 16px !important;
+        padding: 16px !important;
+    }
+
+    header>div {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Theme Switcher on Tablets */
+    header .flex.items-center.gap-6 {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px !important;
+    }
+
+    /* Sidebar Full Width on Tablet */
+    .grid.grid-cols-1.lg\:grid-cols-\[350px_1fr\] {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Routine Grid Horizontal Scroll */
+    #routine-actual-grid {
+        min-width: 900px;
+    }
+
+    #routine-scroll-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* Mobile Devices (< 768px) */
+@media (max-width: 767px) {
+
+    /* ============ GLOBAL ============ */
+    body {
+        padding: 6px !important;
+        font-size: 14px;
+    }
+
+    .space-y-6>*+* {
+        margin-top: 12px !important;
+    }
+
+    /* ============ HEADER ============ */
+    header {
+        padding: 10px !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 10px !important;
+    }
+
+    header .flex.items-center.gap-4 {
+        justify-content: center;
+        gap: 10px !important;
+    }
+
+    header h1 {
+        font-size: 16px !important;
+    }
+
+    header p {
+        font-size: 7px !important;
+        letter-spacing: 0.1em !important;
+    }
+
+    /* Logo/Icon Smaller */
+    header .w-12.h-12 {
+        width: 36px !important;
+        height: 36px !important;
+    }
+
+    header .w-12.h-12 i {
+        width: 18px !important;
+        height: 18px !important;
+    }
+
+    /* Theme + Credits Row */
+    header .flex.items-center.gap-6 {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px !important;
+        width: 100%;
+    }
+
+    header .bg-black\/30 {
+        width: 100%;
+        justify-content: space-between;
+        padding: 8px 12px !important;
+    }
+
+    /* Theme Color Buttons - Compact Grid */
+    header .flex.gap-1\.5 {
+        display: grid !important;
+        grid-template-columns: repeat(5, 1fr) !important;
+        gap: 6px !important;
+    }
+
+    header .flex.gap-1\.5 button {
+        width: 32px !important;
+        height: 32px !important;
+    }
+
+    /* Export Button Full Width */
+    #export-btn {
+        width: 100% !important;
+        min-width: auto !important;
+        padding: 10px 14px !important;
+        font-size: 11px !important;
+    }
+
+    /* ============ SIDEBAR ============ */
+    aside {
+        width: 100%;
+    }
+
+    aside .prism-card {
+        padding: 14px !important;
+    }
+
+    .space-y-6 {
+        gap: 12px !important;
+    }
+
+    /* Section Headers */
+    aside h2 {
+        font-size: 10px !important;
+        letter-spacing: 0.1em !important;
+    }
+
+    /* Search Input */
+    #course-search {
+        font-size: 13px !important;
+        padding: 9px 10px 9px 36px !important;
+    }
+
+    .absolute.inset-y-0.left-4 {
+        left: 10px !important;
+    }
+
+    /* Selected Courses List */
+    #selected-courses-list {
+        max-height: 250px !important;
+        padding-right: 4px !important;
+    }
+
+    /* Parameters Section */
+    .grid.grid-cols-2.gap-3 {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+    }
+
+    /* Labels */
+    label.text-\[9px\] {
+        font-size: 9px !important;
+    }
+
+    /* Dropdowns */
+    select.prism-input {
+        font-size: 13px !important;
+        padding: 9px 12px !important;
+    }
+
+    /* Section Status Chips - 3 COLUMNS FOR BETTER FIT */
+    .grid.grid-cols-3.gap-2 {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 6px !important;
+    }
+
+    .status-chip {
+        padding: 8px 4px !important;
+        font-size: 9px !important;
+        letter-spacing: 0.5px !important;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Day Chips - 4 Columns Compact */
+    .grid.grid-cols-4.gap-2 {
+        gap: 6px !important;
+    }
+
+    .day-chip {
+        min-width: 40px !important;
+        height: 40px !important;
+        font-size: 13px !important;
+        font-weight: 800;
+    }
+
+    /* Generate Button */
+    #generate-all-btn {
+        padding: 12px 18px !important;
+        font-size: 11px !important;
+    }
+
+    /* ============ MAIN ROUTINE GRID ============ */
+
+    /* Explorer Navigation */
+    #explorer-nav {
+        padding: 10px !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+    }
+
+    #explorer-nav .flex.items-center.gap-6 {
+        width: 100%;
+        justify-content: space-between;
+        gap: 12px !important;
+    }
+
+    #explorer-nav button {
+        width: 40px !important;
+        height: 40px !important;
+    }
+
+    #routine-counter {
+        font-size: 15px !important;
+    }
+
+    #exit-explorer {
+        width: 100%;
+        padding: 9px 14px !important;
+        font-size: 9px !important;
+    }
+
+    /* Grid Container */
+    .grid-container {
+        padding: 10px !important;
+        border-radius: 14px !important;
+    }
+
+    /* VISIBLE SCROLLBAR for Mobile Routine Grid */
+    #routine-scroll-wrapper {
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+        scrollbar-width: thin !important;
+        scrollbar-color: var(--accent-primary) rgba(255, 255, 255, 0.05) !important;
+    }
+
+    /* Make scrollbar always visible on mobile */
+    #routine-scroll-wrapper::-webkit-scrollbar {
+        height: 8px !important;
+        display: block !important;
+    }
+
+    #routine-scroll-wrapper::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05) !important;
+        border-radius: 4px;
+        margin: 0 10px;
+    }
+
+    #routine-scroll-wrapper::-webkit-scrollbar-thumb {
+        background: var(--accent-primary) !important;
+        border-radius: 4px;
+        box-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    #routine-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+        background: var(--accent-primary) !important;
+        filter: brightness(1.2);
+    }
+
+    #routine-actual-grid {
+        min-width: 750px;
+        /* Ensure it's scrollable */
+    }
+
+    /* Day Labels Smaller */
+    .day-label {
+        font-size: 9px !important;
+        padding: 6px 3px !important;
+        letter-spacing: 0.05em !important;
+    }
+
+    /* Time Labels Smaller */
+    .time-label {
+        font-size: 8px !important;
+        padding-right: 6px !important;
+    }
+
+    /* Time Rail Narrower */
+    .absolute.left-0.top-0.bottom-0.w-\[80px\] {
+        width: 55px !important;
+    }
+
+    .ml-\[80px\] {
+        margin-left: 55px !important;
+    }
+
+    /* Grid Height Adjustment */
+    .relative.h-\[800px\] {
+        height: 550px !important;
+    }
+
+    /* Class Blocks */
+    .class-block {
+        padding: 4px 5px !important;
+        font-size: 9px !important;
+        border-radius: 7px !important;
+    }
+
+    .class-name {
+        font-size: 8.5px !important;
+        line-height: 1.2;
+        font-weight: 800;
+    }
+
+    .class-info {
+        font-size: 7.5px !important;
+    }
+
+    /* ============ BUTTONS & INTERACTIONS ============ */
+    .prism-btn {
+        font-size: 11px !important;
+        padding: 10px 16px !important;
+        min-width: 100px !important;
+        gap: 5px !important;
+    }
+
+    .prism-btn i {
+        width: 14px !important;
+        height: 14px !important;
+    }
+
+    /* ============ INPUTS ============ */
+    .prism-input {
+        font-size: 13px !important;
+        padding: 9px 12px !important;
+        border-radius: 12px !important;
+    }
+
+    /* ============ SLIDER ============ */
+    #seat-val {
+        font-size: 15px !important;
+    }
+
+    .prism-slider::-webkit-slider-thumb {
+        width: 22px !important;
+        height: 22px !important;
+    }
+
+    /* ============ CARDS ============ */
+    .prism-card {
+        border-radius: 14px !important;
+    }
+
+    /* ============ CONFLICT BADGE ============ */
+    #conflict-badge {
+        padding: 8px 10px !important;
+        font-size: 8px !important;
+    }
+
+    /* ============ SEARCH SUGGESTIONS ============ */
+    #search-suggestions {
+        font-size: 12px !important;
+    }
+
+    /* ============ SPACING OPTIMIZATIONS ============ */
+    .space-y-5>*+* {
+        margin-top: 12px !important;
+    }
+
+    .space-y-4>*+* {
+        margin-top: 10px !important;
+    }
+
+    .space-y-3>*+* {
+        margin-top: 8px !important;
+    }
+
+    /* ============ TOUCH INTERACTIONS ============ */
+    button,
+    .day-chip,
+    .status-chip,
+    select {
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+    }
+
+    /* Increase touch targets */
+    button {
+        min-height: 40px;
+    }
+
+    /* ============ SCROLLBARS FOR LISTS ============ */
+    #selected-courses-list::-webkit-scrollbar {
+        width: 6px !important;
+    }
+
+    #selected-courses-list::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 3px;
+    }
+
+    #selected-courses-list::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 3px;
+    }
+}
+
+
+/* Extra Small Devices (< 480px) */
+@media (max-width: 479px) {
+
+    body {
+        padding: 6px !important;
+    }
+
+    /* Header Even More Compact */
+    header {
+        padding: 10px !important;
+    }
+
+    header h1 {
+        font-size: 16px !important;
+    }
+
+    /* 2-Column Theme Switcher */
+    header .flex.gap-1\.5 {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 6px !important;
+        width: 100%;
+    }
+
+    header .flex.gap-1\.5 button {
+        width: 32px !important;
+        height: 32px !important;
+    }
+
+    /* Credits Display Smaller */
+    #total-credits {
+        font-size: 18px !important;
+    }
+
+    /* Sidebar Ultra Compact */
+    aside .prism-card {
+        padding: 12px !important;
+    }
+
+    /* Status Chips Stack Vertically */
+    .grid.grid-cols-3.gap-2 {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Day Chips 3 Columns */
+    .grid.grid-cols-4.gap-2 {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+
+    /* Routine Grid Even Smaller */
+    #routine-actual-grid {
+        min-width: 700px;
+    }
+
+    .relative.h-\[800px\],
+    .relative.h-\[600px\] {
+        height: 500px !important;
+    }
+
+    /* Time Rail Ultra Compact */
+    .absolute.left-0.top-0.bottom-0.w-\[80px\],
+    .absolute.left-0.top-0.bottom-0.w-\[60px\] {
+        width: 50px !important;
+    }
+
+    .ml-\[80px\],
+    .ml-\[60px\] {
+        margin-left: 50px !important;
+    }
+
+    .time-label {
+        font-size: 8px !important;
+        padding-right: 6px !important;
+    }
+
+    /* Class Blocks Ultra Compact */
+    .class-block {
+        padding: 3px 4px !important;
+    }
+
+    .class-name {
+        font-size: 8px !important;
+    }
+
+    .class-info {
+        font-size: 7px !important;
+    }
+}
+
+/* Landscape Mobile (Small Height) */
+@media (max-height: 600px) and (orientation: landscape) {
+
+    .relative.h-\[800px\],
+    .relative.h-\[600px\],
+    .relative.h-\[500px\] {
+        height: 400px !important;
+    }
+
+    #selected-courses-list {
+        max-height: 200px !important;
+    }
+
+    body {
+        padding: 6px !important;
+    }
+}
+
+/* Desktop Large Screens */
 @media (min-width: 1024px) {
     .main-grid {
         grid-template-columns: 320px 1fr;
