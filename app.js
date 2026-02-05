@@ -157,7 +157,9 @@ generateAllBtn.addEventListener('click', () => {
         const course = selectedCourses[idx].course;
         for (const sec of course.sections) {
             if (parseInt(sec.count) > maxC && maxC < 100) continue;
-            if (allowedStatuses.length > 0 && !allowedStatuses.includes(sec.status)) continue;
+
+            // Strict Status Filter: Must be in the allowed list
+            if (!allowedStatuses.includes(sec.status)) continue;
 
             let validTime = true;
             for (const s of sec.schedules) {
@@ -187,9 +189,30 @@ generateAllBtn.addEventListener('click', () => {
     find(0, []);
     if (possibleRoutines.length === 0) return alert("No valid scenarios for these settings.");
 
-    // Sorting Engine
+    // Sorting & Optimization Engine
     if (sortType === 'gaps') {
-        possibleRoutines.sort((a, b) => calculateGaps(a) - calculateGaps(b));
+        // 1. Calculate and attach gap scores
+        const scoredRoutines = possibleRoutines.map(r => ({ routine: r, gaps: calculateGaps(r) }));
+
+        // 2. Find the absolute minimum gap achieved
+        const minGap = Math.min(...scoredRoutines.map(sr => sr.gaps));
+
+        // 3. Filter to ONLY include those with the absolute minimum gap
+        possibleRoutines = scoredRoutines
+            .filter(sr => sr.gaps === minGap)
+            .map(sr => sr.routine);
+
+        // 4. Sort is technically already 'perfect' now, but we can shuffle the identical ones
+        for (let i = possibleRoutines.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [possibleRoutines[i], possibleRoutines[j]] = [possibleRoutines[j], possibleRoutines[i]];
+        }
+    } else {
+        // Shuffle for true "Random" feel
+        for (let i = possibleRoutines.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [possibleRoutines[i], possibleRoutines[j]] = [possibleRoutines[j], possibleRoutines[i]];
+        }
     }
 
     isExplorerMode = true; currentRoutineIndex = 0;
@@ -206,6 +229,15 @@ function syncWorkspace() {
 
     if (isExplorerMode) {
         routineCounter.innerText = `${currentRoutineIndex + 1} / ${possibleRoutines.length}`;
+
+        // Show Gap info in the explorer badge
+        const totalGapMin = calculateGaps(possibleRoutines[currentRoutineIndex]);
+        const gapHrs = Math.floor(totalGapMin / 60);
+        const gapMins = totalGapMin % 60;
+        const gapText = totalGapMin === 0 ? "No Waiting Gaps!" : `${gapHrs > 0 ? gapHrs + 'h ' : ''}${gapMins}m Waiting Time`;
+
+        const gapDisplay = document.getElementById('gap-info-badge');
+        if (gapDisplay) gapDisplay.innerText = gapText;
     }
 
     renderSidebar();

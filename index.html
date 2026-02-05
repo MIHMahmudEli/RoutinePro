@@ -150,8 +150,8 @@
                                 <label><input type="checkbox" value="Closed" class="status-check day-toggle">
                                     <div class="status-chip w-full">Closed</div>
                                 </label>
-                                <label><input type="checkbox" value="Cancle" class="status-check day-toggle">
-                                    <div class="status-chip w-full">Cancle</div>
+                                <label><input type="checkbox" value="Cancel" class="status-check day-toggle">
+                                    <div class="status-chip w-full">Cancel</div>
                                 </label>
                             </div>
                         </div>
@@ -234,8 +234,12 @@
                         </button>
                         <div class="text-center">
                             <div id="routine-counter" class="text-lg font-900 leading-tight">0 / 0</div>
-                            <p class="text-[9px] font-black text-emerald-600 uppercase tracking-widest">Valid Scenario
-                            </p>
+                            <div class="flex items-center gap-1 justify-center mt-0.5">
+                                <p id="gap-info-badge"
+                                    class="text-[8px] font-black text-[var(--accent-primary)] bg-[var(--accent-glow)] px-1.5 py-0.5 rounded uppercase tracking-[0.15em]">
+                                    0m Waiting</p>
+                                <p class="text-[8px] font-black text-slate-500 uppercase tracking-widest">Scenario</p>
+                            </div>
                         </div>
                         <button id="next-routine"
                             class="w-10 h-10 rounded-lg bg-black/40 hover:bg-black/60 flex items-center justify-center transition-all border border-white/5">
