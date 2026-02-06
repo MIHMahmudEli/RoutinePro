@@ -17,6 +17,25 @@ class RoutineView {
         this.semesterBadge = document.getElementById('semester-badge');
         this.syncModal = document.getElementById('sync-modal');
         this.toastContainer = document.getElementById('toast-container');
+        this.filterStart = document.getElementById('filter-start');
+        this.filterEnd = document.getElementById('filter-end');
+    }
+
+    populateTimeFilters() {
+        const times = [
+            { v: 480, l: '08:00 AM' }, { v: 540, l: '09:00 AM' }, { v: 600, l: '10:00 AM' },
+            { v: 660, l: '11:00 AM' }, { v: 720, l: '12:00 PM' }, { v: 780, l: '01:00 PM' },
+            { v: 840, l: '02:00 PM' }, { v: 900, l: '03:00 PM' }, { v: 960, l: '04:00 PM' },
+            { v: 1020, l: '05:00 PM' }, { v: 1080, l: '06:00 PM' }, { v: 1140, l: '07:00 PM' },
+            { v: 1200, l: '08:00 PM' }
+        ];
+
+        if (this.filterStart) {
+            this.filterStart.innerHTML = times.map(t => `<option value="${t.v}">${t.l}</option>`).join('');
+        }
+        if (this.filterEnd) {
+            this.filterEnd.innerHTML = times.map((t, i) => `<option value="${t.v}" ${i === times.length - 1 ? 'selected' : ''}>${t.l}</option>`).join('');
+        }
     }
 
     renderSidebar(selectedCourses, isExplorerMode, currentRoutine, onRemove, onSectionChange) {

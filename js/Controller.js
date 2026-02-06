@@ -12,6 +12,7 @@ class RoutineController {
 
     async init() {
         await this.model.loadInitialData();
+        this.view.populateTimeFilters();
         this.view.updateSyncUI(this.model.allCourses);
         this.setupEventListeners();
         this.syncWorkspace();
