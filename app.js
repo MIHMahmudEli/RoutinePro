@@ -84,7 +84,7 @@ searchInput.addEventListener('input', (e) => {
 
     const results = allCourses.filter(c =>
         c.baseTitle.toLowerCase().includes(q) || (c.code && c.code.toLowerCase().includes(q))
-    ).slice(0, 8);
+    ).slice(0, 15);
 
     if (results.length > 0) {
         suggestions.innerHTML = results.map(c => `
