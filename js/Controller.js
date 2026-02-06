@@ -75,6 +75,77 @@ class RoutineController {
                 if (sliderFill) sliderFill.style.width = `${e.target.value}%`;
             };
         }
+
+        // File Upload
+        const fileInput = document.getElementById('course-file-input');
+        if (fileInput) {
+            fileInput.onchange = (e) => this.handleFileUpload(e);
+        }
+    }
+
+    async handleFileUpload(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const btn = this.view.syncModal.querySelector('.prism-btn');
+        const originalText = btn.innerText;
+        btn.disabled = true;
+        btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> PROCESSING...`;
+        lucide.createIcons();
+
+        try {
+            const semesterInput = document.getElementById('semester-input');
+            const targetSemester = semesterInput?.value || 'Updated Semester';
+
+            if (file.name.endsWith('.json')) {
+                const text = await file.text();
+                const data = JSON.parse(text);
+                this.model.saveCourses(data, targetSemester);
+                this.view.showToast(`${data.length} courses loaded from ${file.name}`);
+            } else if (file.name.endsWith('.xlsx')) {
+                const reader = new FileReader();
+                reader.onload = async (evt) => {
+                    const dataArr = new Uint8Array(evt.target.result);
+                    const wb = XLSX.read(dataArr, { type: 'array' });
+                    const wsname = wb.SheetNames[0];
+                    const ws = wb.Sheets[wsname];
+                    const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
+
+                    // Auto-detect semester
+                    let detectedSemester = "";
+                    const headerPeek = JSON.stringify(data.slice(0, 10)).toUpperCase();
+                    const wsUpper = wsname.toUpperCase();
+                    const combinedSearch = wsUpper + " " + headerPeek;
+
+                    if (combinedSearch.includes('SPRING') || combinedSearch.includes('SPRI')) detectedSemester = 'SPRING';
+                    else if (combinedSearch.includes('FALL') || combinedSearch.includes('FAL')) detectedSemester = 'FALL';
+                    else if (combinedSearch.includes('SUMMER') || combinedSearch.includes('SUMM')) detectedSemester = 'SUMMER';
+
+                    const yearMatch = combinedSearch.match(/\d{4}-\d{2,4}/);
+                    if (yearMatch && detectedSemester) detectedSemester += ` ${yearMatch[0]}`;
+                    else if (yearMatch && !detectedSemester) detectedSemester = yearMatch[0];
+
+                    const finalSemester = detectedSemester || targetSemester || 'Updated Semester';
+                    const courses = this.model.parseExcelData(data);
+
+                    this.model.saveCourses(courses, finalSemester);
+                    if (semesterInput) semesterInput.value = finalSemester;
+                    this.view.showToast(`${courses.length} courses loaded from ${file.name}`);
+                    this.syncWorkspace();
+                };
+                reader.readAsArrayBuffer(file);
+            }
+        } catch (err) {
+            console.error(err);
+            this.view.showToast("Failed to process file.", "error");
+        } finally {
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.innerText = originalText;
+                lucide.createIcons();
+                this.view.syncModal.classList.add('hidden');
+            }, 1500);
+        }
     }
 
     handleSearch(e) {
@@ -171,5 +242,6 @@ class RoutineController {
         this.view.renderSidebar(selectedCourses, isExplorerMode, currentItems, (i) => this.handleRemoveCourse(i), (ci, si) => this.handleSectionChange(ci, si));
         this.view.renderRoutine(currentItems, isExplorerMode);
         this.view.totalCreditsEl.innerText = this.model.calculateCredits();
+        this.view.updateSyncUI(this.model.allCourses);
     }
 }
