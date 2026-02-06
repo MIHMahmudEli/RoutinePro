@@ -152,7 +152,11 @@ class RoutineModel {
         dayKeys.forEach(day => {
             let schs = [];
             routine.forEach(item => {
-                item.section.schedules.forEach(s => {
+                // Handle both generated routine items and direct selections
+                const section = item.section || (item.course && item.course.sections[item.selectedSectionIndex]);
+                if (!section) return;
+
+                section.schedules.forEach(s => {
                     if (s.day && s.day.toUpperCase().startsWith(day)) {
                         schs.push({ start: this.toMin(s.start), end: this.toMin(s.end) });
                     }

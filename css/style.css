@@ -539,49 +539,33 @@ select.prism-input option {
 
     /* ============ HEADER ============ */
     header {
-        padding: 10px !important;
-        flex-direction: column !important;
-        align-items: stretch !important;
-        gap: 10px !important;
-    }
-
-    header .flex.items-center.gap-4 {
-        justify-content: center;
-        gap: 10px !important;
+        padding: 12px !important;
+        gap: 12px !important;
     }
 
     header h1 {
-        font-size: 16px !important;
+        font-size: 15px !important;
     }
 
     header p {
-        font-size: 7px !important;
-        letter-spacing: 0.1em !important;
+        font-size: 8px !important;
     }
 
-    /* Logo/Icon Smaller */
-    header .w-12.h-12 {
-        width: 36px !important;
-        height: 36px !important;
+    /* Minimal Statistics Chip for Mobile */
+    header .flex.items-center.gap-3.bg-black\/40 {
+        padding: 6px 12px !important;
+        border-radius: 14px !important;
+        width: auto !important;
+        margin: 0 auto;
     }
 
-    header .w-12.h-12 i {
-        width: 18px !important;
+    header .w-px.h-6 {
         height: 18px !important;
     }
 
-    /* Theme + Credits Row */
-    header .flex.items-center.gap-6 {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 6px !important;
-        width: 100%;
-    }
-
-    header .bg-black\/30 {
-        width: 100%;
-        justify-content: space-between;
-        padding: 8px 12px !important;
+    #header-gap-display,
+    #total-credits {
+        font-size: 13px !important;
     }
 
     /* Theme Color Buttons - Compact Grid */
@@ -693,30 +677,30 @@ select.prism-input option {
 
     /* Explorer Navigation */
     #explorer-nav {
-        padding: 10px !important;
-        flex-direction: column !important;
-        gap: 10px !important;
+        padding: 12px !important;
+        gap: 12px !important;
+        border-radius: 20px !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     }
 
     #explorer-nav .flex.items-center.gap-6 {
         width: 100%;
-        justify-content: space-between;
-        gap: 12px !important;
-    }
-
-    #explorer-nav button {
-        width: 40px !important;
-        height: 40px !important;
+        gap: 10px !important;
     }
 
     #routine-counter {
-        font-size: 15px !important;
+        font-size: 18px !important;
+        font-weight: 900;
+        color: white;
     }
 
     #exit-explorer {
         width: 100%;
-        padding: 9px 14px !important;
-        font-size: 9px !important;
+        padding: 12px !important;
+        font-size: 10px !important;
+        font-weight: 900;
+        letter-spacing: 0.1em;
+        border-radius: 12px !important;
     }
 
     /* Grid Container */
@@ -770,10 +754,22 @@ select.prism-input option {
         letter-spacing: 0.05em !important;
     }
 
+    /* Grid Height Adjustment (13 hours * 50px = 650px) */
+    .relative.h-\[910px\] {
+        height: 650px !important;
+    }
+
+    /* Time & Guide Spacing (70px -> 50px) */
+    .h-\[70px\] {
+        height: 50px !important;
+    }
+
     /* Time Labels Smaller */
     .time-label {
         font-size: 8px !important;
         padding-right: 6px !important;
+        top: -4px !important;
+        /* Adjusted for 50px scale */
     }
 
     /* Time Rail Narrower */
@@ -785,26 +781,23 @@ select.prism-input option {
         margin-left: 55px !important;
     }
 
-    /* Grid Height Adjustment */
-    .relative.h-\[910px\] {
-        height: 620px !important;
-    }
-
     /* Class Blocks */
     .class-block {
-        padding: 4px 5px !important;
-        font-size: 9px !important;
-        border-radius: 7px !important;
+        padding: 6px !important;
+        font-size: 10px !important;
+        border-radius: 8px !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
 
     .class-name {
-        font-size: 8px !important;
-        line-height: 1.2;
-        font-weight: 800;
+        font-size: 9px !important;
+        line-height: 1.1;
+        margin-bottom: 2px;
     }
 
     .class-info {
-        font-size: 7px !important;
+        font-size: 8px !important;
+        opacity: 0.9;
     }
 
     /* ============ BUTTONS & INTERACTIONS ============ */

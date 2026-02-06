@@ -211,14 +211,60 @@ class RoutineController {
         lucide.createIcons();
 
         try {
-            const themeBg = getComputedStyle(document.body).getPropertyValue('--bg-surface').trim() || '#0a0d14';
-            const canvas = await html2canvas(el, { scale: 2, backgroundColor: themeBg });
-            const link = document.createElement('a');
-            link.download = `RoutinePro_${Date.now()}.png`;
-            link.href = canvas.toDataURL();
-            link.click();
+            // Get proper background color and ensure it's not transparent
+            const style = getComputedStyle(document.body);
+            const themeBg = style.getPropertyValue('--bg-surface').trim() || '#0a0d14';
+
+            const canvas = await html2canvas(el, {
+                scale: window.innerWidth < 768 ? 1.5 : 2, // Slightly lower scale on mobile for memory
+                backgroundColor: themeBg,
+                useCORS: true,
+                allowTaint: true,
+                logging: false,
+                onclone: (clonedDoc) => {
+                    // Fix the -4px/-6px alignment shift in the exported image
+                    const labels = clonedDoc.querySelectorAll('.time-label');
+                    const isMob = window.innerWidth < 768;
+                    labels.forEach(l => {
+                        // On mobile we use 50px scale, desktop 70px. 
+                        // html2canvas needs different offset than browser sometimes
+                        l.style.position = 'relative';
+                        l.style.top = isMob ? '-2px' : '-4px';
+                        l.style.display = 'flex';
+                        l.style.alignItems = 'flex-start';
+                        l.style.height = isMob ? '50px' : '70px';
+                    });
+                }
+            });
+
+            // Conversion to PNG
+            const dataUrl = canvas.toDataURL('image/png');
+
+            // For mobile, we sometimes need a direct blob or open in new tab
+            if (/Android|WebOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                // On mobile, opening in new window is often most reliable
+                // The user can then long-press to save
+                const newWindow = window.open();
+                if (newWindow) {
+                    newWindow.document.write(`<img src="${dataUrl}" style="max-width:100%;">`);
+                    this.view.showToast("Image opened! Long-press to save.", "success");
+                } else {
+                    // If popup blocked, try regular download
+                    const link = document.createElement('a');
+                    link.download = `RoutinePro_${Date.now()}.png`;
+                    link.href = dataUrl;
+                    link.click();
+                }
+            } else {
+                // Desktop regular download
+                const link = document.createElement('a');
+                link.download = `RoutinePro_${Date.now()}.png`;
+                link.href = dataUrl;
+                link.click();
+            }
         } catch (err) {
-            this.view.showToast("Export failed", "error");
+            this.view.showToast("Export failed. Try a desktop", "error");
+            console.error(err);
         } finally {
             this.view.exportBtn.disabled = false;
             this.view.exportBtn.innerHTML = originalHTML;
@@ -232,15 +278,16 @@ class RoutineController {
         this.view.explorerNav.classList.toggle('hidden', !isExplorerMode);
         this.view.explorerNav.classList.toggle('flex', isExplorerMode);
 
+        // Always show gap/waiting time in header
+        const currentItems = isExplorerMode ? possibleRoutines[currentRoutineIndex] : selectedCourses;
+        const totalGapMin = this.model.calculateGaps(currentItems);
+        this.view.headerGapDisplay.innerText = this.view.formatGap(totalGapMin);
+
         if (isExplorerMode) {
             this.view.routineCounter.innerText = `${currentRoutineIndex + 1} / ${possibleRoutines.length}`;
-            const totalGapMin = this.model.calculateGaps(possibleRoutines[currentRoutineIndex]);
-            const hrs = Math.floor(totalGapMin / 60);
-            const mins = totalGapMin % 60;
-            this.view.gapDisplay.innerText = totalGapMin === 0 ? "No Waiting Gaps!" : `${hrs > 0 ? hrs + 'h ' : ''}${mins}m Waiting Time`;
+            this.view.gapDisplay.innerText = totalGapMin === 0 ? "No Waiting Gaps!" : `${this.view.formatGap(totalGapMin)} Waiting Time`;
         }
 
-        const currentItems = isExplorerMode ? possibleRoutines[currentRoutineIndex] : selectedCourses;
         this.view.renderSidebar(selectedCourses, isExplorerMode, currentItems, (i) => this.handleRemoveCourse(i), (ci, si) => this.handleSectionChange(ci, si));
         this.view.renderRoutine(currentItems, isExplorerMode);
         this.view.totalCreditsEl.innerText = this.model.calculateCredits();

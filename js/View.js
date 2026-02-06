@@ -14,6 +14,7 @@ class RoutineView {
         this.explorerNav = document.getElementById('explorer-nav');
         this.routineCounter = document.getElementById('routine-counter');
         this.gapDisplay = document.getElementById('gap-info-badge');
+        this.headerGapDisplay = document.getElementById('header-gap-display');
         this.semesterBadge = document.getElementById('semester-badge');
         this.syncModal = document.getElementById('sync-modal');
         this.toastContainer = document.getElementById('toast-container');
@@ -36,6 +37,13 @@ class RoutineView {
         if (this.filterEnd) {
             this.filterEnd.innerHTML = times.map((t, i) => `<option value="${t.v}" ${i === times.length - 1 ? 'selected' : ''}>${t.l}</option>`).join('');
         }
+    }
+
+    formatGap(totalGapMin) {
+        if (totalGapMin === 0) return "0m";
+        const hrs = Math.floor(totalGapMin / 60);
+        const mins = totalGapMin % 60;
+        return `${hrs > 0 ? hrs + 'h ' : ''}${mins}m`;
     }
 
     renderSidebar(selectedCourses, isExplorerMode, currentRoutine, onRemove, onSectionChange) {
@@ -107,8 +115,13 @@ class RoutineView {
             section.schedules.forEach(sch => {
                 const start = this.toMin(sch.start);
                 const end = this.toMin(sch.end);
-                const top = (start - (8 * 60)) * (70 / 60);
-                const height = (end - start) * (70 / 60);
+
+                // Use smaller vertical scale for mobile
+                const isMobile = window.innerWidth < 768;
+                const scale = isMobile ? (50 / 60) : (70 / 60);
+
+                const top = (start - (8 * 60)) * scale;
+                const height = (end - start) * scale;
 
                 if (!dayData[sch.day]) dayData[sch.day] = [];
                 const conflict = !isExplorerMode && dayData[sch.day].some(e => (top < e.end && (top + height) > e.start));
