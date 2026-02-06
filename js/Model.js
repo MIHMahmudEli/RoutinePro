@@ -16,7 +16,7 @@ class RoutineModel {
         if (localCourses) {
             this.allCourses = JSON.parse(localCourses);
         } else {
-            const res = await fetch('courses.json');
+            const res = await fetch('data/courses.json');
             if (res.ok) {
                 this.allCourses = await res.json();
             }

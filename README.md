@@ -2,7 +2,13 @@
 
 RoutinePro is a high-performance, aesthetically stunning web application designed to solve the complex puzzle of university course scheduling. Built with a focus on **Glassmorphism UI** and **Dynamic Logic**, it allows students to generate thousands of possible routine scenarios in seconds.
 
-![RoutinePro Preview](preview.svg)
+## 📂 Project Structure
+
+- **`index.html`**: The main entry point.
+- **`js/`**: Contains the MVC architecture (`Model.js`, `View.js`, `Controller.js`) and the main `app.js`.
+- **`css/`**: Contains all styling for the premium glassmorphic interface.
+- **`assets/`**: Images, icons, and other static assets.
+- **`data/`**: Default course data in JSON format.
 
 ## ✨ Core Features
 
