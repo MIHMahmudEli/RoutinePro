@@ -45,6 +45,33 @@ const courseFileInput = document.getElementById('course-file-input');
 const courseCountDisplay = document.getElementById('course-count-display');
 const lastUpdateDisplay = document.getElementById('last-update-display');
 const syncModal = document.getElementById('sync-modal');
+const toastContainer = document.getElementById('toast-container');
+
+/**
+ * TOAST NOTIFICATION SYSTEM
+ */
+window.showToast = (message, type = 'success') => {
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+
+    const icon = type === 'success' ? 'check-circle' : 'alert-circle';
+    const iconColor = type === 'success' ? 'text-emerald-400' : 'text-rose-400';
+
+    toast.innerHTML = `
+        <div class="toast-icon">
+            <i data-lucide="${icon}" class="w-5 h-5 ${iconColor}"></i>
+        </div>
+        <div class="toast-message">${message}</div>
+    `;
+
+    toastContainer.appendChild(toast);
+    lucide.createIcons();
+
+    setTimeout(() => {
+        toast.classList.add('removing');
+        toast.addEventListener('animationend', () => toast.remove());
+    }, 3000);
+};
 
 /**
  * INITIALIZATION
@@ -162,14 +189,14 @@ window.handleSectionChange = (cIdx, sIdx) => {
  * GENERATION ENGINE
  */
 generateAllBtn.addEventListener('click', () => {
-    if (selectedCourses.length < 1) return alert("Select courses first.");
+    if (selectedCourses.length < 1) return showToast("Select courses first.", "error");
 
     const minS = parseInt(filterStart.value);
     const maxE = parseInt(filterEnd.value);
     const maxC = parseInt(filterSeats.value);
-    const allowedStatuses = Array.from(document.querySelectorAll('.status-check:checked')).map(el => el.value);
+    const allowedStatuses = Array.from(document.querySelectorAll('.status-check:checked')).map(el => el.value.toLowerCase().trim());
     const sortType = filterSort.value;
-    const allowedDays = Array.from(document.querySelectorAll('.day-check:checked')).map(el => el.value.substring(0, 3));
+    const allowedDays = Array.from(document.querySelectorAll('.day-check:checked')).map(el => el.value.substring(0, 3).toLowerCase());
 
     possibleRoutines = [];
 
@@ -180,12 +207,12 @@ generateAllBtn.addEventListener('click', () => {
         for (const sec of course.sections) {
             if (parseInt(sec.count) > maxC && maxC < 100) continue;
 
-            // Strict Status Filter: Must be in the allowed list
-            if (!allowedStatuses.includes(sec.status)) continue;
+            // Strict Status Filter: Must be in the allowed list (Case Insensitive)
+            if (!allowedStatuses.includes(sec.status.toLowerCase().trim())) continue;
 
             let validTime = true;
             for (const s of sec.schedules) {
-                if (toMin(s.start) < minS || toMin(s.end) > maxE || !allowedDays.includes(s.day.substring(0, 3))) {
+                if (toMin(s.start) < minS || toMin(s.end) > maxE || !allowedDays.includes(s.day.substring(0, 3).toLowerCase())) {
                     validTime = false; break;
                 }
             }
@@ -209,7 +236,9 @@ generateAllBtn.addEventListener('click', () => {
     }
 
     find(0, []);
-    if (possibleRoutines.length === 0) return alert("No valid scenarios for these settings.");
+    if (possibleRoutines.length === 0) return showToast("No valid scenarios for these settings.", "error");
+
+    showToast(`Found ${possibleRoutines.length} scenarios!`);
 
     // Sorting & Optimization Engine
     if (sortType === 'gaps') {
@@ -290,9 +319,9 @@ function renderSidebar() {
                 <h3 class="text-xs font-900 uppercase text-white tracking-tight pr-6">${sc.course.baseTitle}</h3>
                 
                 <div class="grid grid-cols-4 gap-2 mt-4 py-2 border-y border-white/5">
-                    <div class="text-center"><p class="text-[8px] text-slate-600 font-black uppercase">Sec</p><p class="text-[11px] font-bold">${section.section}</p></div>
-                    <div class="text-center"><p class="text-[8px] text-slate-600 font-black uppercase">Enr</p><p class="text-[11px] font-bold">${section.count}</p></div>
-                    <div class="text-center"><p class="text-[8px] text-slate-600 font-black uppercase">Cap</p><p class="text-[11px] font-bold">${section.capacity}</p></div>
+                    <div class="text-center"><p class="text-[8px] text-slate-600 font-black uppercase">Sec</p><p class="text-[9px] font-bold">${section.section}</p></div>
+                    <div class="text-center"><p class="text-[8px] text-slate-600 font-black uppercase">Enr</p><p class="text-[9px] font-bold">${section.count}</p></div>
+                    <div class="text-center"><p class="text-[8px] text-slate-600 font-black uppercase">Cap</p><p class="text-[9px] font-bold">${section.capacity}</p></div>
                     <div class="text-center">
                         <p class="text-[8px] text-slate-600 font-black uppercase">Stat</p>
                         <span class="status-tag ${statusClass}">${section.status}</span>
@@ -483,7 +512,7 @@ async function handleFileUpload(e) {
         if (file.name.endsWith('.json')) {
             const text = await file.text();
             const data = JSON.parse(text);
-            saveCourses(data);
+            saveCourses(data, file.name);
         } else if (file.name.endsWith('.xlsx')) {
             const reader = new FileReader();
             reader.onload = async (evt) => {
@@ -494,13 +523,13 @@ async function handleFileUpload(e) {
                 const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
 
                 const courses = parseExcelData(data);
-                saveCourses(courses);
+                saveCourses(courses, file.name);
             };
             reader.readAsBinaryString(file);
         }
     } catch (err) {
         console.error("Upload Error:", err);
-        alert("Failed to process file. Check console for details.");
+        showToast("Failed to process file.", "error");
     } finally {
         setTimeout(() => {
             btn.disabled = false;
@@ -578,7 +607,7 @@ function parseExcelData(rows) {
     });
 }
 
-function saveCourses(data) {
+function saveCourses(data, source = 'Local Storage') {
     allCourses = data;
     localStorage.setItem('routine-pro-courses', JSON.stringify(data));
     const now = new Date().toLocaleString();
@@ -588,6 +617,7 @@ function saveCourses(data) {
     possibleRoutines = [];
     currentRoutineIndex = 0;
     syncWorkspace();
+    showToast(`${data.length} courses loaded from ${source}`);
 }
 
 document.addEventListener('click', (e) => {

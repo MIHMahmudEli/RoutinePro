@@ -217,16 +217,6 @@
                             </div>
                         </div>
 
-                        <!-- Hidden Status Hub -->
-                        <div class="hidden">
-                            <input type="checkbox" value="Open" checked class="status-check">
-                            <input type="checkbox" value="Reserved" checked class="status-check">
-                            <input type="checkbox" value="Cancel" checked class="status-check">
-                            <input type="checkbox" value="Freshman" checked class="status-check">
-                            <input type="checkbox" value="Closed" checked class="status-check">
-                            <input type="radio" name="sort-gap" value="none" checked>
-                            <input type="radio" name="sort-gap" value="min">
-                        </div>
                     </div>
 
                     <button id="generate-all-btn" class="prism-btn w-full py-4">
@@ -402,6 +392,8 @@
             </button>
         </div>
     </div>
+
+    <div id="toast-container" class="fixed bottom-6 right-6 z-[300] space-y-3 pointer-events-none"></div>
 
     <script src="app.js"></script>
 </body>
