@@ -326,8 +326,8 @@ function renderRoutine() {
         section.schedules.forEach(sch => {
             const start = toMin(sch.start);
             const end = toMin(sch.end);
-            const top = start - (8 * 60);
-            const height = end - start;
+            const top = (start - (8 * 60)) * (70 / 60);
+            const height = (end - start) * (70 / 60);
 
             if (!dayData[sch.day]) dayData[sch.day] = [];
             const conflict = !isExplorerMode && dayData[sch.day].some(e => (top < e.end && (top + height) > e.start));
@@ -356,8 +356,8 @@ function renderRoutine() {
                 <div class="class-name">${title}</div>
                 <div class="class-info">${sch.start} - ${sch.end}</div>
                 <div class="flex justify-between items-center mt-auto opacity-60">
-                    <span class="text-[9px] font-black">SEC ${section.section}</span>
-                    <span class="text-[9px] font-black">RM ${sch.room}</span>
+                    <span class="text-[8px] font-black">SEC ${section.section}</span>
+                    <span class="text-[8px] font-black">RM ${sch.room}</span>
                 </div>
             `;
             const b = document.querySelector(`.day-bucket[data-day="${sch.day}"]`);

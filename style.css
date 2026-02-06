@@ -286,15 +286,16 @@ select.prism-input option {
     left: 4px;
     right: 4px;
     border-radius: 12px;
-    padding: 6px 8px;
-    font-size: 0.7rem;
+    padding: 5px 7px;
+    font-size: 0.50rem;
     border: 1px solid rgba(255, 255, 255, 0.08);
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 2px;
     transition: all 0.2s ease;
     cursor: default;
     z-index: 10;
+    overflow: hidden;
 }
 
 .class-block:hover {
@@ -318,14 +319,14 @@ select.prism-input option {
     font-weight: 800;
     color: white;
     line-height: 1.1;
-    font-size: 0.65rem;
+    font-size: 0.62rem;
     word-break: break-word;
     /* Show all text */
     overflow-wrap: break-word;
 }
 
 .class-info {
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     color: var(--text-secondary);
     font-weight: 500;
     margin-top: 1px;
@@ -771,8 +772,8 @@ select.prism-input option {
     }
 
     /* Grid Height Adjustment */
-    .relative.h-\[800px\] {
-        height: 550px !important;
+    .relative.h-\[910px\] {
+        height: 620px !important;
     }
 
     /* Class Blocks */
@@ -783,13 +784,13 @@ select.prism-input option {
     }
 
     .class-name {
-        font-size: 8.5px !important;
+        font-size: 8px !important;
         line-height: 1.2;
         font-weight: 800;
     }
 
     .class-info {
-        font-size: 7.5px !important;
+        font-size: 7px !important;
     }
 
     /* ============ BUTTONS & INTERACTIONS ============ */
@@ -936,9 +937,9 @@ select.prism-input option {
         min-width: 700px;
     }
 
-    .relative.h-\[800px\],
+    .relative.h-\[910px\],
     .relative.h-\[600px\] {
-        height: 500px !important;
+        height: 580px !important;
     }
 
     /* Time Rail Ultra Compact */
@@ -963,11 +964,11 @@ select.prism-input option {
     }
 
     .class-name {
-        font-size: 8px !important;
+        font-size: 7.5px !important;
     }
 
     .class-info {
-        font-size: 7px !important;
+        font-size: 6.5px !important;
     }
 }
 
