@@ -53,7 +53,7 @@ class RoutineModel {
     }
 
     generateRoutines(filters) {
-        const { minS, maxE, maxC, allowedStatuses, allowedDays } = filters;
+        const { minS, maxE, maxC, allowedStatuses, allowedDays, sortBy } = filters;
         this.possibleRoutines = [];
 
         const find = (idx, current) => {
@@ -84,6 +84,22 @@ class RoutineModel {
         };
 
         find(0, []);
+
+        if (sortBy === 'gaps') {
+            // Sort to bring most compact routines to the top
+            this.possibleRoutines.sort((a, b) => {
+                const gapsA = this.calculateGaps(a);
+                const gapsB = this.calculateGaps(b);
+                if (gapsA !== gapsB) return gapsA - gapsB;
+
+                // If gaps are equal, prefer fewer days on campus
+                return this.countDays(a) - this.countDays(b);
+            });
+
+            // Apply strict filter: only show routines with <= 5h 40m (340 mins) of waiting time
+            this.possibleRoutines = this.possibleRoutines.filter(r => this.calculateGaps(r) <= 340);
+        }
+
         return this.possibleRoutines;
     }
 
@@ -91,10 +107,22 @@ class RoutineModel {
         return existing.some(item => {
             const secB = item.section;
             return secA.schedules.some(schA => secB.schedules.some(schB => {
-                if (schA.day !== schB.day) return false;
+                const dayA = this.normalizeDay(schA.day);
+                const dayB = this.normalizeDay(schB.day);
+                if (dayA !== dayB) return false;
                 return (this.toMin(schA.start) < this.toMin(schB.end) && this.toMin(schA.end) > this.toMin(schB.start));
             }));
         });
+    }
+
+    normalizeDay(dayStr) {
+        if (!dayStr) return "";
+        const raw = dayStr.trim().toUpperCase();
+        const dayMap = { 'SUN': 'Sunday', 'MON': 'Monday', 'TUE': 'Tuesday', 'WED': 'Wednesday', 'THU': 'Thursday', 'FRI': 'Friday', 'SAT': 'Saturday' };
+        for (const k in dayMap) {
+            if (raw.startsWith(k)) return dayMap[k];
+        }
+        return dayStr;
     }
 
     toMin(s) {
@@ -107,16 +135,30 @@ class RoutineModel {
         } catch (e) { return 0; }
     }
 
+    countDays(routine) {
+        const days = new Set();
+        routine.forEach(item => {
+            item.section.schedules.forEach(s => {
+                if (s.day) days.add(this.normalizeDay(s.day));
+            });
+        });
+        return days.size;
+    }
+
     calculateGaps(routine) {
         let totalGaps = 0;
-        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        days.forEach(day => {
+        const dayKeys = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+
+        dayKeys.forEach(day => {
             let schs = [];
             routine.forEach(item => {
                 item.section.schedules.forEach(s => {
-                    if (s.day === day) schs.push({ start: this.toMin(s.start), end: this.toMin(s.end) });
+                    if (s.day && s.day.toUpperCase().startsWith(day)) {
+                        schs.push({ start: this.toMin(s.start), end: this.toMin(s.end) });
+                    }
                 });
             });
+
             if (schs.length > 1) {
                 schs.sort((a, b) => a.start - b.start);
                 for (let i = 0; i < schs.length - 1; i++) {
@@ -182,7 +224,8 @@ class RoutineModel {
             const fullTitle = String(row[colMap.title] || '').trim();
             const sectionName = String(row[colMap.section] || '').trim();
             const classType = String(row[colMap.type] || '').trim();
-            const day = String(row[colMap.day] || '').trim();
+            const day = this.normalizeDay(String(row[colMap.day] || ''));
+
             const startTime = String(row[colMap.start] || '').trim();
             const endTime = String(row[colMap.end] || '').trim();
             const room = String(row[colMap.room] || '').trim();

@@ -188,6 +188,7 @@ class RoutineController {
             minS: parseInt(document.getElementById('filter-start').value),
             maxE: parseInt(document.getElementById('filter-end').value),
             maxC: parseInt(document.getElementById('filter-seats').value),
+            sortBy: document.getElementById('filter-sort').value,
             allowedStatuses: Array.from(document.querySelectorAll('.status-check:checked')).map(el => el.value.toLowerCase().trim()),
             allowedDays: Array.from(document.querySelectorAll('.day-check:checked')).map(el => el.value.substring(0, 3).toLowerCase())
         };
