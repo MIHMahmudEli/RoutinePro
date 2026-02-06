@@ -25,8 +25,13 @@
                     <i data-lucide="layout-grid" class="w-6 h-6 text-emerald-400"></i>
                 </div>
                 <div>
-                    <h1 class="text-xl font-900 tracking-tighter">ROUTINE<span
-                            class="text-emerald-400 italic">PRO</span></h1>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-xl font-900 tracking-tighter">ROUTINE<span
+                                class="text-emerald-400 italic">PRO</span></h1>
+                        <span id="semester-badge"
+                            class="px-2 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-[9px] font-black text-emerald-400 uppercase tracking-widest hidden">SPRING
+                            2024-25</span>
+                    </div>
                     <p class="text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em]">Next-Gen Course Architect
                     </p>
                 </div>
@@ -365,6 +370,13 @@
                         <div id="last-update-display" class="text-[9px] font-bold text-slate-600 uppercase">Never Synced
                         </div>
                     </div>
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="text-[9px] font-black text-slate-600 uppercase pl-1 tracking-widest">Target
+                        Semester</label>
+                    <input type="text" id="semester-input" class="prism-input !py-3 !text-xs"
+                        placeholder="e.g. SPRING 2024-25">
                 </div>
 
                 <div class="relative group">

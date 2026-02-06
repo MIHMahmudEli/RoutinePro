@@ -46,6 +46,8 @@ const courseCountDisplay = document.getElementById('course-count-display');
 const lastUpdateDisplay = document.getElementById('last-update-display');
 const syncModal = document.getElementById('sync-modal');
 const toastContainer = document.getElementById('toast-container');
+const semesterBadge = document.getElementById('semester-badge');
+const semesterInput = document.getElementById('semester-input');
 
 /**
  * TOAST NOTIFICATION SYSTEM
@@ -492,6 +494,15 @@ function updateSyncUI() {
     if (courseCountDisplay) courseCountDisplay.innerText = `${allCourses.length} Courses`;
     const lastSync = localStorage.getItem('routine-pro-last-sync');
     if (lastUpdateDisplay) lastUpdateDisplay.innerText = lastSync ? `Last Sync: ${lastSync}` : 'Default (Pre-loaded)';
+
+    const semester = localStorage.getItem('routine-pro-semester');
+    if (semester && semesterBadge) {
+        semesterBadge.innerText = semester;
+        semesterBadge.classList.remove('hidden');
+        if (semesterInput) semesterInput.value = semester;
+    } else if (semesterBadge) {
+        semesterBadge.classList.add('hidden');
+    }
 }
 
 if (courseFileInput) {
@@ -509,23 +520,42 @@ async function handleFileUpload(e) {
     lucide.createIcons();
 
     try {
+        const targetSemester = semesterInput?.value || 'Updated Semester';
+
         if (file.name.endsWith('.json')) {
             const text = await file.text();
             const data = JSON.parse(text);
-            saveCourses(data, file.name);
+            saveCourses(data, file.name, targetSemester);
         } else if (file.name.endsWith('.xlsx')) {
             const reader = new FileReader();
             reader.onload = async (evt) => {
-                const bstr = evt.target.result;
-                const wb = XLSX.read(bstr, { type: 'binary' });
+                const dataArr = new Uint8Array(evt.target.result);
+                const wb = XLSX.read(dataArr, { type: 'array' });
                 const wsname = wb.SheetNames[0];
                 const ws = wb.Sheets[wsname];
                 const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
 
+                // Auto-detect semester from sheet name or first few rows of data
+                let detectedSemester = "";
+                const headerPeek = JSON.stringify(data.slice(0, 10)).toUpperCase();
+                const wsUpper = wsname.toUpperCase();
+                const combinedSearch = wsUpper + " " + headerPeek;
+
+                if (combinedSearch.includes('SPRING')) detectedSemester = 'SPRING';
+                else if (combinedSearch.includes('FALL')) detectedSemester = 'FALL';
+                else if (combinedSearch.includes('SUMMER')) detectedSemester = 'SUMMER';
+
+                const yearMatch = combinedSearch.match(/\d{4}-\d{2,4}/);
+                if (yearMatch && detectedSemester) detectedSemester += ` ${yearMatch[0]}`;
+
+                // Final detected value OR the manual input OR default
+                const finalSemester = detectedSemester || targetSemester || 'Updated Semester';
+
                 const courses = parseExcelData(data);
-                saveCourses(courses, file.name);
+                saveCourses(courses, file.name, finalSemester);
+                if (semesterInput) semesterInput.value = finalSemester;
             };
-            reader.readAsBinaryString(file);
+            reader.readAsArrayBuffer(file);
         }
     } catch (err) {
         console.error("Upload Error:", err);
@@ -542,33 +572,62 @@ async function handleFileUpload(e) {
 
 function parseExcelData(rows) {
     let headerIdx = -1;
+    let colMap = {};
+
+    // Find the header row more robustly
     for (let i = 0; i < rows.length; i++) {
-        if (rows[i] && rows[i].includes("Class ID")) { headerIdx = i; break; }
+        const row = rows[i];
+        if (!row || !Array.isArray(row)) continue;
+
+        const rowStr = row.map(c => String(c || '').toUpperCase().trim());
+        if (rowStr.includes("CLASS ID") || rowStr.includes("COURSE TITLE")) {
+            headerIdx = i;
+            // Map columns
+            rowStr.forEach((cell, idx) => {
+                if (cell.includes("CLASS ID")) colMap.id = idx;
+                if (cell.includes("COURSE CODE")) colMap.code = idx;
+                if (cell.includes("STATUS")) colMap.status = idx;
+                if (cell.includes("CAPACITY")) colMap.capacity = idx;
+                if (cell.includes("COUNT")) colMap.count = idx;
+                if (cell.includes("COURSE TITLE")) colMap.title = idx;
+                if (cell.includes("SECTION")) colMap.section = idx;
+                if (cell.includes("TYPE")) colMap.type = idx;
+                if (cell.includes("DAY")) colMap.day = idx;
+                if (cell.includes("START TIME")) colMap.start = idx;
+                if (cell.includes("END TIME")) colMap.end = idx;
+                if (cell.includes("ROOM")) colMap.room = idx;
+            });
+            break;
+        }
     }
 
-    if (headerIdx === -1) throw new Error("Could not find Class ID header");
+    if (headerIdx === -1 || colMap.id === undefined) {
+        throw new Error("Could not find a valid course report header structure.");
+    }
 
     const dataRows = rows.slice(headerIdx + 1);
     const coursesMap = {};
     let currentCourseCode = "";
 
     dataRows.forEach(row => {
-        const classId = String(row[1] || '').trim();
-        if (!classId || classId === "nan") return;
+        const classId = String(row[colMap.id] || '').trim();
+        if (!classId || classId === "nan" || classId.toUpperCase().includes("CLASS ID")) return;
 
-        const rawCode = String(row[2] || '').trim();
+        const rawCode = String(row[colMap.code] || '').trim();
         if (rawCode && rawCode !== "nan") currentCourseCode = rawCode;
 
-        const status = String(row[3] || 'Open');
-        const capacity = String(row[4] || '0');
-        const count = String(row[5] || '0');
-        const fullTitle = String(row[6] || '');
-        const sectionName = String(row[7] || '');
-        const classType = String(row[9] || '');
-        const day = String(row[10] || '');
-        const startTime = String(row[11] || '');
-        const endTime = String(row[12] || '');
-        const room = String(row[13] || '');
+        const status = String(row[colMap.status] || 'Open').trim();
+        const capacity = String(row[colMap.capacity] || '0').trim();
+        const count = String(row[colMap.count] || '0').trim();
+        const fullTitle = String(row[colMap.title] || '').trim();
+        const sectionName = String(row[colMap.section] || '').trim();
+        const classType = String(row[colMap.type] || '').trim();
+        const day = String(row[colMap.day] || '').trim();
+        const startTime = String(row[colMap.start] || '').trim();
+        const endTime = String(row[colMap.end] || '').trim();
+        const room = String(row[colMap.room] || '').trim();
+
+        if (!fullTitle) return; // Skip rows without titles
 
         const baseTitle = fullTitle.replace(/\s*\[.*\]$/, '').trim();
         const key = `${baseTitle}@@@${currentCourseCode}`;
@@ -607,11 +666,16 @@ function parseExcelData(rows) {
     });
 }
 
-function saveCourses(data, source = 'Local Storage') {
+function saveCourses(data, source = 'Local Storage', semesterName = null) {
     allCourses = data;
     localStorage.setItem('routine-pro-courses', JSON.stringify(data));
     const now = new Date().toLocaleString();
     localStorage.setItem('routine-pro-last-sync', now);
+
+    if (semesterName) {
+        localStorage.setItem('routine-pro-semester', semesterName);
+    }
+
     updateSyncUI();
     selectedCourses = [];
     possibleRoutines = [];
