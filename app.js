@@ -541,12 +541,17 @@ async function handleFileUpload(e) {
                 const wsUpper = wsname.toUpperCase();
                 const combinedSearch = wsUpper + " " + headerPeek;
 
-                if (combinedSearch.includes('SPRING')) detectedSemester = 'SPRING';
-                else if (combinedSearch.includes('FALL')) detectedSemester = 'FALL';
-                else if (combinedSearch.includes('SUMMER')) detectedSemester = 'SUMMER';
+                if (combinedSearch.includes('SPRING') || combinedSearch.includes('SPRI')) detectedSemester = 'SPRING';
+                else if (combinedSearch.includes('FALL') || combinedSearch.includes('FAL')) detectedSemester = 'FALL';
+                else if (combinedSearch.includes('SUMMER') || combinedSearch.includes('SUMM')) detectedSemester = 'SUMMER';
 
+                // Matches 2024-25, 2025-26, 2024-2025, etc.
                 const yearMatch = combinedSearch.match(/\d{4}-\d{2,4}/);
-                if (yearMatch && detectedSemester) detectedSemester += ` ${yearMatch[0]}`;
+                if (yearMatch && detectedSemester) {
+                    detectedSemester += ` ${yearMatch[0]}`;
+                } else if (yearMatch && !detectedSemester) {
+                    detectedSemester = yearMatch[0];
+                }
 
                 // Final detected value OR the manual input OR default
                 const finalSemester = detectedSemester || targetSemester || 'Updated Semester';
