@@ -10,6 +10,7 @@
     --text-primary: #ffffff;
     --text-secondary: #94a3b8;
     --text-muted: #475569;
+    --text-on-accent: #000000;
     --font-main: 'Inter', sans-serif;
 }
 
@@ -22,6 +23,7 @@
     /* Pink */
     --accent-glow: rgba(168, 85, 247, 0.15);
     --border-glass: rgba(255, 255, 255, 0.08);
+    --text-on-accent: #ffffff;
 }
 
 [data-theme="crimson"] {
@@ -33,6 +35,7 @@
     /* Orange */
     --accent-glow: rgba(244, 63, 94, 0.15);
     --border-glass: rgba(255, 255, 255, 0.08);
+    --text-on-accent: #ffffff;
 }
 
 [data-theme="ocean"] {
@@ -44,6 +47,7 @@
     /* Blue */
     --accent-glow: rgba(6, 182, 212, 0.15);
     --border-glass: rgba(255, 255, 255, 0.08);
+    --text-on-accent: #ffffff;
 }
 
 [data-theme="sandstone"] {
@@ -55,6 +59,17 @@
     /* Orange-800 */
     --accent-glow: rgba(245, 158, 11, 0.15);
     --border-glass: rgba(255, 255, 255, 0.08);
+    --text-on-accent: #000000;
+}
+
+[data-theme="spectrum"] {
+    --bg-base: #05070a;
+    --bg-surface: #0d1117;
+    --accent-primary: #7c3aed;
+    --accent-secondary: #0891b2;
+    --accent-glow: rgba(124, 58, 237, 0.15);
+    --border-glass: rgba(255, 255, 255, 0.1);
+    --text-on-accent: #ffffff;
 }
 
 * {
@@ -194,7 +209,7 @@ select.prism-input option {
 
 .prism-btn {
     background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-    color: #000;
+    color: var(--text-on-accent);
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.05em;

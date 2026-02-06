@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 
 <body class="p-4 lg:p-8">
@@ -47,6 +48,9 @@
                             class="w-4 h-4 rounded-full bg-cyan-500 border border-white/20" title="Ocean"></button>
                         <button onclick="setTheme('sandstone')"
                             class="w-4 h-4 rounded-full bg-amber-500 border border-white/20" title="Sandstone"></button>
+                        <button onclick="setTheme('spectrum')"
+                            class="w-4 h-4 rounded-full bg-gradient-to-tr from-pink-500 via-purple-500 to-cyan-500 border border-white/20"
+                            title="Spectrum (Dynamic Colors)"></button>
                     </div>
                 </div>
 
@@ -54,6 +58,16 @@
                     <span class="text-[10px] font-black text-slate-600 uppercase">Credits</span>
                     <span id="total-credits" class="text-xl font-900 text-white leading-none">0</span>
                 </div>
+                <button onclick="document.getElementById('sync-modal').classList.remove('hidden')"
+                    class="prism-btn group !bg-emerald-500/10 !text-emerald-400 border border-emerald-500/20 hover:!bg-emerald-500 hover:!text-black">
+                    <div class="relative">
+                        <i data-lucide="refresh-cw"
+                            class="w-4 h-4 group-hover:rotate-180 transition-transform duration-500"></i>
+                        <span
+                            class="absolute -top-1 -right-1 w-2 h-2 bg-emerald-400 rounded-full animate-pulse border-2 border-black"></span>
+                    </div>
+                    PORTAL SYNC
+                </button>
                 <button id="export-btn"
                     class="prism-btn !bg-white/5 !text-white border border-white/10 hover:!bg-white/10">
                     <i data-lucide="download" class="w-4 h-4"></i> EXPORT PNG
@@ -324,6 +338,68 @@
                     </div>
                 </div>
             </main>
+        </div>
+    </div>
+
+    <!-- Dynamic Sync Modal -->
+    <div id="sync-modal"
+        class="hidden fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div class="prism-card max-w-md w-full p-8 space-y-6 animate-pop border-emerald-500/30">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div
+                        class="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center border border-emerald-500/30">
+                        <i data-lucide="cloud-lightning" class="w-6 h-6 text-emerald-400"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-900 tracking-tighter uppercase">Sync Manager</h2>
+                        <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Update Course Library
+                        </p>
+                    </div>
+                </div>
+                <button onclick="document.getElementById('sync-modal').classList.add('hidden')"
+                    class="text-slate-500 hover:text-white transition-colors">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4">
+                <div class="p-4 bg-emerald-500/5 border border-emerald-500/10 rounded-2xl space-y-3">
+                    <div
+                        class="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-emerald-400/60">
+                        <span>Current Database</span>
+                        <span id="sync-status-badge">Live View</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div id="course-count-display" class="text-2xl font-900">0 Courses</div>
+                        <div id="last-update-display" class="text-[9px] font-bold text-slate-600 uppercase">Never Synced
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative group">
+                    <input type="file" id="course-file-input"
+                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" accept=".xlsx,.json">
+                    <div
+                        class="border-2 border-dashed border-white/10 group-hover:border-emerald-500/50 rounded-2xl p-8 text-center transition-all bg-white/[0.02] group-hover:bg-emerald-500/5">
+                        <i data-lucide="upload-cloud"
+                            class="w-10 h-10 text-slate-600 group-hover:text-emerald-400 mx-auto mb-4 transition-all group-hover:-translate-y-1"></i>
+                        <p class="text-xs font-bold text-slate-400 group-hover:text-white transition-colors">Drop
+                            offered course report here</p>
+                        <p class="text-[9px] text-slate-600 font-black uppercase mt-2">Supports .xlsx or .json</p>
+                    </div>
+                </div>
+
+                <div class="text-[9px] text-slate-500 font-bold leading-relaxed text-center px-4">
+                    Upload the <span class="text-emerald-400">Offered Course Report.xlsx</span> exported from the portal
+                    to refresh the entire course database for the current semester.
+                </div>
+            </div>
+
+            <button onclick="document.getElementById('course-file-input').click()"
+                class="prism-btn w-full py-4 !bg-emerald-500 !text-black shadow-[0_0_20px_rgba(16,185,129,0.3)]">
+                SELECT EXCEL FILE
+            </button>
         </div>
     </div>
 

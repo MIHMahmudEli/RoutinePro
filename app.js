@@ -13,6 +13,7 @@ let isExplorerMode = false;
 window.setTheme = (theme) => {
     document.body.setAttribute('data-theme', theme);
     localStorage.setItem('routine-pro-theme', theme);
+    if (typeof renderRoutine === 'function') renderRoutine();
 };
 // Restore Theme
 const savedTheme = localStorage.getItem('routine-pro-theme');
@@ -39,14 +40,28 @@ const filterSeats = document.getElementById('filter-seats');
 const seatValDisplay = document.getElementById('seat-val');
 const filterSort = document.getElementById('filter-sort');
 
+// Sync Data Elements
+const courseFileInput = document.getElementById('course-file-input');
+const courseCountDisplay = document.getElementById('course-count-display');
+const lastUpdateDisplay = document.getElementById('last-update-display');
+const syncModal = document.getElementById('sync-modal');
+
 /**
  * INITIALIZATION
  */
 async function initialize() {
     try {
-        const res = await fetch('courses.json');
-        if (!res.ok) throw new Error('Data unavailable');
-        allCourses = await res.json();
+        const localCourses = localStorage.getItem('routine-pro-courses');
+        if (localCourses) {
+            allCourses = JSON.parse(localCourses);
+            updateSyncUI();
+        } else {
+            const res = await fetch('courses.json');
+            if (res.ok) {
+                allCourses = await res.json();
+                updateSyncUI();
+            }
+        }
 
         const times = [
             { v: 480, l: '08:00 AM' }, { v: 540, l: '09:00 AM' }, { v: 600, l: '10:00 AM' },
@@ -87,22 +102,29 @@ searchInput.addEventListener('input', (e) => {
     ).slice(0, 15);
 
     if (results.length > 0) {
-        suggestions.innerHTML = results.map(c => `
-            <div class="p-4 hover:bg-emerald-500/5 cursor-pointer border-b border-white/5 group transition-colors" 
-                 onclick="handleAddCourse('${c.baseTitle.replace(/'/g, "\\'")}', '${c.code}')">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <div class="text-white text-sm font-bold group-hover:text-emerald-400 transition-colors uppercase">${c.baseTitle}</div>
-                        <div class="text-[10px] text-slate-500 uppercase font-black mt-1 tracking-widest">
-                            ${c.code || 'CORE'} • ${c.sections.length} Dept Sections
+        suggestions.innerHTML = results.map(c => {
+            const searchAccent = document.body.getAttribute('data-theme') === 'spectrum'
+                ? `style="border-left: 3px solid hsla(${getCourseHue(c.baseTitle)}, 70%, 60%, 0.8)"`
+                : '';
+
+            return `
+                <div class="p-4 hover:bg-emerald-500/5 cursor-pointer border-b border-white/5 group transition-colors" 
+                    ${searchAccent}
+                    onclick="handleAddCourse('${c.baseTitle.replace(/'/g, "\\'")}', '${c.code}')">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <div class="text-white text-sm font-bold group-hover:text-emerald-400 transition-colors uppercase">${c.baseTitle}</div>
+                            <div class="text-[10px] text-slate-500 uppercase font-black mt-1 tracking-widest">
+                                ${c.code || 'CORE'} • ${c.sections.length} Dept Sections
+                            </div>
+                        </div>
+                        <div class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500 group-hover:bg-emerald-500 group-hover:text-black transition-all">
+                            <i data-lucide="plus" class="w-4 h-4"></i>
                         </div>
                     </div>
-                    <div class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500 group-hover:bg-emerald-500 group-hover:text-black transition-all">
-                        <i data-lucide="plus" class="w-4 h-4"></i>
-                    </div>
                 </div>
-            </div>
-        `).join('');
+            `;
+        }).join('');
         suggestions.classList.remove('hidden');
         lucide.createIcons();
     } else {
@@ -259,8 +281,11 @@ function renderSidebar() {
 
         const statusClass = `tag-${section.status.toLowerCase()}`;
 
+        const accentStyle = document.body.getAttribute('data-theme') === 'spectrum'
+            ? `style="border-left: 4px solid hsla(${getCourseHue(sc.course.baseTitle)}, 70%, 60%, 0.8)"`
+            : '';
         return `
-            <div class="sidebar-item group">
+            <div class="sidebar-item group" ${accentStyle}>
                 ${!isExplorerMode ? `<button onclick="handleRemoveCourse(${i})" class="absolute top-4 right-4 text-slate-600 hover:text-rose-500"><i data-lucide="x" class="w-4 h-4"></i></button>` : ''}
                 <h3 class="text-xs font-900 uppercase text-white tracking-tight pr-6">${sc.course.baseTitle}</h3>
                 
@@ -310,6 +335,21 @@ function renderRoutine() {
 
             const block = document.createElement('div');
             block.className = `class-block ${sch.type.toLowerCase()}`;
+
+            // Spectrum Dynamic Colors
+            if (document.body.getAttribute('data-theme') === 'spectrum') {
+                const hue = getCourseHue(title);
+                const colorBase = `hsla(${hue}, 70%, 60%, 0.15)`;
+                const colorSolid = `hsla(${hue}, 70%, 60%, 0.9)`;
+
+                block.style.background = `linear-gradient(135deg, ${colorBase}, rgba(255,255,255,0.02))`;
+                block.style.backdropFilter = 'blur(10px)';
+                block.style.webkitBackdropFilter = 'blur(10px)';
+                block.style.border = '1px solid rgba(255,255,255,0.1)';
+                block.style.borderLeft = `4px solid ${colorSolid}`;
+                block.style.boxShadow = `0 8px 32px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255,255,255,0.05)`;
+            }
+
             block.style.top = `${top}px`;
             block.style.height = `${height}px`;
             block.innerHTML = `
@@ -325,6 +365,14 @@ function renderRoutine() {
         });
     });
     conflictBadge.classList.toggle('hidden', !globalConflict);
+}
+
+function getCourseHue(title) {
+    let hash = 0;
+    for (let i = 0; i < title.length; i++) {
+        hash = title.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return Math.abs(hash % 360);
 }
 
 function calculateCredits() {
@@ -408,5 +456,143 @@ exportBtn.onclick = async () => {
     }
 };
 
-document.addEventListener('click', (e) => { if (!searchInput.contains(e.target) && !suggestions.contains(e.target)) suggestions.classList.add('hidden'); });
+/**
+ * SYNC & DATA MANAGEMENT
+ */
+function updateSyncUI() {
+    if (courseCountDisplay) courseCountDisplay.innerText = `${allCourses.length} Courses`;
+    const lastSync = localStorage.getItem('routine-pro-last-sync');
+    if (lastUpdateDisplay) lastUpdateDisplay.innerText = lastSync ? `Last Sync: ${lastSync}` : 'Default (Pre-loaded)';
+}
+
+if (courseFileInput) {
+    courseFileInput.addEventListener('change', handleFileUpload);
+}
+
+async function handleFileUpload(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const btn = e.target.closest('#sync-modal').querySelector('.prism-btn');
+    const originalText = btn.innerText;
+    btn.disabled = true;
+    btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> PROCESSING...`;
+    lucide.createIcons();
+
+    try {
+        if (file.name.endsWith('.json')) {
+            const text = await file.text();
+            const data = JSON.parse(text);
+            saveCourses(data);
+        } else if (file.name.endsWith('.xlsx')) {
+            const reader = new FileReader();
+            reader.onload = async (evt) => {
+                const bstr = evt.target.result;
+                const wb = XLSX.read(bstr, { type: 'binary' });
+                const wsname = wb.SheetNames[0];
+                const ws = wb.Sheets[wsname];
+                const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
+
+                const courses = parseExcelData(data);
+                saveCourses(courses);
+            };
+            reader.readAsBinaryString(file);
+        }
+    } catch (err) {
+        console.error("Upload Error:", err);
+        alert("Failed to process file. Check console for details.");
+    } finally {
+        setTimeout(() => {
+            btn.disabled = false;
+            btn.innerText = originalText;
+            lucide.createIcons();
+            if (syncModal) syncModal.classList.add('hidden');
+        }, 1500);
+    }
+}
+
+function parseExcelData(rows) {
+    let headerIdx = -1;
+    for (let i = 0; i < rows.length; i++) {
+        if (rows[i] && rows[i].includes("Class ID")) { headerIdx = i; break; }
+    }
+
+    if (headerIdx === -1) throw new Error("Could not find Class ID header");
+
+    const dataRows = rows.slice(headerIdx + 1);
+    const coursesMap = {};
+    let currentCourseCode = "";
+
+    dataRows.forEach(row => {
+        const classId = String(row[1] || '').trim();
+        if (!classId || classId === "nan") return;
+
+        const rawCode = String(row[2] || '').trim();
+        if (rawCode && rawCode !== "nan") currentCourseCode = rawCode;
+
+        const status = String(row[3] || 'Open');
+        const capacity = String(row[4] || '0');
+        const count = String(row[5] || '0');
+        const fullTitle = String(row[6] || '');
+        const sectionName = String(row[7] || '');
+        const classType = String(row[9] || '');
+        const day = String(row[10] || '');
+        const startTime = String(row[11] || '');
+        const endTime = String(row[12] || '');
+        const room = String(row[13] || '');
+
+        const baseTitle = fullTitle.replace(/\s*\[.*\]$/, '').trim();
+        const key = `${baseTitle}@@@${currentCourseCode}`;
+
+        if (!coursesMap[key]) {
+            coursesMap[key] = {
+                code: currentCourseCode,
+                baseTitle: baseTitle,
+                sections: {}
+            };
+        }
+
+        if (!coursesMap[key].sections[sectionName]) {
+            coursesMap[key].sections[sectionName] = {
+                id: classId,
+                section: sectionName,
+                status: status,
+                capacity: capacity,
+                count: count,
+                schedules: []
+            };
+        }
+
+        coursesMap[key].sections[sectionName].schedules.push({
+            day: day,
+            start: startTime,
+            end: endTime,
+            room: room,
+            type: classType
+        });
+    });
+
+    return Object.values(coursesMap).map(data => {
+        data.sections = Object.values(data.sections).sort((a, b) => a.section.localeCompare(b.section));
+        return data;
+    });
+}
+
+function saveCourses(data) {
+    allCourses = data;
+    localStorage.setItem('routine-pro-courses', JSON.stringify(data));
+    const now = new Date().toLocaleString();
+    localStorage.setItem('routine-pro-last-sync', now);
+    updateSyncUI();
+    selectedCourses = [];
+    possibleRoutines = [];
+    currentRoutineIndex = 0;
+    syncWorkspace();
+}
+
+document.addEventListener('click', (e) => {
+    if (searchInput && !searchInput.contains(e.target) && suggestions && !suggestions.contains(e.target)) {
+        suggestions.classList.add('hidden');
+    }
+});
 initialize();
