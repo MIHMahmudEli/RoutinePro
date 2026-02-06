@@ -275,9 +275,12 @@ select.prism-input option {
 }
 
 .time-label {
-    font-size: 0.7rem;
+    font-size: 0.70rem;
     color: var(--text-muted);
-    font-weight: 600;
+    font-weight: 800;
+    position: relative;
+    top: -6px;
+    /* Shift up to center the line through the text */
 }
 
 /* Class Blocks */
