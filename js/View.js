@@ -53,7 +53,7 @@ class RoutineView {
         return `${hrs > 0 ? hrs + 'h ' : ''}${mins}m`;
     }
 
-    renderSidebar(selectedCourses, isExplorerMode, currentRoutine, onRemove, onSectionChange, onEdit) {
+    renderSidebar(selectedCourses, isExplorerMode, currentRoutine, onRemove, onSectionChange, onEdit, onTogglePin) {
         if (selectedCourses.length === 0) {
             this.selectedList.innerHTML = `<div class="text-center py-12 opacity-20 border-2 border-dashed border-white/5 rounded-2xl"><i data-lucide="command" class="w-8 h-8 mx-auto mb-2"></i><p class="text-[10px] font-bold uppercase tracking-widest">Awaiting Input</p></div>`;
             lucide.createIcons();
@@ -61,7 +61,6 @@ class RoutineView {
         }
 
         this.selectedList.innerHTML = selectedCourses.map((sc, i) => {
-            // ... (lines 72-112 are unchanged - using a multi_replace later if needed, but for now I'll just write it out to be safe)
             const section = isExplorerMode
                 ? currentRoutine.find(item => item.courseTitle === sc.course.baseTitle).section
                 : sc.course.sections[sc.selectedSectionIndex];
@@ -75,12 +74,14 @@ class RoutineView {
             const isManual = sc.course.code === 'MANUAL';
 
             return `
-                <div class="sidebar-item group" ${accentStyle}>
-                    ${!isExplorerMode ? `
+                <div class="sidebar-item group ${sc.isPinned ? 'border-emerald-500/30 bg-emerald-500/[0.03]' : ''}" ${accentStyle}>
                     <div class="absolute top-4 right-4 flex items-center gap-2">
-                        ${isManual ? `<button class="edit-btn text-slate-600 hover:text-emerald-500 transition-colors" data-index="${i}"><i data-lucide="edit-2" class="w-4 h-4"></i></button>` : ''}
-                        <button class="remove-btn text-slate-600 hover:text-rose-500 transition-colors" data-index="${i}"><i data-lucide="x" class="w-4 h-4"></i></button>
-                    </div>` : ''}
+                        <button class="pin-btn ${sc.isPinned ? 'text-emerald-400' : 'text-slate-600'} hover:text-emerald-500 transition-colors" data-index="${i}" title="${sc.isPinned ? 'Unfix this course' : 'Fix this course'}">
+                            <i data-lucide="${sc.isPinned ? 'lock' : 'unlock'}" class="w-3.5 h-3.5"></i>
+                        </button>
+                        ${!isExplorerMode && isManual ? `<button class="edit-btn text-slate-600 hover:text-emerald-500 transition-colors" data-index="${i}"><i data-lucide="edit-2" class="w-3.5 h-3.5"></i></button>` : ''}
+                        ${!isExplorerMode ? `<button class="remove-btn text-slate-600 hover:text-rose-500 transition-colors" data-index="${i}"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>` : ''}
+                    </div>
                     <h3 class="text-xs font-900 uppercase text-white tracking-tight pr-12">${sc.course.baseTitle}</h3>
                     
                     <div class="grid grid-cols-4 gap-2 mt-4 py-2 border-y border-white/5">
@@ -111,6 +112,9 @@ class RoutineView {
         });
         this.selectedList.querySelectorAll('.edit-btn').forEach(btn => {
             btn.onclick = () => onEdit(btn.dataset.index);
+        });
+        this.selectedList.querySelectorAll('.pin-btn').forEach(btn => {
+            btn.onclick = () => onTogglePin(btn.dataset.index);
         });
         this.selectedList.querySelectorAll('.section-select').forEach(select => {
             select.onchange = (e) => onSectionChange(select.dataset.index, e.target.value);

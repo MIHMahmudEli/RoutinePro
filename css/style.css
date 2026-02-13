@@ -219,7 +219,7 @@ select.prism-input option {
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 16px;
     padding: 3px;
-    height: 48px;
+    height: 30px !important;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     width: 100%;
     overflow: hidden;
@@ -246,12 +246,12 @@ select.prism-input option {
     color: var(--text-primary);
     font-family: 'Inter', sans-serif;
     font-weight: 800;
-    font-size: 1.1rem;
+    font-size: 0.7rem !important;
     text-align: center;
     cursor: pointer;
     outline: none;
     padding: 0 4px;
-    min-width: 38px;
+    min-width: 30px !important;
     transition: color 0.2s ease;
 }
 
@@ -270,7 +270,7 @@ select.prism-input option {
     font-weight: 900;
     color: var(--accent-primary);
     opacity: 0.4;
-    font-size: 1rem;
+    font-size: 0.65rem !important;
     user-select: none;
 }
 
@@ -286,7 +286,7 @@ select.prism-input option {
     background: transparent;
     color: var(--accent-primary);
     font-weight: 900;
-    font-size: 0.8rem;
+    font-size: 0.55rem !important;
     text-transform: uppercase;
     letter-spacing: 0.1em;
     padding: 0;
@@ -296,7 +296,7 @@ select.prism-input option {
     cursor: pointer;
     outline: none;
     text-align: center;
-    min-width: 44px;
+    min-width: 35px !important;
 }
 
 .period-select-modern:hover {

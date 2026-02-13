@@ -38,7 +38,7 @@ class RoutineModel {
 
     addCourse(course) {
         if (!this.selectedCourses.some(sc => sc.course.baseTitle === course.baseTitle)) {
-            this.selectedCourses.push({ course, selectedSectionIndex: 0 });
+            this.selectedCourses.push({ course, selectedSectionIndex: 0, isPinned: false });
             return true;
         }
         return false;
@@ -65,7 +65,7 @@ class RoutineModel {
             }]
         };
 
-        this.selectedCourses.push({ course: manualCourse, selectedSectionIndex: 0 });
+        this.selectedCourses.push({ course: manualCourse, selectedSectionIndex: 0, isPinned: false });
         return true;
     }
 
@@ -96,6 +96,12 @@ class RoutineModel {
         this.selectedCourses[cIdx].selectedSectionIndex = sIdx;
     }
 
+    togglePin(idx) {
+        if (this.selectedCourses[idx]) {
+            this.selectedCourses[idx].isPinned = !this.selectedCourses[idx].isPinned;
+        }
+    }
+
     generateRoutines(filters) {
         const { minS, maxE, maxC, allowedStatuses, allowedDays, sortBy } = filters;
         this.possibleRoutines = [];
@@ -106,8 +112,12 @@ class RoutineModel {
                 return;
             }
 
-            const course = this.selectedCourses[idx].course;
-            for (const sec of course.sections) {
+            const sc = this.selectedCourses[idx];
+            const course = sc.course;
+            const sectionsToTry = sc.isPinned ? [course.sections[sc.selectedSectionIndex]] : course.sections;
+
+            for (const sec of sectionsToTry) {
+                if (!sec) continue; // Safety check
                 if (parseInt(sec.count) > maxC && maxC < 100) continue;
                 if (!allowedStatuses.includes(sec.status.toLowerCase().trim())) continue;
 

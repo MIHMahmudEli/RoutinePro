@@ -512,8 +512,28 @@ class RoutineController {
             this.view.gapDisplay.innerText = totalGapMin === 0 ? "No Waiting Gaps!" : `${this.view.formatGap(totalGapMin)} Waiting Time`;
         }
 
-        this.view.renderSidebar(selectedCourses, isExplorerMode, currentItems, (i) => this.handleRemoveCourse(i), (ci, si) => this.handleSectionChange(ci, si), (i) => this.handleEditManual(i));
+        this.view.renderSidebar(
+            selectedCourses,
+            isExplorerMode,
+            currentItems,
+            (i) => this.handleRemoveCourse(i),
+            (ci, si) => this.handleSectionChange(ci, si),
+            (i) => this.handleEditManual(i),
+            (i) => {
+                if (isExplorerMode) {
+                    // Apply the current explorer section to the main list before pinning
+                    const explorerSection = currentItems.find(item => item.courseTitle === selectedCourses[i].course.baseTitle).section;
+                    const sectionIdx = selectedCourses[i].course.sections.findIndex(s => s.section === explorerSection.section);
+                    if (sectionIdx !== -1) {
+                        this.model.updateSectionSelection(i, sectionIdx);
+                    }
+                }
+                this.model.togglePin(i);
+                this.syncWorkspace();
+            }
+        );
         this.view.renderRoutine(currentItems, isExplorerMode);
+        lucide.createIcons(); // Ensure all icons are updated, including some with custom stroke if added
         this.view.totalCreditsEl.innerText = this.model.calculateCredits();
         this.view.updateSyncUI(this.model.allCourses);
     }
