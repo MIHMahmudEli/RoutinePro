@@ -20,12 +20,81 @@ class RoutineController {
     }
 
     setupEventListeners() {
-        // Theme
-        window.setTheme = (theme) => {
-            document.body.setAttribute('data-theme', theme);
-            localStorage.setItem('routine-pro-theme', theme);
+        // Theme Management
+        window.setTheme = (theme, customColor = null) => {
+            const root = document.body;
+
+            // Clear active states
+            document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
+            const pickerContainer = document.querySelector('#custom-theme-picker')?.parentElement;
+            pickerContainer?.classList.remove('ring-2', 'ring-white');
+
+            // Remove inline overrides first
+            // Remove inline overrides first
+            ['--accent-primary', '--accent-secondary', '--accent-glow', '--bg-base', '--bg-surface'].forEach(v => root.style.removeProperty(v));
+
+            if (theme === 'custom' && customColor) {
+                // Helper for RGBA
+                const hexToRgba = (hex, alpha) => {
+                    const r = parseInt(hex.slice(1, 3), 16);
+                    const g = parseInt(hex.slice(3, 5), 16);
+                    const b = parseInt(hex.slice(5, 7), 16);
+                    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+                };
+
+                // Apply custom variables
+                root.style.setProperty('--accent-primary', customColor);
+                root.style.setProperty('--accent-secondary', customColor); // Unified for custom
+                root.style.setProperty('--accent-glow', hexToRgba(customColor, 0.15));
+
+                // Mix custom color with black for base/surface to ensure visibility
+                const mixWithBlack = (hex, amount) => {
+                    const r = parseInt(hex.slice(1, 3), 16) * amount;
+                    const g = parseInt(hex.slice(3, 5), 16) * amount;
+                    const b = parseInt(hex.slice(5, 7), 16) * amount;
+                    return `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)})`;
+                };
+
+                // Dynamic Background Tint based on custom color (very dark)
+                root.style.setProperty('--bg-base', mixWithBlack(customColor, 0.08));
+                root.style.setProperty('--bg-surface', mixWithBlack(customColor, 0.15));
+                root.style.setProperty('--border-glass', hexToRgba(customColor, 0.2));
+
+                root.removeAttribute('data-theme'); // Fallback to root (default dark) base
+
+                localStorage.setItem('routine-pro-theme', 'custom');
+                localStorage.setItem('routine-pro-custom-color', customColor);
+
+                if (pickerContainer) pickerContainer.classList.add('ring-2', 'ring-white');
+            } else {
+                root.setAttribute('data-theme', theme);
+                localStorage.setItem('routine-pro-theme', theme);
+
+                const btn = document.querySelector(`button[onclick="setTheme('${theme}')"]`);
+                if (btn) btn.classList.add('active');
+            }
             this.syncWorkspace();
         };
+
+        // Initialize Saved Theme
+        const savedTheme = localStorage.getItem('routine-pro-theme') || 'default';
+        const savedColor = localStorage.getItem('routine-pro-custom-color');
+
+        if (savedTheme === 'custom' && savedColor) {
+            window.setTheme('custom', savedColor);
+            const picker = document.getElementById('custom-theme-picker');
+            if (picker) picker.value = savedColor;
+        } else {
+            window.setTheme(savedTheme);
+        }
+
+        // Custom Picker Listener
+        const colorPicker = document.getElementById('custom-theme-picker');
+        if (colorPicker) {
+            colorPicker.addEventListener('input', (e) => {
+                window.setTheme('custom', e.target.value);
+            });
+        }
 
         // Search
         this.view.searchInput.oninput = (e) => this.handleSearch(e);
