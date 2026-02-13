@@ -44,6 +44,50 @@ class RoutineModel {
         return false;
     }
 
+    addManualCourse(data) {
+        const { subject, days, start, end, section, room } = data;
+        const manualCourse = {
+            baseTitle: subject,
+            code: "MANUAL",
+            sections: [{
+                id: "M-" + Date.now(),
+                section: section || "1",
+                status: "Open",
+                capacity: "99",
+                count: "0",
+                schedules: days.map(day => ({
+                    day: day,
+                    start: start,
+                    end: end,
+                    room: room || "N/A",
+                    type: "Theory"
+                }))
+            }]
+        };
+
+        this.selectedCourses.push({ course: manualCourse, selectedSectionIndex: 0 });
+        return true;
+    }
+
+    updateManualCourse(idx, data) {
+        if (this.selectedCourses[idx]) {
+            const { subject, days, start, end, section, room } = data;
+            const course = this.selectedCourses[idx].course;
+            course.baseTitle = subject;
+            const sec = course.sections[0];
+            sec.section = section || "1";
+            sec.schedules = days.map(day => ({
+                day: day,
+                start: start,
+                end: end,
+                room: room || "N/A",
+                type: "Theory"
+            }));
+            return true;
+        }
+        return false;
+    }
+
     removeCourse(idx) {
         this.selectedCourses.splice(idx, 1);
     }

@@ -110,7 +110,10 @@
                 <section class="prism-card p-6 space-y-5">
                     <div class="flex items-center justify-between">
                         <h2 class="text-sm font-800 uppercase tracking-widest text-slate-400">Course Queue</h2>
-                        <i data-lucide="plus" class="w-4 h-4 text-emerald-500"></i>
+                        <button id="toggle-manual-mode"
+                            class="text-[9px] font-black text-emerald-400 uppercase tracking-widest bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1.5 rounded-lg hover:bg-emerald-500 hover:text-black transition-all flex items-center gap-2">
+                            <i data-lucide="edit-3" class="w-3.5 h-3.5"></i> MANUAL MODE
+                        </button>
                     </div>
 
                     <div class="relative">
@@ -139,8 +142,122 @@
                     </div>
                 </section>
 
+                <!-- Manual Entry Panel -->
+                <section id="manual-entry-section" class="prism-card p-6 space-y-6 hidden border-emerald-500/20">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <div
+                                class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
+                                <i data-lucide="pencil-line" class="w-4 h-4 text-emerald-400"></i>
+                            </div>
+                            <h2 class="text-sm font-800 uppercase tracking-widest text-slate-400">Manual Entry</h2>
+                        </div>
+                        <button id="back-to-smart"
+                            class="text-[9px] font-black text-rose-500 uppercase tracking-widest bg-rose-500/10 border border-rose-500/20 px-3 py-1.5 rounded-lg hover:bg-rose-500 hover:text-white transition-all">
+                            BACK
+                        </button>
+                    </div>
+
+                    <div class="space-y-5">
+                        <div class="space-y-2">
+                            <label
+                                class="flex items-center gap-2 text-[10px] font-black text-slate-500 uppercase tracking-widest pl-1">
+                                <i data-lucide="book-type" class="w-3 h-3"></i> Subject Name
+                            </label>
+                            <input type="text" id="manual-subject" class="prism-input !bg-emerald-500/[0.02]"
+                                placeholder="e.g. Data Structures">
+                        </div>
+
+                        <div class="space-y-2">
+                            <label
+                                class="flex items-center gap-2 text-[10px] font-black text-slate-500 uppercase tracking-widest pl-1">
+                                <i data-lucide="calendar" class="w-3 h-3"></i> Schedule Days
+                            </label>
+                            <div class="grid grid-cols-7 gap-1.5" id="manual-day-container">
+                                <label><input type="checkbox" name="man-day" value="Sunday" checked class="day-toggle">
+                                    <div class="day-chip !w-full !h-9 !text-[11px]">S</div>
+                                </label>
+                                <label><input type="checkbox" name="man-day" value="Monday" class="day-toggle">
+                                    <div class="day-chip !w-full !h-9 !text-[11px]">M</div>
+                                </label>
+                                <label><input type="checkbox" name="man-day" value="Tuesday" class="day-toggle">
+                                    <div class="day-chip !w-full !h-9 !text-[11px]">T</div>
+                                </label>
+                                <label><input type="checkbox" name="man-day" value="Wednesday" class="day-toggle">
+                                    <div class="day-chip !w-full !h-9 !text-[11px]">W</div>
+                                </label>
+                                <label><input type="checkbox" name="man-day" value="Thursday" class="day-toggle">
+                                    <div class="day-chip !w-full !h-9 !text-[11px]">T</div>
+                                </label>
+                                <label><input type="checkbox" name="man-day" value="Friday" class="day-toggle">
+                                    <div class="day-chip !w-full !h-9 !text-[11px]">F</div>
+                                </label>
+                                <label><input type="checkbox" name="man-day" value="Saturday" class="day-toggle">
+                                    <div class="day-chip !w-full !h-9 !text-[11px]">S</div>
+                                </label>
+                            </div>
+                            <p class="text-[8px] text-slate-600 font-bold uppercase tracking-wider pl-1">Select all days
+                                for this class</p>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="space-y-2">
+                                <label
+                                    class="flex items-center gap-2 text-[10px] font-black text-slate-500 uppercase tracking-widest pl-1">
+                                    <i data-lucide="clock" class="w-3 h-3"></i> Start
+                                </label>
+                                <div class="select-wrapper">
+                                    <select id="manual-start"
+                                        class="prism-input !py-2.5 !text-xs cursor-pointer"></select>
+                                    <i data-lucide="chevron-down" class="select-arrow w-3 h-3"></i>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <label
+                                    class="flex items-center gap-2 text-[10px] font-black text-slate-500 uppercase tracking-widest pl-1">
+                                    <i data-lucide="clock-4" class="w-3 h-3"></i> End
+                                </label>
+                                <div class="select-wrapper">
+                                    <select id="manual-end"
+                                        class="prism-input !py-2.5 !text-xs cursor-pointer"></select>
+                                    <i data-lucide="chevron-down" class="select-arrow w-3 h-3"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="space-y-2">
+                                <label
+                                    class="flex items-center gap-2 text-[10px] font-black text-slate-500 uppercase tracking-widest pl-1">
+                                    <i data-lucide="layers" class="w-3 h-3"></i> Section
+                                </label>
+                                <input type="text" id="manual-section" class="prism-input !py-2.5" placeholder="e.g. A">
+                            </div>
+                            <div class="space-y-2">
+                                <label
+                                    class="flex items-center gap-2 text-[10px] font-black text-slate-500 uppercase tracking-widest pl-1">
+                                    <i data-lucide="map-pin" class="w-3 h-3"></i> Room
+                                </label>
+                                <input type="text" id="manual-room" class="prism-input !py-2.5" placeholder="e.g. 1102">
+                            </div>
+                        </div>
+
+                        <div class="pt-2 flex gap-3">
+                            <button id="add-manual-btn"
+                                class="prism-btn flex-1 !py-4 !bg-emerald-500 !text-black shadow-[0_4px_15px_rgba(16,185,129,0.2)]">
+                                <i data-lucide="plus-circle" class="w-4 h-4"></i> ADD TO ROUTINE
+                            </button>
+                            <button id="clear-manual-btn"
+                                class="w-12 h-14 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-rose-500/10 hover:border-rose-500/20 hover:text-rose-500 transition-all"
+                                title="Clear All Fields">
+                                <i data-lucide="rotate-ccw" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
                 <!-- Configuration Panel -->
-                <section class="prism-card p-6 space-y-6">
+                <section id="parameters-section" class="prism-card p-6 space-y-6">
                     <h2 class="text-sm font-800 uppercase tracking-widest text-slate-400">Parameters</h2>
 
                     <!-- Filters -->

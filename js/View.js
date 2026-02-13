@@ -20,22 +20,37 @@ class RoutineView {
         this.toastContainer = document.getElementById('toast-container');
         this.filterStart = document.getElementById('filter-start');
         this.filterEnd = document.getElementById('filter-end');
+        this.manualStart = document.getElementById('manual-start');
+        this.manualEnd = document.getElementById('manual-end');
+        this.manualAddBtn = document.getElementById('add-manual-btn');
     }
 
     populateTimeFilters() {
         const times = [
-            { v: 480, l: '08:00 AM' }, { v: 540, l: '09:00 AM' }, { v: 600, l: '10:00 AM' },
-            { v: 660, l: '11:00 AM' }, { v: 720, l: '12:00 PM' }, { v: 780, l: '01:00 PM' },
-            { v: 840, l: '02:00 PM' }, { v: 900, l: '03:00 PM' }, { v: 960, l: '04:00 PM' },
-            { v: 1020, l: '05:00 PM' }, { v: 1080, l: '06:00 PM' }, { v: 1140, l: '07:00 PM' },
+            { v: 480, l: '08:00 AM' }, { v: 510, l: '08:30 AM' }, { v: 540, l: '09:00 AM' }, { v: 570, l: '09:30 AM' },
+            { v: 600, l: '10:00 AM' }, { v: 630, l: '10:30 AM' }, { v: 660, l: '11:00 AM' }, { v: 690, l: '11:30 AM' },
+            { v: 720, l: '12:00 PM' }, { v: 750, l: '12:30 PM' }, { v: 780, l: '01:00 PM' }, { v: 810, l: '01:30 PM' },
+            { v: 840, l: '02:00 PM' }, { v: 870, l: '02:30 PM' }, { v: 900, l: '03:00 PM' }, { v: 930, l: '03:30 PM' },
+            { v: 960, l: '04:00 PM' }, { v: 990, l: '04:30 PM' }, { v: 1020, l: '05:00 PM' }, { v: 1050, l: '05:30 PM' },
+            { v: 1080, l: '06:00 PM' }, { v: 1110, l: '06:30 PM' }, { v: 1140, l: '07:00 PM' }, { v: 1170, l: '07:30 PM' },
             { v: 1200, l: '08:00 PM' }
         ];
+
+        const optionsHtml = times.map(t => `<option value="${t.l}">${t.l}</option>`).join('');
 
         if (this.filterStart) {
             this.filterStart.innerHTML = times.map(t => `<option value="${t.v}">${t.l}</option>`).join('');
         }
         if (this.filterEnd) {
             this.filterEnd.innerHTML = times.map((t, i) => `<option value="${t.v}" ${i === times.length - 1 ? 'selected' : ''}>${t.l}</option>`).join('');
+        }
+        if (this.manualStart) {
+            this.manualStart.innerHTML = optionsHtml;
+        }
+        if (this.manualEnd) {
+            this.manualEnd.innerHTML = optionsHtml;
+            // Default select a bit later
+            this.manualEnd.selectedIndex = 3;
         }
     }
 
@@ -46,7 +61,7 @@ class RoutineView {
         return `${hrs > 0 ? hrs + 'h ' : ''}${mins}m`;
     }
 
-    renderSidebar(selectedCourses, isExplorerMode, currentRoutine, onRemove, onSectionChange) {
+    renderSidebar(selectedCourses, isExplorerMode, currentRoutine, onRemove, onSectionChange, onEdit) {
         if (selectedCourses.length === 0) {
             this.selectedList.innerHTML = `<div class="text-center py-12 opacity-20 border-2 border-dashed border-white/5 rounded-2xl"><i data-lucide="command" class="w-8 h-8 mx-auto mb-2"></i><p class="text-[10px] font-bold uppercase tracking-widest">Awaiting Input</p></div>`;
             lucide.createIcons();
@@ -54,6 +69,7 @@ class RoutineView {
         }
 
         this.selectedList.innerHTML = selectedCourses.map((sc, i) => {
+            // ... (lines 72-112 are unchanged - using a multi_replace later if needed, but for now I'll just write it out to be safe)
             const section = isExplorerMode
                 ? currentRoutine.find(item => item.courseTitle === sc.course.baseTitle).section
                 : sc.course.sections[sc.selectedSectionIndex];
@@ -64,10 +80,16 @@ class RoutineView {
                 ? `style="border-left: 4px solid hsla(${hue}, 70%, 60%, 0.8)"`
                 : '';
 
+            const isManual = sc.course.code === 'MANUAL';
+
             return `
                 <div class="sidebar-item group" ${accentStyle}>
-                    ${!isExplorerMode ? `<button class="remove-btn absolute top-4 right-4 text-slate-600 hover:text-rose-500" data-index="${i}"><i data-lucide="x" class="w-4 h-4"></i></button>` : ''}
-                    <h3 class="text-xs font-900 uppercase text-white tracking-tight pr-6">${sc.course.baseTitle}</h3>
+                    ${!isExplorerMode ? `
+                    <div class="absolute top-4 right-4 flex items-center gap-2">
+                        ${isManual ? `<button class="edit-btn text-slate-600 hover:text-emerald-500 transition-colors" data-index="${i}"><i data-lucide="edit-2" class="w-4 h-4"></i></button>` : ''}
+                        <button class="remove-btn text-slate-600 hover:text-rose-500 transition-colors" data-index="${i}"><i data-lucide="x" class="w-4 h-4"></i></button>
+                    </div>` : ''}
+                    <h3 class="text-xs font-900 uppercase text-white tracking-tight pr-12">${sc.course.baseTitle}</h3>
                     
                     <div class="grid grid-cols-4 gap-2 mt-4 py-2 border-y border-white/5">
                         <div class="text-center"><p class="text-[8px] text-slate-600 font-black uppercase">Sec</p><p class="text-[9px] font-bold">${section.section}</p></div>
@@ -80,7 +102,7 @@ class RoutineView {
                     </div>
 
                     ${!isExplorerMode ? `
-                    <div class="select-wrapper mt-3">
+                    <div class="select-wrapper mt-3 ${sc.course.code === 'MANUAL' ? 'hidden' : ''}">
                         <select class="section-select prism-input !py-1.5 !text-[10px] !rounded-lg" data-index="${i}">
                             ${sc.course.sections.map((s, si) => `<option value="${si}" ${si === sc.selectedSectionIndex ? 'selected' : ''}>Switch to Sec ${s.section}</option>`).join('')}
                         </select>
@@ -94,6 +116,9 @@ class RoutineView {
         // Attach listeners
         this.selectedList.querySelectorAll('.remove-btn').forEach(btn => {
             btn.onclick = () => onRemove(btn.dataset.index);
+        });
+        this.selectedList.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.onclick = () => onEdit(btn.dataset.index);
         });
         this.selectedList.querySelectorAll('.section-select').forEach(select => {
             select.onchange = (e) => onSectionChange(select.dataset.index, e.target.value);

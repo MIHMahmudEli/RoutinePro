@@ -6,6 +6,7 @@ class RoutineController {
     constructor(model, view) {
         this.model = model;
         this.view = view;
+        this.editingIndex = null;
 
         this.init();
     }
@@ -82,6 +83,159 @@ class RoutineController {
         if (fileInput) {
             fileInput.onchange = (e) => this.handleFileUpload(e);
         }
+
+        // Manual Entry
+        if (this.view.manualAddBtn) {
+            this.view.manualAddBtn.onclick = () => this.handleAddManual();
+        }
+
+        const btnToggleManual = document.getElementById('toggle-manual-mode');
+        const btnBackSmart = document.getElementById('back-to-smart');
+
+        if (btnToggleManual) {
+            btnToggleManual.onclick = () => this.toggleManualMode(true);
+        }
+        if (btnBackSmart) {
+            btnBackSmart.onclick = () => this.toggleManualMode(false);
+        }
+
+        // UX Improvements: Clear Button
+        const btnClearManual = document.getElementById('clear-manual-btn');
+        if (btnClearManual) {
+            btnClearManual.onclick = () => this.resetManualForm();
+        }
+
+        // UX Improvements: Enter key submission
+        ['manual-subject', 'manual-section', 'manual-room'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') this.handleAddManual();
+                });
+            }
+        });
+
+        // UX Improvements: Smart Time End suggest
+        const startSelect = document.getElementById('manual-start');
+        const endSelect = document.getElementById('manual-end');
+        if (startSelect && endSelect) {
+            startSelect.addEventListener('change', () => {
+                const startMin = this.model.toMin(startSelect.value);
+                const endMin = this.model.toMin(endSelect.value);
+                if (endMin <= startMin) {
+                    // Try to suggest +90 mins
+                    const suggestMin = startMin + 90;
+                    // Find closest available option
+                    let bestIdx = 0;
+                    let minDiff = Infinity;
+                    for (let i = 0; i < endSelect.options.length; i++) {
+                        const optMin = this.model.toMin(endSelect.options[i].value);
+                        const diff = Math.abs(optMin - suggestMin);
+                        if (diff < minDiff) {
+                            minDiff = diff;
+                            bestIdx = i;
+                        }
+                    }
+                    endSelect.selectedIndex = bestIdx;
+                }
+            });
+        }
+    }
+
+    toggleManualMode(show) {
+        const manualSection = document.getElementById('manual-entry-section');
+        const paramsSection = document.getElementById('parameters-section');
+        const btnToggleManual = document.getElementById('toggle-manual-mode');
+
+        if (show) {
+            manualSection.classList.remove('hidden');
+            paramsSection.classList.add('hidden');
+            btnToggleManual.classList.add('hidden');
+            if (this.editingIndex !== null) {
+                manualSection.classList.add('ring-2', 'ring-emerald-500/50', 'ring-offset-4', 'ring-offset-slate-900');
+            } else {
+                manualSection.classList.remove('ring-2', 'ring-emerald-500/50', 'ring-offset-4', 'ring-offset-slate-900');
+            }
+            document.getElementById('manual-subject').focus();
+        } else {
+            manualSection.classList.add('hidden');
+            paramsSection.classList.remove('hidden');
+            btnToggleManual.classList.remove('hidden');
+            this.resetManualForm();
+        }
+        lucide.createIcons();
+    }
+
+    resetManualForm() {
+        this.editingIndex = null;
+        document.getElementById('manual-subject').value = '';
+        document.getElementById('manual-section').value = '';
+        document.getElementById('manual-room').value = '';
+        document.querySelectorAll('input[name="man-day"]').forEach((cb, i) => cb.checked = i === 0);
+        this.view.manualAddBtn.innerHTML = `<i data-lucide="plus-circle" class="w-4 h-4"></i> ADD TO ROUTINE`;
+        document.getElementById('manual-entry-section').classList.remove('ring-2', 'ring-emerald-500/50', 'ring-offset-4', 'ring-offset-slate-900');
+        lucide.createIcons();
+    }
+
+    handleAddManual() {
+        const subject = document.getElementById('manual-subject').value.trim();
+        const days = Array.from(document.querySelectorAll('input[name="man-day"]:checked')).map(cb => cb.value);
+        const start = document.getElementById('manual-start').value;
+        const end = document.getElementById('manual-end').value;
+        const section = document.getElementById('manual-section').value.trim();
+        const room = document.getElementById('manual-room').value.trim();
+
+        if (!subject || days.length === 0 || !start || !end) {
+            return this.view.showToast("Subject, at least one Day, and Times are required!", "error");
+        }
+
+        if (this.model.toMin(start) >= this.model.toMin(end)) {
+            return this.view.showToast("Start time must be before end time!", "error");
+        }
+
+        this.model.isExplorerMode = false;
+
+        if (this.editingIndex !== null) {
+            if (this.model.updateManualCourse(this.editingIndex, { subject, days, start, end, section, room })) {
+                this.view.showToast("Updates saved!");
+                this.resetManualForm();
+            }
+        } else {
+            if (this.model.addManualCourse({ subject, days, start, end, section, room })) {
+                this.view.showToast(`"${subject}" added!`);
+                this.resetManualForm();
+            }
+        }
+
+        document.getElementById('manual-subject').focus();
+        this.syncWorkspace();
+    }
+
+    handleEditManual(idx) {
+        const item = this.model.selectedCourses[idx];
+        if (!item || item.course.code !== 'MANUAL') return;
+
+        this.editingIndex = parseInt(idx);
+        const course = item.course;
+        const sec = course.sections[0];
+        const sched = sec.schedules[0];
+
+        // Populate fields
+        document.getElementById('manual-subject').value = course.baseTitle;
+        document.getElementById('manual-section').value = sec.section || '';
+        document.getElementById('manual-room').value = sched.room || '';
+        document.getElementById('manual-start').value = sched.start;
+        document.getElementById('manual-end').value = sched.end;
+
+        // Select days
+        const selectedDays = sec.schedules.map(s => s.day);
+        document.querySelectorAll('input[name="man-day"]').forEach(cb => {
+            cb.checked = selectedDays.includes(cb.value);
+        });
+
+        // Visual update
+        this.view.manualAddBtn.innerHTML = `<i data-lucide="save" class="w-4 h-4"></i> SAVE CHANGES`;
+        this.toggleManualMode(true);
     }
 
     async handleFileUpload(e) {
@@ -288,7 +442,7 @@ class RoutineController {
             this.view.gapDisplay.innerText = totalGapMin === 0 ? "No Waiting Gaps!" : `${this.view.formatGap(totalGapMin)} Waiting Time`;
         }
 
-        this.view.renderSidebar(selectedCourses, isExplorerMode, currentItems, (i) => this.handleRemoveCourse(i), (ci, si) => this.handleSectionChange(ci, si));
+        this.view.renderSidebar(selectedCourses, isExplorerMode, currentItems, (i) => this.handleRemoveCourse(i), (ci, si) => this.handleSectionChange(ci, si), (i) => this.handleEditManual(i));
         this.view.renderRoutine(currentItems, isExplorerMode);
         this.view.totalCreditsEl.innerText = this.model.calculateCredits();
         this.view.updateSyncUI(this.model.allCourses);
