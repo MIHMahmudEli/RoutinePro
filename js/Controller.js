@@ -30,7 +30,6 @@ class RoutineController {
             pickerContainer?.classList.remove('ring-2', 'ring-white');
 
             // Remove inline overrides first
-            // Remove inline overrides first
             ['--accent-primary', '--accent-secondary', '--accent-glow', '--bg-base', '--bg-surface'].forEach(v => root.style.removeProperty(v));
 
             if (theme === 'custom' && customColor) {
@@ -348,6 +347,21 @@ class RoutineController {
         });
     }
 
+    setSectionCollapse(sectionId, chevronId, shouldCollapse) {
+        const content = document.getElementById(sectionId);
+        const chevron = document.getElementById(chevronId);
+        if (content) {
+            if (shouldCollapse) {
+                content.classList.add('hidden-params');
+            } else {
+                content.classList.remove('hidden-params');
+            }
+        }
+        if (chevron) {
+            chevron.style.transform = shouldCollapse ? 'rotate(180deg)' : 'rotate(0deg)';
+        }
+    }
+
     toggleManualMode(show) {
         const manualSection = document.getElementById('manual-entry-section');
         const paramsSection = document.getElementById('parameters-section');
@@ -357,6 +371,12 @@ class RoutineController {
             manualSection.classList.remove('hidden');
             paramsSection.classList.add('hidden');
             btnToggleManual.classList.add('hidden');
+
+            // Auto collapse queue when entering manual entry
+            this.setSectionCollapse('queue-content', 'queue-chevron', true);
+            // Ensure manual section is expanded
+            this.setSectionCollapse('manual-content', 'manual-chevron', false);
+
             if (this.editingIndex !== null) {
                 manualSection.classList.add('ring-2', 'ring-emerald-500/50', 'ring-offset-4', 'ring-offset-slate-900');
             } else {
@@ -367,6 +387,10 @@ class RoutineController {
             manualSection.classList.add('hidden');
             paramsSection.classList.remove('hidden');
             btnToggleManual.classList.remove('hidden');
+
+            // Re-expand queue when leaving manual entry
+            this.setSectionCollapse('queue-content', 'queue-chevron', false);
+
             this.resetManualForm();
         }
         lucide.createIcons();
@@ -391,8 +415,6 @@ class RoutineController {
         document.getElementById('manual-entry-section').classList.remove('ring-2', 'ring-emerald-500/50', 'ring-offset-4', 'ring-offset-slate-900');
         lucide.createIcons();
     }
-
-
 
     handleAddManual() {
         const subject = document.getElementById('manual-subject').value.trim();
@@ -425,11 +447,15 @@ class RoutineController {
             if (this.model.updateManualCourse(this.editingIndex, { subject, days, start, end, section, room })) {
                 this.view.showToast("Updates saved!");
                 this.resetManualForm();
+                // Ensure queue is visible to see result
+                this.setSectionCollapse('queue-content', 'queue-chevron', false);
             }
         } else {
             if (this.model.addManualCourse({ subject, days, start, end, section, room })) {
                 this.view.showToast(`"${subject}" added!`);
                 this.resetManualForm();
+                // Ensure queue is visible to see result
+                this.setSectionCollapse('queue-content', 'queue-chevron', false);
             }
         }
 
@@ -448,225 +474,133 @@ class RoutineController {
 
         // Populate fields
         document.getElementById('manual-subject').value = course.baseTitle;
-        document.getElementById('manual-section').value = sec.section || '';
-        document.getElementById('manual-room').value = sched.room || '';
+        document.getElementById('manual-section').value = sec.section;
+        document.getElementById('manual-room').value = sched.room;
 
-        // Split and set start time
-        const [st, sp] = sched.start.split(' ');
-        const [sh, sm] = st.split(':');
-        document.getElementById('man-start-h').value = sh;
-        document.getElementById('man-start-m').value = sm;
-        document.getElementById('man-start-p').value = sp;
+        // Parse time
+        const [time, period] = sched.start.split(' ');
+        const [h, m] = time.split(':');
+        document.getElementById('man-start-h').value = h;
+        document.getElementById('man-start-m').value = m;
+        document.getElementById('man-start-p').value = period;
 
-        // Split and set end time
-        const [et, ep] = sched.end.split(' ');
-        const [eh, em] = et.split(':');
+        const [etime, eperiod] = sched.end.split(' ');
+        const [eh, em] = etime.split(':');
         document.getElementById('man-end-h').value = eh;
         document.getElementById('man-end-m').value = em;
-        document.getElementById('man-end-p').value = ep;
+        document.getElementById('man-end-p').value = eperiod;
 
-        // Select days
-        const selectedDays = sec.schedules.map(s => s.day);
+        // Days
+        const activeDays = new Set(sec.schedules.map(s => s.day));
         document.querySelectorAll('input[name="man-day"]').forEach(cb => {
-            cb.checked = selectedDays.includes(cb.value);
+            cb.checked = activeDays.has(cb.value);
         });
 
-        // Visual update
-        this.view.manualAddBtn.innerHTML = `<i data-lucide="save" class="w-4 h-4"></i> SAVE CHANGES`;
+        this.view.manualAddBtn.innerHTML = `<i data-lucide="save" class="w-4 h-4"></i> SAVE UPDATES`;
         this.toggleManualMode(true);
     }
 
-    async handleFileUpload(e) {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        const btn = this.view.syncModal.querySelector('.prism-btn');
-        const originalText = btn.innerText;
-        btn.disabled = true;
-        btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> PROCESSING...`;
-        lucide.createIcons();
-
-        try {
-            const semesterInput = document.getElementById('semester-input');
-            const targetSemester = semesterInput?.value || 'Updated Semester';
-
-            if (file.name.endsWith('.json')) {
-                const text = await file.text();
-                const data = JSON.parse(text);
-                this.model.saveCourses(data, targetSemester);
-                this.view.showToast(`${data.length} courses loaded from ${file.name}`);
-            } else if (file.name.endsWith('.xlsx')) {
-                const reader = new FileReader();
-                reader.onload = async (evt) => {
-                    const dataArr = new Uint8Array(evt.target.result);
-                    const wb = XLSX.read(dataArr, { type: 'array' });
-                    const wsname = wb.SheetNames[0];
-                    const ws = wb.Sheets[wsname];
-                    const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
-
-                    // Auto-detect semester
-                    let detectedSemester = "";
-                    const headerPeek = JSON.stringify(data.slice(0, 10)).toUpperCase();
-                    const wsUpper = wsname.toUpperCase();
-                    const combinedSearch = wsUpper + " " + headerPeek;
-
-                    if (combinedSearch.includes('SPRING') || combinedSearch.includes('SPRI')) detectedSemester = 'SPRING';
-                    else if (combinedSearch.includes('FALL') || combinedSearch.includes('FAL')) detectedSemester = 'FALL';
-                    else if (combinedSearch.includes('SUMMER') || combinedSearch.includes('SUMM')) detectedSemester = 'SUMMER';
-
-                    const yearMatch = combinedSearch.match(/\d{4}-\d{2,4}/);
-                    if (yearMatch && detectedSemester) detectedSemester += ` ${yearMatch[0]}`;
-                    else if (yearMatch && !detectedSemester) detectedSemester = yearMatch[0];
-
-                    const finalSemester = detectedSemester || targetSemester || 'Updated Semester';
-                    const courses = this.model.parseExcelData(data);
-
-                    this.model.saveCourses(courses, finalSemester);
-                    if (semesterInput) semesterInput.value = finalSemester;
-                    this.view.showToast(`${courses.length} courses loaded from ${file.name}`);
-                    this.syncWorkspace();
-                };
-                reader.readAsArrayBuffer(file);
-            }
-        } catch (err) {
-            console.error(err);
-            this.view.showToast("Failed to process file.", "error");
-        } finally {
-            setTimeout(() => {
-                btn.disabled = false;
-                btn.innerText = originalText;
-                lucide.createIcons();
-                this.view.syncModal.classList.add('hidden');
-            }, 1500);
-        }
-    }
-
     handleSearch(e) {
-        const q = e.target.value.toLowerCase().trim();
-        if (q.length < 2) { this.view.suggestions.classList.add('hidden'); return; }
-
-        const results = this.model.allCourses.filter(c =>
-            c.baseTitle.toLowerCase().includes(q) || (c.code && c.code.toLowerCase().includes(q))
-        ).slice(0, 15);
-
-        if (results.length > 0) {
-            this.view.suggestions.innerHTML = results.map(c => `
-                <div class="p-4 hover:bg-emerald-500/5 cursor-pointer border-b border-white/5 group transition-colors" onclick="app.controller.handleAddCourse('${c.baseTitle.replace(/'/g, "\\'")}', '${c.code}')">
-                    <div class="flex justify-between items-center text-sm font-bold group-hover:text-emerald-400 uppercase">${c.baseTitle}</div>
-                </div>
-            `).join('');
-            this.view.suggestions.classList.remove('hidden');
-        } else {
-            this.view.suggestions.classList.add('hidden');
+        const query = e.target.value.toLowerCase().trim();
+        if (query.length < 2) {
+            this.view.searchSuggestions.innerHTML = '';
+            this.view.searchSuggestions.classList.add('hidden');
+            return;
         }
+
+        const matches = this.model.searchCourses(query);
+        this.view.renderSuggestions(matches, (course) => this.handleAddCourse(course));
     }
 
-    handleAddCourse(title, code) {
+    handleAddCourse(course) {
         this.model.isExplorerMode = false;
-        const course = this.model.allCourses.find(c => c.baseTitle === title && c.code === code);
-        if (course && this.model.addCourse(course)) {
+        if (this.model.addCourse(course)) {
             this.view.searchInput.value = '';
-            this.view.suggestions.classList.add('hidden');
+            this.view.searchSuggestions.classList.add('hidden');
             this.syncWorkspace();
-        } else {
-            this.view.showToast("Course already added or not found", "error");
         }
     }
 
     handleGenerate() {
-        if (this.model.selectedCourses.length < 1) return this.view.showToast("Select courses first.", "error");
-
         const filters = {
-            minS: parseInt(document.getElementById('filter-start').value),
-            maxE: parseInt(document.getElementById('filter-end').value),
+            minS: this.model.toMin(document.getElementById('filter-start').value || "08:00 AM"),
+            maxE: this.model.toMin(document.getElementById('filter-end').value || "10:00 PM"),
             maxC: parseInt(document.getElementById('filter-seats').value),
-            sortBy: document.getElementById('filter-sort').value,
-            allowedStatuses: Array.from(document.querySelectorAll('.status-check:checked')).map(el => el.value.toLowerCase().trim()),
-            allowedDays: Array.from(document.querySelectorAll('.day-check:checked')).map(el => el.value.substring(0, 3).toLowerCase())
+            allowedStatuses: Array.from(document.querySelectorAll('.status-check:checked')).map(cb => cb.value),
+            allowedDays: Array.from(document.querySelectorAll('.day-check:checked')).map(cb => cb.value),
+            sortBy: document.getElementById('filter-sort').value
         };
 
         const results = this.model.generateRoutines(filters);
-        if (results.length === 0) return this.view.showToast("No valid scenarios found.", "error");
-
-        this.model.isExplorerMode = true;
-        this.model.currentRoutineIndex = 0;
-        this.view.showToast(`Found ${results.length} scenarios!`);
-        this.syncWorkspace();
-        this.view.explorerNav.scrollIntoView({ behavior: 'smooth' });
+        if (results.length === 0) {
+            this.view.showToast("No schedules found with these filters!", "error");
+        } else {
+            this.model.isExplorerMode = true;
+            this.model.currentRoutineIndex = 0;
+            this.syncWorkspace();
+            this.view.showToast(`Found ${results.length} possible routines!`);
+        }
     }
 
-    async handleExport() {
-        const el = document.getElementById('routine-actual-grid');
-        const originalHTML = this.view.exportBtn.innerHTML;
-        this.view.exportBtn.disabled = true;
-        this.view.exportBtn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>`;
-        lucide.createIcons();
+    handleExport() {
+        // Find the routine container
+        const routineElement = document.getElementById('routine-actual-grid');
+        if (!routineElement) return;
 
-        try {
-            // Get proper background color and ensure it's not transparent
-            const style = getComputedStyle(document.body);
-            const themeBg = style.getPropertyValue('--bg-surface').trim() || '#0a0d14';
+        this.view.showToast("Preparing download...", "info");
 
-            const canvas = await html2canvas(el, {
-                scale: 3, // High resolution for crisp mobile/desktop exports
-                backgroundColor: themeBg,
-                useCORS: true,
-                allowTaint: true,
-                logging: false,
-                onclone: (clonedDoc) => {
-                    // Fix the -4px/-6px alignment shift in the exported image
-                    const labels = clonedDoc.querySelectorAll('.time-label');
-                    const isMob = window.innerWidth < 768;
-                    labels.forEach(l => {
-                        const actualHeight = getComputedStyle(document.documentElement).getPropertyValue('--row-height');
-                        l.style.position = 'relative';
-                        l.style.display = 'flex';
-                        l.style.alignItems = 'flex-start';
-                        l.style.height = actualHeight;
-                    });
-                }
-            });
-
-            // Conversion to PNG
+        // Use html2canvas to capture the element
+        html2canvas(routineElement, {
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: "#0f172a", // Match your slate-900 bg
+            scale: 2 // Higher resolution
+        }).then(canvas => {
             const dataUrl = canvas.toDataURL('image/png');
 
-            // For mobile, we sometimes need a direct blob or open in new tab
-            // Mobile Download Strategy
-            if (/Android|WebOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                // Try direct download first (modern mobile browsers)
-                try {
-                    const link = document.createElement('a');
-                    link.download = `RoutinePro_${Date.now()}.png`;
-                    link.href = dataUrl;
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                    this.view.showToast("Downloading Routine...", "success");
-                } catch (e) {
-                    // Fallback to new window if direct download is blocked
-                    const newWindow = window.open();
-                    if (newWindow) {
-                        newWindow.document.write(`<img src="${dataUrl}" style="max-width:100%;">`);
-                        this.view.showToast("Long-press image to save", "success");
-                    } else {
-                        window.location.href = dataUrl; // Last resort
-                    }
-                }
+            // Check if device is mobile
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+            if (isMobile) {
+                // For mobile, open image in new tab so user can long-press to save
+                const newTab = window.open();
+                newTab.document.write(`<img src="${dataUrl}" style="width:100%; height:auto;" />`);
+                this.view.showToast("Long press the image to save to gallery", "info");
             } else {
-                // Desktop regular download
+                // Desktop download
                 const link = document.createElement('a');
-                link.download = `RoutinePro_${Date.now()}.png`;
+                link.download = `RoutinePro_${new Date().getTime()}.png`;
                 link.href = dataUrl;
                 link.click();
+                this.view.showToast("Download started!");
             }
-        } catch (err) {
-            this.view.showToast("Export failed. Try a desktop", "error");
-            console.error(err);
-        } finally {
-            this.view.exportBtn.disabled = false;
-            this.view.exportBtn.innerHTML = originalHTML;
-            lucide.createIcons();
+        }).catch(err => {
+            console.error("Export failed:", err);
+            this.view.showToast("Failed to generate image", "error");
+        });
+    }
+
+    updateFocusToggleUI() {
+        const focusBtn = document.getElementById('focus-toggle');
+        if (!focusBtn) return;
+
+        const icon = focusBtn.querySelector('i');
+        if (this.model.focusMode) {
+            focusBtn.classList.add('!bg-[var(--accent-primary)]', '!text-black', 'shadow-[0_0_15px_var(--accent-glow)]');
+            focusBtn.classList.remove('!bg-white/10', '!text-white', 'border-white/20');
+            if (icon) {
+                icon.setAttribute('data-lucide', 'minimize-2');
+                icon.classList.add('rotate-90');
+            }
+        } else {
+            focusBtn.classList.remove('!bg-[var(--accent-primary)]', '!text-black', 'shadow-[0_0_15px_var(--accent-glow)]');
+            focusBtn.classList.add('!bg-white/10', '!text-white', 'border-white/20');
+            if (icon) {
+                icon.setAttribute('data-lucide', 'maximize-2');
+                icon.classList.remove('rotate-90');
+            }
         }
+        lucide.createIcons();
     }
 
     syncWorkspace() {
@@ -716,28 +650,5 @@ class RoutineController {
         lucide.createIcons(); // Ensure all icons are updated, including some with custom stroke if added
         this.view.totalCreditsEl.innerText = this.model.calculateCredits();
         this.view.updateSyncUI(this.model.allCourses);
-    }
-
-    updateFocusToggleUI() {
-        const focusBtn = document.getElementById('focus-toggle');
-        if (!focusBtn) return;
-
-        const icon = focusBtn.querySelector('i');
-        if (this.model.focusMode) {
-            focusBtn.classList.add('!bg-[var(--accent-primary)]', '!text-black', 'shadow-[0_0_15px_var(--accent-glow)]');
-            focusBtn.classList.remove('!bg-white/10', '!text-white', 'border-white/20');
-            if (icon) {
-                icon.setAttribute('data-lucide', 'minimize-2');
-                icon.classList.add('rotate-90');
-            }
-        } else {
-            focusBtn.classList.remove('!bg-[var(--accent-primary)]', '!text-black', 'shadow-[0_0_15px_var(--accent-glow)]');
-            focusBtn.classList.add('!bg-white/10', '!text-white', 'border-white/20');
-            if (icon) {
-                icon.setAttribute('data-lucide', 'maximize-2');
-                icon.classList.remove('rotate-90');
-            }
-        }
-        lucide.createIcons();
     }
 }
