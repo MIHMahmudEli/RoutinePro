@@ -686,14 +686,14 @@ class RoutineController {
         const icon = focusBtn.querySelector('i');
         if (this.model.focusMode) {
             focusBtn.classList.add('!bg-[var(--accent-primary)]', '!text-black', 'shadow-[0_0_15px_var(--accent-glow)]');
-            focusBtn.classList.remove('!bg-white/5', '!text-slate-400');
+            focusBtn.classList.remove('!bg-white/10', '!text-white', 'border-white/20');
             if (icon) {
                 icon.setAttribute('data-lucide', 'minimize-2');
                 icon.classList.add('rotate-90');
             }
         } else {
             focusBtn.classList.remove('!bg-[var(--accent-primary)]', '!text-black', 'shadow-[0_0_15px_var(--accent-glow)]');
-            focusBtn.classList.add('!bg-white/5', '!text-slate-400');
+            focusBtn.classList.add('!bg-white/10', '!text-white', 'border-white/20');
             if (icon) {
                 icon.setAttribute('data-lucide', 'maximize-2');
                 icon.classList.remove('rotate-90');
