@@ -116,30 +116,37 @@ class RoutineController {
         });
 
         // UX Improvements: Smart Time End suggest
-        const startSelect = document.getElementById('manual-start');
-        const endSelect = document.getElementById('manual-end');
-        if (startSelect && endSelect) {
-            startSelect.addEventListener('change', () => {
-                const startMin = this.model.toMin(startSelect.value);
-                const endMin = this.model.toMin(endSelect.value);
-                if (endMin <= startMin) {
-                    // Try to suggest +90 mins
-                    const suggestMin = startMin + 90;
-                    // Find closest available option
-                    let bestIdx = 0;
-                    let minDiff = Infinity;
-                    for (let i = 0; i < endSelect.options.length; i++) {
-                        const optMin = this.model.toMin(endSelect.options[i].value);
-                        const diff = Math.abs(optMin - suggestMin);
-                        if (diff < minDiff) {
-                            minDiff = diff;
-                            bestIdx = i;
-                        }
+        ['man-start-h', 'man-start-m', 'man-start-p'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('change', () => {
+                    const sh = document.getElementById('man-start-h').value;
+                    const sm = document.getElementById('man-start-m').value;
+                    const sp = document.getElementById('man-start-p').value;
+                    const eh = document.getElementById('man-end-h').value;
+                    const em = document.getElementById('man-end-m').value;
+                    const ep = document.getElementById('man-end-p').value;
+
+                    const startMin = this.model.toMin(`${sh}:${sm} ${sp}`);
+                    const endMin = this.model.toMin(`${eh}:${em} ${ep}`);
+
+                    if (endMin <= startMin) {
+                        // Suggest +90 mins
+                        let sugMin = startMin + 90;
+                        if (sugMin >= 1440) sugMin -= 1440; // Wrap day
+
+                        let h = Math.floor(sugMin / 60);
+                        const m = sugMin % 60;
+                        const p = h >= 12 ? 'PM' : 'AM';
+                        h = h % 12 || 12;
+
+                        document.getElementById('man-end-h').value = String(h).padStart(2, '0');
+                        document.getElementById('man-end-m').value = String(Math.round(m / 5) * 5).padStart(2, '0').replace('60', '55');
+                        document.getElementById('man-end-p').value = p;
                     }
-                    endSelect.selectedIndex = bestIdx;
-                }
-            });
-        }
+                });
+            }
+        });
     }
 
     toggleManualMode(show) {
@@ -171,23 +178,43 @@ class RoutineController {
         document.getElementById('manual-subject').value = '';
         document.getElementById('manual-section').value = '';
         document.getElementById('manual-room').value = '';
+
+        // Reset time selects to defaults
+        document.getElementById('man-start-h').value = '08';
+        document.getElementById('man-start-m').value = '00';
+        document.getElementById('man-start-p').value = 'AM';
+        document.getElementById('man-end-h').value = '09';
+        document.getElementById('man-end-m').value = '30';
+        document.getElementById('man-end-p').value = 'AM';
+
         document.querySelectorAll('input[name="man-day"]').forEach((cb, i) => cb.checked = i === 0);
         this.view.manualAddBtn.innerHTML = `<i data-lucide="plus-circle" class="w-4 h-4"></i> ADD TO ROUTINE`;
         document.getElementById('manual-entry-section').classList.remove('ring-2', 'ring-emerald-500/50', 'ring-offset-4', 'ring-offset-slate-900');
         lucide.createIcons();
     }
 
+
+
     handleAddManual() {
         const subject = document.getElementById('manual-subject').value.trim();
         const days = Array.from(document.querySelectorAll('input[name="man-day"]:checked')).map(cb => cb.value);
-        const start = document.getElementById('manual-start').value;
-        const end = document.getElementById('manual-end').value;
         const section = document.getElementById('manual-section').value.trim();
         const room = document.getElementById('manual-room').value.trim();
 
-        if (!subject || days.length === 0 || !start || !end) {
-            return this.view.showToast("Subject, at least one Day, and Times are required!", "error");
+        // Get time components
+        const sh = document.getElementById('man-start-h').value;
+        const sm = document.getElementById('man-start-m').value;
+        const sp = document.getElementById('man-start-p').value;
+        const eh = document.getElementById('man-end-h').value;
+        const em = document.getElementById('man-end-m').value;
+        const ep = document.getElementById('man-end-p').value;
+
+        if (!subject || days.length === 0) {
+            return this.view.showToast("Subject and at least one Day are required!", "error");
         }
+
+        const start = `${sh}:${sm} ${sp}`;
+        const end = `${eh}:${em} ${ep}`;
 
         if (this.model.toMin(start) >= this.model.toMin(end)) {
             return this.view.showToast("Start time must be before end time!", "error");
@@ -224,8 +251,20 @@ class RoutineController {
         document.getElementById('manual-subject').value = course.baseTitle;
         document.getElementById('manual-section').value = sec.section || '';
         document.getElementById('manual-room').value = sched.room || '';
-        document.getElementById('manual-start').value = sched.start;
-        document.getElementById('manual-end').value = sched.end;
+
+        // Split and set start time
+        const [st, sp] = sched.start.split(' ');
+        const [sh, sm] = st.split(':');
+        document.getElementById('man-start-h').value = sh;
+        document.getElementById('man-start-m').value = sm;
+        document.getElementById('man-start-p').value = sp;
+
+        // Split and set end time
+        const [et, ep] = sched.end.split(' ');
+        const [eh, em] = et.split(':');
+        document.getElementById('man-end-h').value = eh;
+        document.getElementById('man-end-m').value = em;
+        document.getElementById('man-end-p').value = ep;
 
         // Select days
         const selectedDays = sec.schedules.map(s => s.day);

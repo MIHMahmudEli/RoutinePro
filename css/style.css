@@ -207,6 +207,105 @@ select.prism-input option {
     box-shadow: 0 0 15px var(--accent-glow);
 }
 
+/* Premium Modern Time Picker */
+.time-picker-premium {
+    display: flex;
+    align-items: center;
+    background: #0f172a;
+    /* Deep slate background */
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 3px;
+    height: 48px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 100%;
+    overflow: hidden;
+}
+
+.time-picker-premium:focus-within {
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.15), inset 0 0 10px rgba(16, 185, 129, 0.05);
+}
+
+.time-input-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    gap: 2px;
+}
+
+.time-select-modern {
+    appearance: none;
+    -webkit-appearance: none;
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    text-align: center;
+    cursor: pointer;
+    outline: none;
+    padding: 0 4px;
+    min-width: 38px;
+    transition: color 0.2s ease;
+}
+
+.time-select-modern:hover {
+    color: var(--accent-primary);
+}
+
+.time-select-modern option {
+    background: #1e293b;
+    color: white;
+    font-weight: 600;
+    padding: 10px;
+}
+
+.time-colon {
+    font-weight: 900;
+    color: var(--accent-primary);
+    opacity: 0.4;
+    font-size: 1rem;
+    user-select: none;
+}
+
+.period-switcher {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.period-select-modern {
+    appearance: none;
+    -webkit-appearance: none;
+    background: transparent;
+    color: var(--accent-primary);
+    font-weight: 900;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0;
+    height: auto;
+    border-radius: 0;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    text-align: center;
+    min-width: 44px;
+}
+
+.period-select-modern:hover {
+    background: transparent;
+    transform: none;
+}
+
+.period-select-modern option {
+    background: #0f172a;
+    color: white;
+}
+
 .prism-btn {
     background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
     color: var(--text-on-accent);

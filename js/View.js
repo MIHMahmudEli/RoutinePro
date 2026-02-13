@@ -44,14 +44,6 @@ class RoutineView {
         if (this.filterEnd) {
             this.filterEnd.innerHTML = times.map((t, i) => `<option value="${t.v}" ${i === times.length - 1 ? 'selected' : ''}>${t.l}</option>`).join('');
         }
-        if (this.manualStart) {
-            this.manualStart.innerHTML = optionsHtml;
-        }
-        if (this.manualEnd) {
-            this.manualEnd.innerHTML = optionsHtml;
-            // Default select a bit later
-            this.manualEnd.selectedIndex = 3;
-        }
     }
 
     formatGap(totalGapMin) {

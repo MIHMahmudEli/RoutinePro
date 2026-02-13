@@ -171,6 +171,11 @@ class RoutineModel {
 
     toMin(s) {
         try {
+            if (!s.includes(' ')) {
+                // Handle 24h format (HH:MM)
+                const [h, m] = s.split(':').map(Number);
+                return h * 60 + m;
+            }
             const [t, m] = s.trim().split(' ');
             let [h, min] = t.split(':').map(Number);
             if (h === 12) h = 0;
