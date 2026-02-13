@@ -379,11 +379,12 @@ input.time-select-modern:hover::-webkit-calendar-picker-indicator {
     background: var(--bg-surface);
     border: 1px solid var(--border-glass);
     border-radius: 24px;
-    padding: 24px;
+    padding: 16px;
     transition: background-color 0.5s ease, border-color 0.5s ease;
 }
 
 #routine-actual-grid {
+    width: 100%;
     background: var(--bg-surface);
     transition: background-color 0.5s ease;
 }
