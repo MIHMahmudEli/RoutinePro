@@ -125,7 +125,7 @@
             </div>
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-[320px_minmax(0,1fr)] gap-6">
 
             <!-- Sidebar -->
             <aside class="space-y-6">
@@ -176,6 +176,59 @@
                         <div id="conflict-badge"
                             class="hidden animate-bounce flex items-center justify-center gap-2 py-3 bg-rose-500/10 border border-rose-500/20 rounded-xl text-rose-500 text-[10px] font-black uppercase tracking-widest">
                             <i data-lucide="zap-off" class="w-4 h-4"></i> Conflict Detected
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Focus Mode Controls -->
+                <section id="focus-controls-section"
+                    class="prism-card p-6 space-y-6 hidden border-[var(--accent-primary)]/20 shadow-[0_0_30px_rgba(16,185,129,0.05)]">
+                    <div class="flex items-center gap-2 mb-2">
+                        <div
+                            class="w-8 h-8 rounded-lg bg-[var(--accent-primary)]/10 flex items-center justify-center border border-[var(--accent-primary)]/20">
+                            <i data-lucide="shrink" class="w-4 h-4 text-[var(--accent-primary)]"></i>
+                        </div>
+                        <h2 class="text-sm font-800 uppercase tracking-widest text-slate-400">Focus View Controls</h2>
+                    </div>
+
+                    <!-- Vertical Zoom (Existing) -->
+                    <div class="space-y-4">
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-end">
+                                <label class="text-[9px] font-black text-slate-600 uppercase pl-1">Vertical Zoom</label>
+                                <div class="flex items-center gap-2">
+                                    <span id="zoom-val-focus"
+                                        class="text-xs font-900 text-[var(--accent-primary)] uppercase">70</span>
+                                    <span
+                                        class="text-[9px] text-slate-600 font-bold uppercase tracking-widest">px</span>
+                                </div>
+                            </div>
+                            <div class="relative flex items-center h-8">
+                                <div id="zoom-slider-fill-focus"
+                                    class="absolute left-0 h-1.5 bg-[var(--accent-primary)] rounded-full shadow-[0_0_15px_var(--accent-glow)] z-0"
+                                    style="width: 37.5%"></div>
+                                <input type="range" id="routine-zoom-focus" min="40" max="150" value="70"
+                                    class="prism-slider relative z-10 w-full bg-transparent border-none">
+                            </div>
+                        </div>
+
+                        <!-- Horizontal Zoom (New) -->
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-end">
+                                <label class="text-[9px] font-black text-slate-600 uppercase pl-1">Width Zoom</label>
+                                <div class="flex items-center gap-2">
+                                    <span id="width-val-focus"
+                                        class="text-xs font-900 text-[var(--accent-primary)] uppercase">100</span>
+                                    <span class="text-[9px] text-slate-600 font-bold uppercase tracking-widest">%</span>
+                                </div>
+                            </div>
+                            <div class="relative flex items-center h-8">
+                                <div id="width-slider-fill-focus"
+                                    class="absolute left-0 h-1.5 bg-[var(--accent-primary)] rounded-full shadow-[0_0_15px_var(--accent-glow)] z-0"
+                                    style="width: 50%"></div>
+                                <input type="range" id="routine-width-focus" min="50" max="250" value="100"
+                                    class="prism-slider relative z-10 w-full bg-transparent border-none">
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -323,7 +376,7 @@
                                 <div id="zoom-slider-fill-manual"
                                     class="absolute left-0 h-1.5 bg-[var(--accent-primary)] rounded-full shadow-[0_0_15px_var(--accent-glow)] z-0"
                                     style="width: 37.5%"></div>
-                                <input type="range" id="routine-zoom-manual" min="40" max="120" value="70"
+                                <input type="range" id="routine-zoom-manual" min="40" max="150" value="70"
                                     class="prism-slider relative z-10 w-full bg-transparent border-none">
                             </div>
                         </div>
@@ -480,7 +533,7 @@
                                     <div id="zoom-slider-fill"
                                         class="absolute left-0 h-1.5 bg-[var(--accent-primary)] rounded-full shadow-[0_0_15px_var(--accent-glow)] z-0"
                                         style="width: 37.5%"></div>
-                                    <input type="range" id="routine-zoom" min="40" max="120" value="70"
+                                    <input type="range" id="routine-zoom" min="40" max="150" value="70"
                                         class="prism-slider relative z-10 w-full bg-transparent border-none">
                                 </div>
                             </div>

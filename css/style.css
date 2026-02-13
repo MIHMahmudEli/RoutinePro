@@ -369,6 +369,13 @@ input.time-select-modern:hover::-webkit-calendar-picker-indicator {
 }
 
 /* Compact Sidebar Styles */
+#parameters-section,
+#manual-entry-section,
+#selection-panel,
+#focus-controls-section {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .sidebar-item {
     padding: 16px;
     background: rgba(255, 255, 255, 0.02);
@@ -389,6 +396,8 @@ input.time-select-modern:hover::-webkit-calendar-picker-indicator {
     border-radius: 24px;
     padding: 16px;
     transition: background-color 0.5s ease, border-color 0.5s ease;
+    overflow: hidden;
+    max-width: 100%;
 }
 
 #routine-actual-grid {
@@ -606,9 +615,11 @@ input.time-select-modern:hover::-webkit-calendar-picker-indicator {
     transform: scale(1.15);
 }
 
-#slider-fill {
+#slider-fill,
+[id*="slider-fill"] {
     pointer-events: none;
-    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: width 0.1s ease-out;
+    /* Much faster for better feel */
 }
 
 /* ===================================

@@ -200,32 +200,43 @@ class RoutineController {
         const sliderFill = document.getElementById('slider-fill');
         if (filterSeats) {
             filterSeats.oninput = (e) => {
-                seatValDisplay.innerText = e.target.value;
-                if (sliderFill) sliderFill.style.width = `${e.target.value}%`;
+                const val = e.target.value;
+                seatValDisplay.innerText = val;
+                if (sliderFill) {
+                    const pct = val; // 0-100 range
+                    sliderFill.style.width = `calc(${pct}% + ${(0.5 - pct / 100) * 20}px)`;
+                }
             };
         }
 
-        // Zoom Sliders (Sync between Manual and Parameters)
+        // Zoom Sliders (Sync between Manual, Parameters, and Focus sections)
         const routineZoom = document.getElementById('routine-zoom');
         const routineZoomManual = document.getElementById('routine-zoom-manual');
+        const routineZoomFocus = document.getElementById('routine-zoom-focus');
         const zoomValDisplay = document.getElementById('zoom-val');
         const zoomValManualDisplay = document.getElementById('zoom-val-manual');
+        const zoomValFocusDisplay = document.getElementById('zoom-val-focus');
         const zoomSliderFill = document.getElementById('zoom-slider-fill');
         const zoomSliderFillManual = document.getElementById('zoom-slider-fill-manual');
+        const zoomSliderFillFocus = document.getElementById('zoom-slider-fill-focus');
 
         const updateZoom = (val) => {
             // Update UI Labels
             if (zoomValDisplay) zoomValDisplay.innerText = val;
             if (zoomValManualDisplay) zoomValManualDisplay.innerText = val;
+            if (zoomValFocusDisplay) zoomValFocusDisplay.innerText = val;
 
             // Update Sliders
             if (routineZoom) routineZoom.value = val;
             if (routineZoomManual) routineZoomManual.value = val;
+            if (routineZoomFocus) routineZoomFocus.value = val;
 
             // Update Fill Bars
-            const pct = ((val - 40) / (120 - 40)) * 100;
-            if (zoomSliderFill) zoomSliderFill.style.width = `${pct}%`;
-            if (zoomSliderFillManual) zoomSliderFillManual.style.width = `${pct}%`;
+            const pct = ((val - 40) / (150 - 40)) * 100;
+            const fillWidth = `calc(${pct}% + ${(0.5 - pct / 100) * 20}px)`;
+            if (zoomSliderFill) zoomSliderFill.style.width = fillWidth;
+            if (zoomSliderFillManual) zoomSliderFillManual.style.width = fillWidth;
+            if (zoomSliderFillFocus) zoomSliderFillFocus.style.width = fillWidth;
 
             // Update CSS Variables
             document.documentElement.style.setProperty('--row-height', `${val}px`);
@@ -237,6 +248,32 @@ class RoutineController {
 
         if (routineZoom) routineZoom.oninput = (e) => updateZoom(e.target.value);
         if (routineZoomManual) routineZoomManual.oninput = (e) => updateZoom(e.target.value);
+        if (routineZoomFocus) routineZoomFocus.oninput = (e) => updateZoom(e.target.value);
+
+        // Width Zoom Control
+        const routineWidthFocus = document.getElementById('routine-width-focus');
+        const widthValFocusDisplay = document.getElementById('width-val-focus');
+        const widthSliderFillFocus = document.getElementById('width-slider-fill-focus');
+
+        const updateWidth = (val) => {
+            if (widthValFocusDisplay) widthValFocusDisplay.innerText = val;
+            const pct = ((val - 50) / (250 - 50)) * 100;
+            if (widthSliderFillFocus) widthSliderFillFocus.style.width = `calc(${pct}% + ${(0.5 - pct / 100) * 20}px)`;
+
+            // Apply Width Change
+            const grid = document.getElementById('routine-actual-grid');
+            if (grid) {
+                grid.style.width = `${val}%`;
+                grid.style.minWidth = 'unset'; // Override the 600px min-width
+            }
+        };
+
+        if (routineWidthFocus) routineWidthFocus.oninput = (e) => updateWidth(e.target.value);
+
+        // Initial Calls to set UI states correctly
+        updateZoom(70);
+        updateWidth(100);
+        if (filterSeats) filterSeats.dispatchEvent(new Event('input', { bubbles: true }));
 
         // File Upload
         const fileInput = document.getElementById('course-file-input');
@@ -691,10 +728,45 @@ class RoutineController {
     }
 
     syncWorkspace() {
-        const { isExplorerMode, currentRoutineIndex, possibleRoutines, selectedCourses } = this.model;
+        const { isExplorerMode, currentRoutineIndex, possibleRoutines, selectedCourses, focusMode } = this.model;
 
         this.view.explorerNav.classList.toggle('hidden', !isExplorerMode);
         this.view.explorerNav.classList.toggle('flex', isExplorerMode);
+
+        // Visibility Logic Based on Focus Mode
+        const paramsSection = document.getElementById('parameters-section');
+        const manualSection = document.getElementById('manual-entry-section');
+        const focusSection = document.getElementById('focus-controls-section');
+        const queueNavManualBtn = document.getElementById('toggle-manual-mode');
+
+        if (focusMode) {
+            if (paramsSection) paramsSection.classList.add('hidden');
+            if (manualSection) manualSection.classList.add('hidden');
+            if (focusSection) focusSection.classList.remove('hidden');
+            if (queueNavManualBtn) queueNavManualBtn.classList.add('hidden'); // Hide manual toggle in focus mode
+
+            // Apply Width Zoom from slider
+            const widthSlider = document.getElementById('routine-width-focus');
+            const grid = document.getElementById('routine-actual-grid');
+            if (widthSlider && grid) {
+                grid.style.width = `${widthSlider.value}%`;
+                grid.style.minWidth = 'unset';
+            }
+        } else {
+            // Only show params/manual-toggle if not in actual manual entry mode
+            if (!manualSection || manualSection.classList.contains('hidden')) {
+                if (paramsSection) paramsSection.classList.remove('hidden');
+                if (queueNavManualBtn) queueNavManualBtn.classList.remove('hidden');
+            }
+            if (focusSection) focusSection.classList.add('hidden');
+
+            // Reset Width when exiting Focus Mode
+            const grid = document.getElementById('routine-actual-grid');
+            if (grid) {
+                grid.style.width = '100%';
+                grid.style.minWidth = '600px';
+            }
+        }
 
         // Always show gap/waiting time in header
         const currentItems = isExplorerMode ? possibleRoutines[currentRoutineIndex] : selectedCourses;
