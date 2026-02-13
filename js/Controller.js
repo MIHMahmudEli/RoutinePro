@@ -502,7 +502,7 @@ class RoutineController {
         const el = document.getElementById('routine-actual-grid');
         const originalHTML = this.view.exportBtn.innerHTML;
         this.view.exportBtn.disabled = true;
-        this.view.exportBtn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> GENERATING...`;
+        this.view.exportBtn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>`;
         lucide.createIcons();
 
         try {
@@ -511,7 +511,7 @@ class RoutineController {
             const themeBg = style.getPropertyValue('--bg-surface').trim() || '#0a0d14';
 
             const canvas = await html2canvas(el, {
-                scale: window.innerWidth < 768 ? 1.5 : 2, // Slightly lower scale on mobile for memory
+                scale: 3, // High resolution for crisp mobile/desktop exports
                 backgroundColor: themeBg,
                 useCORS: true,
                 allowTaint: true,
