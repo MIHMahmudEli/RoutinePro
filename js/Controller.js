@@ -78,6 +78,39 @@ class RoutineController {
             };
         }
 
+        // Zoom Sliders (Sync between Manual and Parameters)
+        const routineZoom = document.getElementById('routine-zoom');
+        const routineZoomManual = document.getElementById('routine-zoom-manual');
+        const zoomValDisplay = document.getElementById('zoom-val');
+        const zoomValManualDisplay = document.getElementById('zoom-val-manual');
+        const zoomSliderFill = document.getElementById('zoom-slider-fill');
+        const zoomSliderFillManual = document.getElementById('zoom-slider-fill-manual');
+
+        const updateZoom = (val) => {
+            // Update UI Labels
+            if (zoomValDisplay) zoomValDisplay.innerText = val;
+            if (zoomValManualDisplay) zoomValManualDisplay.innerText = val;
+
+            // Update Sliders
+            if (routineZoom) routineZoom.value = val;
+            if (routineZoomManual) routineZoomManual.value = val;
+
+            // Update Fill Bars
+            const pct = ((val - 40) / (120 - 40)) * 100;
+            if (zoomSliderFill) zoomSliderFill.style.width = `${pct}%`;
+            if (zoomSliderFillManual) zoomSliderFillManual.style.width = `${pct}%`;
+
+            // Update CSS Variables
+            document.documentElement.style.setProperty('--row-height', `${val}px`);
+            document.documentElement.style.setProperty('--routine-scale', val / 60);
+
+            // Re-render
+            this.syncWorkspace();
+        };
+
+        if (routineZoom) routineZoom.oninput = (e) => updateZoom(e.target.value);
+        if (routineZoomManual) routineZoomManual.oninput = (e) => updateZoom(e.target.value);
+
         // File Upload
         const fileInput = document.getElementById('course-file-input');
         if (fileInput) {
@@ -419,13 +452,11 @@ class RoutineController {
                     const labels = clonedDoc.querySelectorAll('.time-label');
                     const isMob = window.innerWidth < 768;
                     labels.forEach(l => {
-                        // On mobile we use 50px scale, desktop 70px. 
-                        // html2canvas needs different offset than browser sometimes
+                        const actualHeight = getComputedStyle(document.documentElement).getPropertyValue('--row-height');
                         l.style.position = 'relative';
-                        l.style.top = isMob ? '-2px' : '-4px';
                         l.style.display = 'flex';
                         l.style.alignItems = 'flex-start';
-                        l.style.height = isMob ? '50px' : '70px';
+                        l.style.height = actualHeight;
                     });
                 }
             });

@@ -133,9 +133,7 @@ class RoutineView {
                 const start = this.toMin(sch.start);
                 const end = this.toMin(sch.end);
 
-                // Use smaller vertical scale for mobile
-                const isMobile = window.innerWidth < 768;
-                const scale = isMobile ? (50 / 60) : (70 / 60);
+                const scale = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--routine-scale')) || (window.innerWidth < 768 ? 50 / 60 : 70 / 60);
 
                 const top = (start - (8 * 60)) * scale;
                 const height = (end - start) * scale;

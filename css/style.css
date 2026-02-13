@@ -12,6 +12,9 @@
     --text-muted: #475569;
     --text-on-accent: #000000;
     --font-main: 'Inter', sans-serif;
+    --row-height: 70px;
+    --routine-scale: 1.166666667;
+    /* 70/60 */
 }
 
 [data-theme="nebula"] {

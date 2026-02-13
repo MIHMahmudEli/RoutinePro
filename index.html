@@ -310,6 +310,26 @@
                             </div>
                         </div>
 
+                        <!-- Routine Grid Scaling (Manual Mode) -->
+                        <div class="space-y-2 py-2">
+                            <div class="flex justify-between items-end">
+                                <label class="text-[9px] font-black text-slate-600 uppercase pl-1">Routine Zoom</label>
+                                <div class="flex items-center gap-2">
+                                    <span id="zoom-val-manual"
+                                        class="text-xs font-900 text-[var(--accent-primary)] uppercase">70</span>
+                                    <span
+                                        class="text-[9px] text-slate-600 font-bold uppercase tracking-widest">px</span>
+                                </div>
+                            </div>
+                            <div class="relative flex items-center h-8">
+                                <div id="zoom-slider-fill-manual"
+                                    class="absolute left-0 h-1.5 bg-[var(--accent-primary)] rounded-full shadow-[0_0_15px_var(--accent-glow)] z-0"
+                                    style="width: 37.5%"></div>
+                                <input type="range" id="routine-zoom-manual" min="40" max="120" value="70"
+                                    class="prism-slider relative z-10 w-full bg-transparent border-none">
+                            </div>
+                        </div>
+
                         <div class="pt-2 flex gap-3">
                             <button id="add-manual-btn"
                                 class="prism-btn flex-1 !py-4 !bg-emerald-500 !text-black shadow-[0_4px_15px_rgba(16,185,129,0.2)]">
@@ -396,6 +416,26 @@
                                     class="absolute left-0 h-1.5 bg-[var(--accent-primary)] rounded-full shadow-[0_0_15px_var(--accent-glow)] z-0"
                                     style="width: 100%"></div>
                                 <input type="range" id="filter-seats" min="0" max="100" value="100"
+                                    class="prism-slider relative z-10 w-full bg-transparent border-none">
+                            </div>
+                        </div>
+
+                        <!-- Routine Grid Scaling -->
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-end">
+                                <label class="text-[9px] font-black text-slate-600 uppercase pl-1">Routine Zoom</label>
+                                <div class="flex items-center gap-2">
+                                    <span id="zoom-val"
+                                        class="text-xs font-900 text-[var(--accent-primary)] uppercase">70</span>
+                                    <span
+                                        class="text-[9px] text-slate-600 font-bold uppercase tracking-widest">px</span>
+                                </div>
+                            </div>
+                            <div class="relative flex items-center h-8">
+                                <div id="zoom-slider-fill"
+                                    class="absolute left-0 h-1.5 bg-[var(--accent-primary)] rounded-full shadow-[0_0_15px_var(--accent-glow)] z-0"
+                                    style="width: 37.5%"></div>
+                                <input type="range" id="routine-zoom" min="40" max="120" value="70"
                                     class="prism-slider relative z-10 w-full bg-transparent border-none">
                             </div>
                         </div>
@@ -487,40 +527,53 @@
                                 <div class="day-label">SAT</div>
                             </div>
 
-                            <div class="relative h-[910px] mt-4">
+                            <div class="relative mt-4" style="height: calc(13 * var(--row-height))">
                                 <!-- Time Rail -->
                                 <div
                                     class="absolute left-0 top-0 bottom-0 w-[80px] flex flex-col border-r border-white/5">
-                                    <div class="h-[70px] flex items-start justify-end pr-4 time-label">8:00 AM</div>
-                                    <div class="h-[70px] flex items-start justify-end pr-4 time-label">9:00 AM</div>
-                                    <div class="h-[70px] flex items-start justify-end pr-4 time-label">10:00 AM</div>
-                                    <div class="h-[70px] flex items-start justify-end pr-4 time-label">11:00 AM</div>
-                                    <div class="h-[70px] flex items-start justify-end pr-4 time-label">12:00 PM</div>
-                                    <div class="h-[70px] flex items-start justify-end pr-4 time-label">1:00 PM</div>
-                                    <div class="h-[70px] flex items-start justify-end pr-4 time-label">2:00 PM</div>
-                                    <div class="h-[70px] flex items-start justify-end pr-4 time-label">3:00 PM</div>
-                                    <div class="h-[70px] flex items-start justify-end pr-4 time-label">4:00 PM</div>
-                                    <div class="h-[70px] flex items-start justify-end pr-4 time-label">5:00 PM</div>
-                                    <div class="h-[70px] flex items-start justify-end pr-4 time-label">6:00 PM</div>
-                                    <div class="h-[70px] flex items-start justify-end pr-4 time-label">7:00 PM</div>
-                                    <div class="h-[70px] flex items-start justify-end pr-4 time-label">8:00 PM</div>
+                                    <div class="flex items-start justify-end pr-4 time-label"
+                                        style="height: var(--row-height)">8:00 AM</div>
+                                    <div class="flex items-start justify-end pr-4 time-label"
+                                        style="height: var(--row-height)">9:00 AM</div>
+                                    <div class="flex items-start justify-end pr-4 time-label"
+                                        style="height: var(--row-height)">10:00 AM</div>
+                                    <div class="flex items-start justify-end pr-4 time-label"
+                                        style="height: var(--row-height)">11:00 AM</div>
+                                    <div class="flex items-start justify-end pr-4 time-label"
+                                        style="height: var(--row-height)">12:00 PM</div>
+                                    <div class="flex items-start justify-end pr-4 time-label"
+                                        style="height: var(--row-height)">1:00 PM</div>
+                                    <div class="flex items-start justify-end pr-4 time-label"
+                                        style="height: var(--row-height)">2:00 PM</div>
+                                    <div class="flex items-start justify-end pr-4 time-label"
+                                        style="height: var(--row-height)">3:00 PM</div>
+                                    <div class="flex items-start justify-end pr-4 time-label"
+                                        style="height: var(--row-height)">4:00 PM</div>
+                                    <div class="flex items-start justify-end pr-4 time-label"
+                                        style="height: var(--row-height)">5:00 PM</div>
+                                    <div class="flex items-start justify-end pr-4 time-label"
+                                        style="height: var(--row-height)">6:00 PM</div>
+                                    <div class="flex items-start justify-end pr-4 time-label"
+                                        style="height: var(--row-height)">7:00 PM</div>
+                                    <div class="flex items-start justify-end pr-4 time-label"
+                                        style="height: var(--row-height)">8:00 PM</div>
                                 </div>
 
                                 <!-- Horizontal Guide Lines -->
                                 <div class="ml-[80px] absolute inset-0 pointer-events-none">
-                                    <div class="h-[70px] border-b border-white/[0.03]"></div>
-                                    <div class="h-[70px] border-b border-white/[0.03]"></div>
-                                    <div class="h-[70px] border-b border-white/[0.03]"></div>
-                                    <div class="h-[70px] border-b border-white/[0.03]"></div>
-                                    <div class="h-[70px] border-b border-white/[0.03]"></div>
-                                    <div class="h-[70px] border-b border-white/[0.03]"></div>
-                                    <div class="h-[70px] border-b border-white/[0.03]"></div>
-                                    <div class="h-[70px] border-b border-white/[0.03]"></div>
-                                    <div class="h-[70px] border-b border-white/[0.03]"></div>
-                                    <div class="h-[70px] border-b border-white/[0.03]"></div>
-                                    <div class="h-[70px] border-b border-white/[0.03]"></div>
-                                    <div class="h-[70px] border-b border-white/[0.03]"></div>
-                                    <div class="h-[70px] border-b border-white/[0.03]"></div>
+                                    <div class="border-b border-white/[0.03]" style="height: var(--row-height)"></div>
+                                    <div class="border-b border-white/[0.03]" style="height: var(--row-height)"></div>
+                                    <div class="border-b border-white/[0.03]" style="height: var(--row-height)"></div>
+                                    <div class="border-b border-white/[0.03]" style="height: var(--row-height)"></div>
+                                    <div class="border-b border-white/[0.03]" style="height: var(--row-height)"></div>
+                                    <div class="border-b border-white/[0.03]" style="height: var(--row-height)"></div>
+                                    <div class="border-b border-white/[0.03]" style="height: var(--row-height)"></div>
+                                    <div class="border-b border-white/[0.03]" style="height: var(--row-height)"></div>
+                                    <div class="border-b border-white/[0.03]" style="height: var(--row-height)"></div>
+                                    <div class="border-b border-white/[0.03]" style="height: var(--row-height)"></div>
+                                    <div class="border-b border-white/[0.03]" style="height: var(--row-height)"></div>
+                                    <div class="border-b border-white/[0.03]" style="height: var(--row-height)"></div>
+                                    <div class="border-b border-white/[0.03]" style="height: var(--row-height)"></div>
                                 </div>
 
                                 <!-- Columns for Classes -->
