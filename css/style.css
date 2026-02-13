@@ -615,7 +615,8 @@ select.prism-input option {
     }
 
     /* Theme Switcher on Tablets */
-    header .flex.items-center.gap-6 {
+    /* Theme Switcher container on Tablets */
+    header>div:nth-child(2) {
         flex-wrap: wrap;
         justify-content: center;
         gap: 12px !important;
@@ -651,55 +652,80 @@ select.prism-input option {
     }
 
     /* ============ HEADER ============ */
+    /* ============ HEADER ============ */
     header {
-        padding: 12px !important;
-        gap: 12px !important;
+        padding: 10px !important;
+        gap: 10px !important;
+        flex-direction: column !important;
+        align-items: center !important;
     }
 
+    header>div {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    /* Logo Section */
     header h1 {
-        font-size: 15px !important;
+        font-size: 16px !important;
     }
 
-    header p {
-        font-size: 8px !important;
+    /* Tools Container (Theme, Stats, Buttons) */
+    header>div:nth-child(2) {
+        gap: 8px !important;
     }
 
-    /* Minimal Statistics Chip for Mobile */
-    header .flex.items-center.gap-3.bg-black\/40 {
-        padding: 6px 12px !important;
-        border-radius: 14px !important;
-        width: auto !important;
-        margin: 0 auto;
-    }
-
-    header .w-px.h-6 {
-        height: 18px !important;
-    }
-
-    #header-gap-display,
-    #total-credits {
-        font-size: 13px !important;
-    }
-
-    /* Theme Color Buttons - Compact Grid */
-    header .flex.gap-1\.5 {
-        display: grid !important;
-        grid-template-columns: repeat(5, 1fr) !important;
+    /* Theme Switcher Mobile */
+    header .bg-black\/40.rounded-full {
+        padding: 4px 8px !important;
         gap: 6px !important;
     }
 
-    header .flex.gap-1\.5 button {
-        width: 32px !important;
-        height: 32px !important;
+    /* Hide Theme Icon/Label on very small screens if needed, or keep compact */
+    header .group\/theme .text-slate-500 {
+        display: none !important;
+        /* Hide 'Theme' text */
     }
 
-    /* Export Button Full Width */
-    #export-btn {
-        width: 100% !important;
-        min-width: auto !important;
-        padding: 10px 14px !important;
+    header #theme-options {
+        gap: 6px !important;
+    }
+
+    header .theme-btn {
+        width: 18px !important;
+        height: 18px !important;
+    }
+
+    /* Stats Chip */
+    header .flex.items-center.gap-3.bg-black\/40 {
+        padding: 4px 10px !important;
+        border-radius: 12px !important;
+    }
+
+    header #header-gap-display,
+    header #total-credits {
         font-size: 11px !important;
     }
+
+    header .text-\[6px\] {
+        font-size: 6px !important;
+    }
+
+    /* Action Buttons (Sync/Export) */
+    header .prism-btn.\!w-9 {
+        width: 36px !important;
+        height: 36px !important;
+    }
+
+    /* Reset Export Button (remove old full-width style) */
+    #export-btn {
+        width: 36px !important;
+        min-width: 0 !important;
+        padding: 0 !important;
+    }
+
+
 
     /* ============ SIDEBAR ============ */
     aside {
