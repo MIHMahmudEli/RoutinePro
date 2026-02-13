@@ -263,6 +263,20 @@ select.prism-input option {
     transition: color 0.2s ease;
 }
 
+input.time-select-modern {
+    width: 36px !important;
+    padding: 0 !important;
+}
+
+/* Ensure datalist arrow visibility for text inputs */
+input.time-select-modern::-webkit-calendar-picker-indicator {
+    display: none !important;
+}
+
+input.time-select-modern:hover::-webkit-calendar-picker-indicator {
+    display: none !important;
+}
+
 .time-select-modern:hover {
     color: var(--accent-primary);
 }

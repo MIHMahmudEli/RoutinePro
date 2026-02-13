@@ -223,37 +223,11 @@
                                     <i data-lucide="clock" class="w-3 h-3"></i> Start Time
                                 </label>
                                 <div class="time-picker-premium">
-                                    <div class="time-input-group">
-                                        <select id="man-start-h" class="time-select-modern">
-                                            <option value="08" selected>08</option>
-                                            <option value="01">01</option>
-                                            <option value="02">02</option>
-                                            <option value="03">03</option>
-                                            <option value="04">04</option>
-                                            <option value="05">05</option>
-                                            <option value="06">06</option>
-                                            <option value="07">07</option>
-                                            <option value="09">09</option>
-                                            <option value="10">10</option>
-                                            <option value="11">11</option>
-                                            <option value="12">12</option>
-                                        </select>
-                                        <span class="time-colon">:</span>
-                                        <select id="man-start-m" class="time-select-modern">
-                                            <option value="00" selected>00</option>
-                                            <option value="05">05</option>
-                                            <option value="10">10</option>
-                                            <option value="15">15</option>
-                                            <option value="20">20</option>
-                                            <option value="25">25</option>
-                                            <option value="30">30</option>
-                                            <option value="35">35</option>
-                                            <option value="40">40</option>
-                                            <option value="45">45</option>
-                                            <option value="50">50</option>
-                                            <option value="55">55</option>
-                                        </select>
-                                    </div>
+                                    <input type="text" inputmode="numeric" maxlength="2" id="man-start-h"
+                                        class="time-select-modern" value="08" list="time-hours">
+                                    <span class="time-colon">:</span>
+                                    <input type="text" inputmode="numeric" maxlength="2" id="man-start-m"
+                                        class="time-select-modern" value="00" list="time-minutes">
                                     <div class="period-switcher">
                                         <select id="man-start-p" class="period-select-modern">
                                             <option value="AM" selected>AM</option>
@@ -268,37 +242,11 @@
                                     <i data-lucide="clock-4" class="w-3 h-3"></i> End Time
                                 </label>
                                 <div class="time-picker-premium">
-                                    <div class="time-input-group">
-                                        <select id="man-end-h" class="time-select-modern">
-                                            <option value="09" selected>09</option>
-                                            <option value="01">01</option>
-                                            <option value="02">02</option>
-                                            <option value="03">03</option>
-                                            <option value="04">04</option>
-                                            <option value="05">05</option>
-                                            <option value="06">06</option>
-                                            <option value="07">07</option>
-                                            <option value="08">08</option>
-                                            <option value="10">10</option>
-                                            <option value="11">11</option>
-                                            <option value="12">12</option>
-                                        </select>
-                                        <span class="time-colon">:</span>
-                                        <select id="man-end-m" class="time-select-modern">
-                                            <option value="00">00</option>
-                                            <option value="05">05</option>
-                                            <option value="10">10</option>
-                                            <option value="15">15</option>
-                                            <option value="20">20</option>
-                                            <option value="25">25</option>
-                                            <option value="30" selected>30</option>
-                                            <option value="35">35</option>
-                                            <option value="40">40</option>
-                                            <option value="45">45</option>
-                                            <option value="50">50</option>
-                                            <option value="55">55</option>
-                                        </select>
-                                    </div>
+                                    <input type="text" inputmode="numeric" maxlength="2" id="man-end-h"
+                                        class="time-select-modern" value="09" list="time-hours">
+                                    <span class="time-colon">:</span>
+                                    <input type="text" inputmode="numeric" maxlength="2" id="man-end-m"
+                                        class="time-select-modern" value="30" list="time-minutes">
                                     <div class="period-switcher">
                                         <select id="man-end-p" class="period-select-modern">
                                             <option value="AM" selected>AM</option>
@@ -345,6 +293,35 @@
                                     class="prism-slider relative z-10 w-full bg-transparent border-none">
                             </div>
                         </div>
+
+                        <datalist id="time-hours">
+                            <option value="01"></option>
+                            <option value="02"></option>
+                            <option value="03"></option>
+                            <option value="04"></option>
+                            <option value="05"></option>
+                            <option value="06"></option>
+                            <option value="07"></option>
+                            <option value="08"></option>
+                            <option value="09"></option>
+                            <option value="10"></option>
+                            <option value="11"></option>
+                            <option value="12"></option>
+                        </datalist>
+                        <datalist id="time-minutes">
+                            <option value="00"></option>
+                            <option value="05"></option>
+                            <option value="10"></option>
+                            <option value="15"></option>
+                            <option value="20"></option>
+                            <option value="25"></option>
+                            <option value="30"></option>
+                            <option value="35"></option>
+                            <option value="40"></option>
+                            <option value="45"></option>
+                            <option value="50"></option>
+                            <option value="55"></option>
+                        </datalist>
 
                         <div class="pt-2 flex gap-3">
                             <button id="add-manual-btn"

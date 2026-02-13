@@ -249,6 +249,45 @@ class RoutineController {
                 });
             }
         });
+
+        // Time Input Formatting (Clamp & Pad)
+        const formatTimeInput = (el, max) => {
+            let v = parseInt(el.value);
+            if (isNaN(v)) return; // Don't wipe if empty yet or partial
+            if (v < 0) v = 0;
+            if (v > max) v = max;
+            // Special case for hours 1-12
+            if (max === 12 && v === 0) v = 1;
+
+            el.value = String(v).padStart(2, '0');
+            el.dispatchEvent(new Event('change', { bubbles: true })); // Trigger smart suggest
+        };
+
+        ['man-start-h', 'man-end-h'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('blur', () => formatTimeInput(el, 12));
+                // Datalist selection triggers input/change
+                el.addEventListener('input', (e) => {
+                    if (e.inputType === 'insertReplacementText' || !e.inputType) {
+                        // Likely datalist selection
+                        formatTimeInput(el, 12);
+                    }
+                });
+            }
+        });
+
+        ['man-start-m', 'man-end-m'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('blur', () => formatTimeInput(el, 59));
+                el.addEventListener('input', (e) => {
+                    if (e.inputType === 'insertReplacementText' || !e.inputType) {
+                        formatTimeInput(el, 59);
+                    }
+                });
+            }
+        });
     }
 
     toggleManualMode(show) {
