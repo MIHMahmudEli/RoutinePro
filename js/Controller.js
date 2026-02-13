@@ -144,6 +144,19 @@ class RoutineController {
             };
         }
 
+        // Manual Section Toggle
+        const manualToggle = document.getElementById('manual-toggle');
+        const manualContent = document.getElementById('manual-content');
+        const manualChevron = document.getElementById('manual-chevron');
+        if (manualToggle && manualContent) {
+            manualToggle.onclick = () => {
+                const isHidden = manualContent.classList.toggle('hidden-params');
+                if (manualChevron) {
+                    manualChevron.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
+                }
+            };
+        }
+
         // Generation
         this.view.generateAllBtn.onclick = () => this.handleGenerate();
 

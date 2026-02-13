@@ -168,21 +168,33 @@
 
                 <!-- Manual Entry Panel -->
                 <section id="manual-entry-section" class="prism-card p-6 space-y-6 hidden border-emerald-500/20">
-                    <div class="flex items-center justify-between">
+                    <div class="flex items-center justify-between cursor-pointer group" id="manual-toggle">
                         <div class="flex items-center gap-2">
                             <div
-                                class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
+                                class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 group-hover:bg-emerald-500/20 transition-all">
                                 <i data-lucide="pencil-line" class="w-4 h-4 text-emerald-400"></i>
                             </div>
-                            <h2 class="text-sm font-800 uppercase tracking-widest text-slate-400">Manual Entry</h2>
+                            <h2
+                                class="text-sm font-800 uppercase tracking-widest text-slate-400 group-hover:text-white transition-colors">
+                                Manual Entry</h2>
                         </div>
-                        <button id="back-to-smart"
-                            class="text-[9px] font-black text-rose-500 uppercase tracking-widest bg-rose-500/10 border border-rose-500/20 px-3 py-1.5 rounded-lg hover:bg-rose-500 hover:text-white transition-all">
-                            BACK
-                        </button>
+                        <div class="flex items-center gap-2">
+                            <button id="back-to-smart"
+                                class="w-8 h-8 rounded-lg bg-rose-500/10 border border-rose-500/20 flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all shadow-lg active:scale-90"
+                                title="Back to Smart Search">
+                                <i data-lucide="corner-up-left"
+                                    class="w-4 h-4 text-rose-500 group-hover:text-inherit"></i>
+                            </button>
+                            <button
+                                class="w-6 h-6 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-white/10 transition-all">
+                                <i data-lucide="chevron-up"
+                                    class="w-3.5 h-3.5 text-slate-500 group-hover:text-white transition-transform duration-300"
+                                    id="manual-chevron"></i>
+                            </button>
+                        </div>
                     </div>
 
-                    <div class="space-y-5">
+                    <div id="manual-content" class="space-y-5 transition-all duration-300 overflow-hidden">
                         <div class="space-y-2">
                             <label
                                 class="flex items-center gap-2 text-[10px] font-black text-slate-500 uppercase tracking-widest pl-1">
