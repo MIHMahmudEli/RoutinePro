@@ -18,63 +18,58 @@
     <div class="max-w-[1500px] mx-auto space-y-6 animate-pop">
 
         <!-- Top Navigation / Status -->
-        <header class="prism-card p-5 flex flex-col md:flex-row justify-between items-center gap-4">
+        <header class="prism-card p-3 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-4">
                 <div
-                    class="w-12 h-12 bg-emerald-500/10 rounded-xl flex items-center justify-center border border-emerald-500/20">
-                    <i data-lucide="layout-grid" class="w-6 h-6 text-emerald-400"></i>
+                    class="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center border border-emerald-500/20">
+                    <i data-lucide="layout-grid" class="w-5 h-5 text-emerald-400"></i>
                 </div>
                 <div>
                     <div class="flex items-center gap-2">
-                        <h1 class="text-xl font-900 tracking-tighter">ROUTINE<span
+                        <h1 class="text-lg font-900 tracking-tighter">ROUTINE<span
                                 class="text-emerald-400 italic">PRO</span></h1>
                         <span id="semester-badge"
-                            class="px-2 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-[9px] font-black text-emerald-400 uppercase tracking-widest hidden">SPRING
-                            2024-25</span>
+                            class="px-1.5 py-0.5 rounded pl-2.5 text-[8px] font-black text-emerald-400 uppercase tracking-widest hidden bg-emerald-500/10 border border-emerald-500/20">SPRING
+                            24-25</span>
                     </div>
-                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em]">Next-Gen Course Architect
-                    </p>
                 </div>
             </div>
 
-            <div class="flex items-center gap-6">
+            <div class="flex items-center gap-4">
                 <!-- Theme Switcher -->
                 <div
-                    class="bg-black/40 border border-white/5 rounded-full pl-4 pr-1.5 py-1.5 flex items-center gap-3 backdrop-blur-md shadow-lg transition-all hover:bg-white/[0.03] hover:border-white/10 group/theme">
+                    class="bg-black/40 border border-white/5 rounded-full pl-3 pr-1.5 py-1 flex items-center gap-2 backdrop-blur-md shadow-lg group/theme">
                     <div class="flex items-center gap-2">
                         <i data-lucide="palette"
-                            class="w-3.5 h-3.5 text-slate-400 group-hover/theme:text-white transition-colors"></i>
-                        <span
-                            class="text-[9px] font-bold text-slate-500 uppercase tracking-widest hidden sm:block group-hover/theme:text-slate-300 transition-colors">Theme</span>
+                            class="w-3 h-3 text-slate-400 group-hover/theme:text-white transition-colors"></i>
                     </div>
 
-                    <div class="h-4 w-px bg-white/10"></div>
+                    <div class="h-3 w-px bg-white/10"></div>
 
-                    <div class="flex items-center gap-1.5" id="theme-options">
+                    <div class="flex items-center gap-1" id="theme-options">
                         <button onclick="setTheme('default')"
-                            class="theme-btn w-5 h-5 rounded-full bg-emerald-500 border-2 border-transparent hover:scale-110 hover:border-white/30 transition-all shadow-[0_0_10px_rgba(16,185,129,0.3)]"
+                            class="theme-btn w-4 h-4 rounded-full bg-emerald-500 border border-transparent hover:scale-110 hover:border-white/30 transition-all shadow-sm"
                             title="Emerald"></button>
                         <button onclick="setTheme('nebula')"
-                            class="theme-btn w-5 h-5 rounded-full bg-purple-500 border-2 border-transparent hover:scale-110 hover:border-white/30 transition-all shadow-[0_0_10px_rgba(168,85,247,0.3)]"
+                            class="theme-btn w-4 h-4 rounded-full bg-purple-500 border border-transparent hover:scale-110 hover:border-white/30 transition-all shadow-sm"
                             title="Nebula"></button>
                         <button onclick="setTheme('crimson')"
-                            class="theme-btn w-5 h-5 rounded-full bg-rose-500 border-2 border-transparent hover:scale-110 hover:border-white/30 transition-all shadow-[0_0_10px_rgba(244,63,94,0.3)]"
+                            class="theme-btn w-4 h-4 rounded-full bg-rose-500 border border-transparent hover:scale-110 hover:border-white/30 transition-all shadow-sm"
                             title="Crimson"></button>
                         <button onclick="setTheme('ocean')"
-                            class="theme-btn w-5 h-5 rounded-full bg-cyan-500 border-2 border-transparent hover:scale-110 hover:border-white/30 transition-all shadow-[0_0_10px_rgba(6,182,212,0.3)]"
+                            class="theme-btn w-4 h-4 rounded-full bg-cyan-500 border border-transparent hover:scale-110 hover:border-white/30 transition-all shadow-sm"
                             title="Ocean"></button>
                         <button onclick="setTheme('sandstone')"
-                            class="theme-btn w-5 h-5 rounded-full bg-amber-500 border-2 border-transparent hover:scale-110 hover:border-white/30 transition-all shadow-[0_0_10px_rgba(245,158,11,0.3)]"
+                            class="theme-btn w-4 h-4 rounded-full bg-amber-500 border border-transparent hover:scale-110 hover:border-white/30 transition-all shadow-sm"
                             title="Sandstone"></button>
-                        <!-- Spectrum removed or kept? User asked for presets. Spectrum is nice. -->
                         <button onclick="setTheme('spectrum')"
-                            class="theme-btn w-5 h-5 rounded-full bg-gradient-to-tr from-pink-500 via-purple-500 to-cyan-500 border-2 border-transparent hover:scale-110 hover:border-white/30 transition-all shadow-[0_0_10px_rgba(255,255,255,0.2)]"
+                            class="theme-btn w-4 h-4 rounded-full bg-gradient-to-tr from-pink-500 via-purple-500 to-cyan-500 border border-transparent hover:scale-110 hover:border-white/30 transition-all shadow-sm"
                             title="Spectrum"></button>
 
                         <!-- Custom Picker -->
-                        <div class="relative group/picker ml-1">
+                        <div class="relative group/picker ml-0.5">
                             <div
-                                class="w-6 h-6 rounded-full overflow-hidden cursor-pointer border-2 border-white/20 hover:border-white/50 transition-all shadow-lg bg-[conic-gradient(from_0deg,red,yellow,lime,aqua,blue,magenta,red)]">
+                                class="w-5 h-5 rounded-full overflow-hidden cursor-pointer border border-white/20 hover:border-white/50 transition-all shadow-sm bg-[conic-gradient(from_0deg,red,yellow,lime,aqua,blue,magenta,red)]">
                                 <input type="color" id="custom-theme-picker"
                                     class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] p-0 border-0 opacity-0 cursor-pointer"
                                     title="Custom Color" value="#10b981">
@@ -83,41 +78,42 @@
                     </div>
                 </div>
 
-                <div class="flex items-center gap-3 bg-black/40 border border-white/5 rounded-2xl p-2 px-4 shadow-xl">
-                    <div class="flex flex-col min-w-[70px]">
+                <!-- Stats Chip -->
+                <div class="flex items-center gap-3 bg-black/40 border border-white/5 rounded-2xl p-1.5 px-3 shadow-lg">
+                    <div class="flex flex-col min-w-[60px]">
                         <span
-                            class="text-[7px] font-black text-slate-500 uppercase tracking-widest leading-none mb-1.5">Weekly
+                            class="text-[6px] font-black text-slate-500 uppercase tracking-widest leading-none mb-1">Weekly
                             Waiting</span>
                         <div class="flex items-baseline gap-1 whitespace-nowrap">
                             <span id="header-gap-display"
-                                class="text-sm font-900 text-[var(--accent-primary)] leading-none">0m</span>
-                            <span class="text-[7px] font-bold text-slate-600 uppercase">/ WK</span>
+                                class="text-xs font-900 text-[var(--accent-primary)] leading-none">0m</span>
+                            <span class="text-[6px] font-bold text-slate-600 uppercase">/ WK</span>
                         </div>
                     </div>
-
-                    <div class="w-px h-6 bg-white/10 mx-1"></div>
-
-                    <div class="flex flex-col pr-1">
+                    <div class="w-px h-5 bg-white/10 mx-0.5"></div>
+                    <div class="flex flex-col pr-0.5">
                         <span
-                            class="text-[7px] font-black text-slate-500 uppercase tracking-widest leading-none mb-1.5">Total
-                            Credits</span>
-                        <span id="total-credits" class="text-sm font-900 text-white leading-none">0</span>
+                            class="text-[6px] font-black text-slate-500 uppercase tracking-widest leading-none mb-1">Credits</span>
+                        <span id="total-credits" class="text-xs font-900 text-white leading-none">0</span>
                     </div>
                 </div>
-                <button onclick="document.getElementById('sync-modal').classList.remove('hidden')"
-                    class="prism-btn group !bg-emerald-500/10 !text-emerald-400 border border-emerald-500/20 hover:!bg-emerald-500 hover:!text-black">
-                    <div class="relative">
-                        <i data-lucide="refresh-cw"
-                            class="w-4 h-4 group-hover:rotate-180 transition-transform duration-500"></i>
-                        <span
-                            class="absolute -top-1 -right-1 w-2 h-2 bg-emerald-400 rounded-full animate-pulse border-2 border-black"></span>
-                    </div>
-                    PORTAL SYNC
-                </button>
-                <button id="export-btn"
-                    class="prism-btn !bg-white/5 !text-white border border-white/10 hover:!bg-white/10">
-                    <i data-lucide="download" class="w-4 h-4"></i> EXPORT PNG
-                </button>
+
+                <!-- Action Buttons -->
+                <div class="flex items-center gap-2">
+                    <button onclick="document.getElementById('sync-modal').classList.remove('hidden')"
+                        class="prism-btn group !w-9 !h-9 !p-0 !min-w-0 !rounded-xl !bg-[var(--accent-primary)] !text-black border-none hover:!scale-105 hover:!shadow-[0_0_15px_var(--accent-glow)] flex items-center justify-center transition-all"
+                        title="Portal Sync">
+                        <div class="relative flex items-center justify-center">
+                            <i data-lucide="refresh-cw"
+                                class="w-4 h-4 group-hover:rotate-180 transition-transform duration-500"></i>
+                        </div>
+                    </button>
+                    <button id="export-btn"
+                        class="prism-btn !w-9 !h-9 !p-0 !min-w-0 !rounded-xl !bg-white/10 !text-white border border-white/10 hover:!bg-white/20 hover:!border-white/30 flex items-center justify-center transition-all"
+                        title="Export PNG">
+                        <i data-lucide="download" class="w-4 h-4"></i>
+                    </button>
+                </div>
             </div>
         </header>
 
