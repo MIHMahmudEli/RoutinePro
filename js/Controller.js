@@ -112,6 +112,33 @@ class RoutineController {
             this.syncWorkspace();
         };
 
+        // Focus Mode
+        const focusBtn = document.getElementById('focus-toggle');
+        if (focusBtn) {
+            focusBtn.onclick = () => {
+                this.model.focusMode = !this.model.focusMode;
+
+                // Update UI
+                const track = document.getElementById('focus-toggle-track');
+                const thumb = document.getElementById('focus-toggle-thumb');
+                const label = focusBtn.querySelector('span');
+
+                if (this.model.focusMode) {
+                    track.classList.replace('bg-slate-700', 'bg-emerald-500/40');
+                    thumb.classList.replace('bg-slate-400', 'bg-emerald-400');
+                    thumb.classList.replace('left-0.5', 'left-3');
+                    label.classList.replace('text-slate-500', 'text-emerald-400');
+                } else {
+                    track.classList.replace('bg-emerald-500/40', 'bg-slate-700');
+                    thumb.classList.replace('bg-emerald-400', 'bg-slate-400');
+                    thumb.classList.replace('left-3', 'left-0.5');
+                    label.classList.replace('text-emerald-400', 'text-slate-500');
+                }
+
+                this.syncWorkspace();
+            };
+        }
+
         // Generation
         this.view.generateAllBtn.onclick = () => this.handleGenerate();
 
@@ -647,7 +674,7 @@ class RoutineController {
                 this.syncWorkspace();
             }
         );
-        this.view.renderRoutine(currentItems, isExplorerMode);
+        this.view.renderRoutine(currentItems, isExplorerMode, this.model.focusMode);
         lucide.createIcons(); // Ensure all icons are updated, including some with custom stroke if added
         this.view.totalCreditsEl.innerText = this.model.calculateCredits();
         this.view.updateSyncUI(this.model.allCourses);

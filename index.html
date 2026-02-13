@@ -98,6 +98,20 @@
                     </div>
                 </div>
 
+                <!-- Focus Mode Toggle -->
+                <button id="focus-toggle"
+                    class="bg-black/40 border border-white/5 rounded-full px-3 py-1.5 flex items-center gap-2 backdrop-blur-md shadow-lg group/focus hover:border-[var(--accent-primary)]/30 transition-all active:scale-95"
+                    title="Focus Mode: Only show active days and times">
+                    <div class="w-5 h-2.5 bg-slate-700 rounded-full relative transition-colors" id="focus-toggle-track">
+                        <div class="absolute top-0.5 left-0.5 w-1.5 h-1.5 bg-slate-400 rounded-full transition-all"
+                            id="focus-toggle-thumb">
+                        </div>
+                    </div>
+                    <span
+                        class="text-[9px] font-black text-slate-500 group-hover/focus:text-slate-300 uppercase tracking-widest transition-colors">Focus
+                        Mode</span>
+                </button>
+
                 <!-- Action Buttons -->
                 <div class="flex items-center gap-2">
                     <button onclick="document.getElementById('sync-modal').classList.remove('hidden')"
@@ -509,15 +523,16 @@
                     <div id="routine-scroll-wrapper" class="overflow-x-auto scrollbar-hide">
                         <div id="routine-actual-grid" class="min-w-[850px] relative">
                             <!-- Headers -->
-                            <div class="grid grid-cols-[80px_1fr_1fr_1fr_1fr_1fr_1fr_1fr] sticky top-0 z-20">
+                            <div class="grid grid-cols-[80px_1fr_1fr_1fr_1fr_1fr_1fr_1fr] sticky top-0 z-20"
+                                id="routine-header-row">
                                 <div class="day-label !border-none"></div>
-                                <div class="day-label">SUN</div>
-                                <div class="day-label">MON</div>
-                                <div class="day-label">TUE</div>
-                                <div class="day-label">WED</div>
-                                <div class="day-label">THU</div>
-                                <div class="day-label">FRI</div>
-                                <div class="day-label">SAT</div>
+                                <div class="day-label" data-day-header="Sunday">SUN</div>
+                                <div class="day-label" data-day-header="Monday">MON</div>
+                                <div class="day-label" data-day-header="Tuesday">TUE</div>
+                                <div class="day-label" data-day-header="Wednesday">WED</div>
+                                <div class="day-label" data-day-header="Thursday">THU</div>
+                                <div class="day-label" data-day-header="Friday">FRI</div>
+                                <div class="day-label" data-day-header="Saturday">SAT</div>
                             </div>
 
                             <div class="relative mt-4" style="height: calc(13 * var(--row-height))">

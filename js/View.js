@@ -123,11 +123,79 @@ class RoutineView {
         lucide.createIcons();
     }
 
-    renderRoutine(items, isExplorerMode) {
+    renderRoutine(items, isExplorerMode, focusMode = false) {
         const buckets = document.querySelectorAll('.day-bucket');
         buckets.forEach(b => b.innerHTML = '');
         let globalConflict = false;
         const dayData = {};
+
+        // Identify active days and time range if focus mode is on
+        const activeDays = new Set();
+        let minTime = 8 * 60; // Default 8 AM
+        let maxTime = 20 * 60; // Default 8 PM
+
+        if (focusMode && items.length > 0) {
+            let earliest = 24 * 60;
+            let latest = 0;
+            items.forEach(item => {
+                const section = isExplorerMode ? item.section : item.course.sections[item.selectedSectionIndex];
+                section.schedules.forEach(sch => {
+                    activeDays.add(sch.day);
+                    const s = this.toMin(sch.start);
+                    const e = this.toMin(sch.end);
+                    if (s < earliest) earliest = s;
+                    if (e > latest) latest = e;
+                });
+            });
+
+            // Round to nearest hours for visual comfort
+            minTime = Math.max(8 * 60, Math.floor(earliest / 60) * 60);
+            maxTime = Math.min(20 * 60, Math.ceil(latest / 60) * 60);
+
+            // Ensure at least some range
+            if (maxTime <= minTime) maxTime = minTime + 60;
+        }
+
+        // Handle day cropping in Focus Mode
+        const dayList = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        let visibleDayCount = 0;
+
+        dayList.forEach(day => {
+            const bucket = document.querySelector(`.day-bucket[data-day="${day}"]`);
+            const header = document.querySelector(`.day-label[data-day-header="${day}"]`);
+            const isVisible = !focusMode || activeDays.has(day);
+
+            if (bucket) bucket.style.display = isVisible ? 'block' : 'none';
+            if (header) header.style.display = isVisible ? 'block' : 'none';
+            if (isVisible) visibleDayCount++;
+        });
+
+        // Update Grid Columns
+        const gridTemplate = `80px repeat(${visibleDayCount}, 1fr)`;
+        const headerRow = document.getElementById('routine-header-row');
+        const classContainer = document.getElementById('class-container');
+        if (headerRow) headerRow.style.gridTemplateColumns = gridTemplate;
+        if (classContainer) classContainer.style.gridTemplateColumns = `repeat(${visibleDayCount}, 1fr)`;
+
+        // Handle time cropping in Focus Mode
+        const timeLabels = document.querySelectorAll('.time-label');
+        const guideLines = document.querySelector('.ml-\\[80px\\].absolute.inset-0.pointer-events-none').children;
+        const rowHeight = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--row-height')) || 70;
+
+        let visibleRowCount = 0;
+        for (let i = 0; i < 13; i++) {
+            const hour = 8 + i;
+            const hourMin = hour * 60;
+            const isVisible = !focusMode || (hourMin >= minTime && hourMin < maxTime);
+
+            if (timeLabels[i]) timeLabels[i].style.display = isVisible ? 'flex' : 'none';
+            if (guideLines[i]) guideLines[i].style.display = isVisible ? 'block' : 'none';
+            if (isVisible) visibleRowCount++;
+        }
+
+        // Adjust Container Height
+        const gridWrapper = document.querySelector('.relative.mt-4');
+        if (gridWrapper) gridWrapper.style.height = `${visibleRowCount * rowHeight}px`;
 
         items.forEach(item => {
             const title = isExplorerMode ? item.courseTitle : item.course.baseTitle;
@@ -139,11 +207,11 @@ class RoutineView {
 
                 const scale = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--routine-scale')) || (window.innerWidth < 768 ? 50 / 60 : 70 / 60);
 
-                const top = (start - (8 * 60)) * scale;
+                const top = (start - minTime) * scale;
                 const height = (end - start) * scale;
 
                 if (!dayData[sch.day]) dayData[sch.day] = [];
-                const conflict = !isExplorerMode && dayData[sch.day].some(e => (top < e.end && (top + height) > e.start));
+                const conflict = !isExplorerMode && dayData[sch.day].some(e => (start < e.end && end > e.start));
                 if (conflict) globalConflict = true;
 
                 const block = document.createElement('div');
@@ -168,7 +236,10 @@ class RoutineView {
                     </div>
                 `;
                 const b = document.querySelector(`.day-bucket[data-day="${sch.day}"]`);
-                if (b) { b.appendChild(block); dayData[sch.day].push({ start: top, end: top + height }); }
+                if (b && b.style.display !== 'none') {
+                    b.appendChild(block);
+                    dayData[sch.day].push({ start, end });
+                }
             });
         });
         this.conflictBadge.classList.toggle('hidden', !globalConflict);

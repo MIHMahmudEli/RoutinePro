@@ -9,6 +9,7 @@ class RoutineModel {
         this.possibleRoutines = [];
         this.currentRoutineIndex = 0;
         this.isExplorerMode = false;
+        this.focusMode = false;
     }
 
     async loadInitialData() {
