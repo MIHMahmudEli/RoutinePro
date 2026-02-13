@@ -257,7 +257,7 @@ class RoutineController {
 
         const updateWidth = (val) => {
             if (widthValFocusDisplay) widthValFocusDisplay.innerText = val;
-            const pct = ((val - 50) / (250 - 50)) * 100;
+            const pct = ((val - 50) / (100 - 50)) * 100;
             if (widthSliderFillFocus) widthSliderFillFocus.style.width = `calc(${pct}% + ${(0.5 - pct / 100) * 20}px)`;
 
             // Apply Width Change
