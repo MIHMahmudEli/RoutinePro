@@ -116,25 +116,17 @@ class RoutineController {
         const focusBtn = document.getElementById('focus-toggle');
         if (focusBtn) {
             focusBtn.onclick = () => {
-                this.model.focusMode = !this.model.focusMode;
+                const currentItems = this.model.isExplorerMode ? this.model.possibleRoutines[this.model.currentRoutineIndex] : this.model.selectedCourses;
 
-                // Update UI
-                const track = document.getElementById('focus-toggle-track');
-                const thumb = document.getElementById('focus-toggle-thumb');
-                const label = focusBtn.querySelector('span');
-
-                if (this.model.focusMode) {
-                    track.classList.replace('bg-slate-700', 'bg-emerald-500/40');
-                    thumb.classList.replace('bg-slate-400', 'bg-emerald-400');
-                    thumb.classList.replace('left-0.5', 'left-3');
-                    label.classList.replace('text-slate-500', 'text-emerald-400');
-                } else {
-                    track.classList.replace('bg-emerald-500/40', 'bg-slate-700');
-                    thumb.classList.replace('bg-emerald-400', 'bg-slate-400');
-                    thumb.classList.replace('left-3', 'left-0.5');
-                    label.classList.replace('text-emerald-400', 'text-slate-500');
+                if (!this.model.focusMode && (!currentItems || currentItems.length === 0)) {
+                    this.view.showToast("Add courses first to use Focus Mode", "error");
+                    return;
                 }
 
+                this.model.focusMode = !this.model.focusMode;
+
+                // Update UI toggle state
+                this.updateFocusToggleUI();
                 this.syncWorkspace();
             };
         }
@@ -646,6 +638,13 @@ class RoutineController {
 
         // Always show gap/waiting time in header
         const currentItems = isExplorerMode ? possibleRoutines[currentRoutineIndex] : selectedCourses;
+
+        // Auto-disable Focus Mode if no courses exist
+        if (this.model.focusMode && (!currentItems || currentItems.length === 0)) {
+            this.model.focusMode = false;
+            this.updateFocusToggleUI();
+        }
+
         const totalGapMin = this.model.calculateGaps(currentItems);
         this.view.headerGapDisplay.innerText = this.view.formatGap(totalGapMin);
 
@@ -678,5 +677,28 @@ class RoutineController {
         lucide.createIcons(); // Ensure all icons are updated, including some with custom stroke if added
         this.view.totalCreditsEl.innerText = this.model.calculateCredits();
         this.view.updateSyncUI(this.model.allCourses);
+    }
+
+    updateFocusToggleUI() {
+        const focusBtn = document.getElementById('focus-toggle');
+        if (!focusBtn) return;
+
+        const track = document.getElementById('focus-toggle-track');
+        const thumb = document.getElementById('focus-toggle-thumb');
+        const label = focusBtn.querySelector('span');
+
+        if (this.model.focusMode) {
+            track.classList.replace('bg-slate-700', 'bg-emerald-500/40');
+            thumb.classList.replace('bg-slate-400', 'bg-emerald-400');
+            thumb.classList.remove('left-0.5');
+            thumb.classList.add('left-3');
+            label.classList.replace('text-slate-500', 'text-emerald-400');
+        } else {
+            track.classList.replace('bg-emerald-500/40', 'bg-slate-700');
+            thumb.classList.replace('bg-emerald-400', 'bg-slate-400');
+            thumb.classList.remove('left-3');
+            thumb.classList.add('left-0.5');
+            label.classList.replace('text-emerald-400', 'text-slate-500');
+        }
     }
 }
