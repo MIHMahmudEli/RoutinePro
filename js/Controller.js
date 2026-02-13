@@ -534,19 +534,26 @@ class RoutineController {
             const dataUrl = canvas.toDataURL('image/png');
 
             // For mobile, we sometimes need a direct blob or open in new tab
+            // Mobile Download Strategy
             if (/Android|WebOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                // On mobile, opening in new window is often most reliable
-                // The user can then long-press to save
-                const newWindow = window.open();
-                if (newWindow) {
-                    newWindow.document.write(`<img src="${dataUrl}" style="max-width:100%;">`);
-                    this.view.showToast("Image opened! Long-press to save.", "success");
-                } else {
-                    // If popup blocked, try regular download
+                // Try direct download first (modern mobile browsers)
+                try {
                     const link = document.createElement('a');
                     link.download = `RoutinePro_${Date.now()}.png`;
                     link.href = dataUrl;
+                    document.body.appendChild(link);
                     link.click();
+                    document.body.removeChild(link);
+                    this.view.showToast("Downloading Routine...", "success");
+                } catch (e) {
+                    // Fallback to new window if direct download is blocked
+                    const newWindow = window.open();
+                    if (newWindow) {
+                        newWindow.document.write(`<img src="${dataUrl}" style="max-width:100%;">`);
+                        this.view.showToast("Long-press image to save", "success");
+                    } else {
+                        window.location.href = dataUrl; // Last resort
+                    }
                 }
             } else {
                 // Desktop regular download
