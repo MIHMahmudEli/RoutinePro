@@ -132,37 +132,49 @@
 
                 <!-- Selection Panel -->
                 <section class="prism-card p-6 space-y-5">
-                    <div class="flex items-center justify-between">
-                        <h2 class="text-sm font-800 uppercase tracking-widest text-slate-400">Course Queue</h2>
-                        <button id="toggle-manual-mode"
-                            class="text-[9px] font-black text-emerald-400 uppercase tracking-widest bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1.5 rounded-lg hover:bg-emerald-500 hover:text-black transition-all flex items-center gap-2">
-                            <i data-lucide="edit-3" class="w-3.5 h-3.5"></i> MANUAL MODE
-                        </button>
-                    </div>
-
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-                            <i data-lucide="search" class="w-4 h-4 text-slate-600"></i>
-                        </div>
-                        <input type="text" id="course-search" class="prism-input pl-11"
-                            placeholder="Search code or title...">
-                        <div id="search-suggestions"
-                            class="absolute top-full left-0 right-0 z-[100] mt-2 prism-card overflow-y-auto hidden shadow-2xl max-h-[220px]">
-                        </div>
-                    </div>
-
-                    <div id="selected-courses-list"
-                        class="space-y-3 min-h-[100px] max-h-[400px] overflow-y-auto pr-2 scrollbar-hide">
-                        <!-- Empty State -->
-                        <div class="text-center py-12 opacity-20 border-2 border-dashed border-white/5 rounded-2xl">
-                            <i data-lucide="command" class="w-8 h-8 mx-auto mb-2"></i>
-                            <p class="text-[10px] font-bold uppercase tracking-widest">Awaiting Input</p>
+                    <div class="flex items-center justify-between cursor-pointer group" id="queue-toggle">
+                        <h2
+                            class="text-sm font-800 uppercase tracking-widest text-slate-400 group-hover:text-white transition-colors">
+                            Course Queue</h2>
+                        <div class="flex items-center gap-2">
+                            <button id="toggle-manual-mode"
+                                class="text-[9px] font-black text-emerald-400 uppercase tracking-widest bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1.5 rounded-lg hover:bg-emerald-500 hover:text-black transition-all flex items-center gap-2">
+                                <i data-lucide="edit-3" class="w-3.5 h-3.5"></i> MANUAL MODE
+                            </button>
+                            <button
+                                class="w-6 h-6 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-white/10 transition-all">
+                                <i data-lucide="chevron-up"
+                                    class="w-3.5 h-3.5 text-slate-500 group-hover:text-white transition-transform duration-300"
+                                    id="queue-chevron"></i>
+                            </button>
                         </div>
                     </div>
 
-                    <div id="conflict-badge"
-                        class="hidden animate-bounce flex items-center justify-center gap-2 py-3 bg-rose-500/10 border border-rose-500/20 rounded-xl text-rose-500 text-[10px] font-black uppercase tracking-widest">
-                        <i data-lucide="zap-off" class="w-4 h-4"></i> Conflict Detected
+                    <div id="queue-content" class="space-y-5 transition-all duration-300 overflow-hidden">
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                                <i data-lucide="search" class="w-4 h-4 text-slate-600"></i>
+                            </div>
+                            <input type="text" id="course-search" class="prism-input pl-11"
+                                placeholder="Search code or title...">
+                            <div id="search-suggestions"
+                                class="absolute top-full left-0 right-0 z-[100] mt-2 prism-card overflow-y-auto hidden shadow-2xl max-h-[220px]">
+                            </div>
+                        </div>
+
+                        <div id="selected-courses-list"
+                            class="space-y-3 min-h-[100px] max-h-[400px] overflow-y-auto pr-2 scrollbar-hide">
+                            <!-- Empty State -->
+                            <div class="text-center py-12 opacity-20 border-2 border-dashed border-white/5 rounded-2xl">
+                                <i data-lucide="command" class="w-8 h-8 mx-auto mb-2"></i>
+                                <p class="text-[10px] font-bold uppercase tracking-widest">Awaiting Input</p>
+                            </div>
+                        </div>
+
+                        <div id="conflict-badge"
+                            class="hidden animate-bounce flex items-center justify-center gap-2 py-3 bg-rose-500/10 border border-rose-500/20 rounded-xl text-rose-500 text-[10px] font-black uppercase tracking-widest">
+                            <i data-lucide="zap-off" class="w-4 h-4"></i> Conflict Detected
+                        </div>
                     </div>
                 </section>
 
