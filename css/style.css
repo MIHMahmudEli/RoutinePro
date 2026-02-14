@@ -75,6 +75,29 @@
     --text-on-accent: #ffffff;
 }
 
+[data-theme="light"] {
+    --bg-base: #f8fafc;
+    --bg-surface: #ffffff;
+    --accent-primary: #10b981;
+    --accent-secondary: #0ea5e9;
+    --accent-glow: rgba(16, 185, 129, 0.08);
+    --border-glass: rgba(0, 0, 0, 0.08);
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    --text-on-accent: #ffffff;
+}
+
+[data-theme="onyx"] {
+    --bg-base: #000000;
+    --bg-surface: #0a0a0a;
+    --accent-primary: #ffffff;
+    --accent-secondary: #475569;
+    --accent-glow: rgba(255, 255, 255, 0.05);
+    --border-glass: rgba(255, 255, 255, 0.1);
+    --text-on-accent: #000000;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -528,6 +551,183 @@ input.time-select-modern:hover::-webkit-calendar-picker-indicator {
     color: #000;
     border-color: var(--accent-secondary);
     box-shadow: 0 0 15px rgba(14, 165, 233, 0.2);
+}
+
+/* Light Mode Overrides */
+[data-theme="light"] {
+    background-image:
+        radial-gradient(circle at 0% 0%, rgba(16, 185, 129, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 100% 100%, rgba(14, 165, 233, 0.05) 0%, transparent 40%);
+}
+
+[data-theme="light"] .prism-card {
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .prism-input {
+    background: rgba(0, 0, 0, 0.03);
+    color: #0f172a;
+    border-color: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .prism-input:focus {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .prism-input::placeholder {
+    color: #64748b;
+}
+
+[data-theme="light"] .prism-input {
+    color: #0f172a !important;
+}
+
+[data-theme="light"] .time-picker-premium {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .time-select-modern,
+[data-theme="light"] .period-select-modern {
+    color: #0f172a;
+}
+
+[data-theme="light"] .sidebar-item {
+    background: rgba(0, 0, 0, 0.01);
+}
+
+[data-theme="light"] .class-name {
+    color: #0f172a;
+}
+
+[data-theme="light"] .day-label {
+    background: #ffffff;
+}
+
+[data-theme="light"] .day-chip {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+[data-theme="light"] .status-chip {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+[data-theme="light"] select.prism-input option {
+    background: #ffffff;
+    color: #0f172a;
+}
+
+[data-theme="light"] .prism-card:hover {
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .prism-btn.\!bg-white\/10 {
+    background-color: rgba(0, 0, 0, 0.04) !important;
+    color: #0f172a !important;
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .prism-btn.\!bg-white\/10:hover {
+    background-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .bg-black\/40 {
+    background-color: rgba(0, 0, 0, 0.03) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .text-slate-500,
+[data-theme="light"] .text-slate-400 {
+    color: #475569 !important;
+    /* Darker slate for better contrast */
+}
+
+[data-theme="light"] h2.text-slate-400 {
+    color: #475569 !important;
+}
+
+/* Fix hover states in Light Mode */
+[data-theme="light"] .group:hover .group-hover\:text-white {
+    color: #0f172a !important;
+}
+
+[data-theme="light"] .sidebar-item h3 {
+    color: #0f172a !important;
+}
+
+[data-theme="light"] .sidebar-item p.text-slate-600 {
+    color: #64748b !important;
+}
+
+[data-theme="light"] header h1 {
+    color: #0f172a;
+}
+
+[data-theme="light"] .time-label {
+    color: #475569;
+}
+
+[data-theme="light"] .opacity-20 {
+    opacity: 0.5 !important;
+    /* Make empty state icons more visible */
+}
+
+[data-theme="light"] .text-white {
+    color: #0f172a !important;
+}
+
+[data-theme="light"] .text-slate-600 {
+    color: #475569 !important;
+}
+
+[data-theme="light"] #total-credits,
+[data-theme="light"] #header-gap-display {
+    color: #0f172a !important;
+}
+
+[data-theme="light"] .grid-container {
+    background: #ffffff;
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] #routine-actual-grid {
+    background: #ffffff;
+}
+
+[data-theme="light"] .day-label {
+    background: #f1f5f9;
+    color: #475569;
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .time-label {
+    color: #475569;
+}
+
+[data-theme="light"] .border-b.border-white\/\[0\.03\] {
+    border-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+[data-theme="light"] .border-r.border-white\/5 {
+    border-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+[data-theme="light"] .class-block {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .class-info {
+    color: #64748b;
+}
+
+[data-theme="light"] .toast {
+    background: #ffffff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .toast-message {
+    color: #0f172a;
 }
 
 /* Animations */
