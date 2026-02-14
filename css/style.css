@@ -119,12 +119,6 @@ body {
     transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.theme-btn.active {
-    transform: scale(1.15);
-    border-color: white;
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.4), inset 0 0 10px rgba(0, 0, 0, 0.2);
-}
-
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
     width: 4px;
@@ -138,6 +132,14 @@ body {
 ::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.1);
     border-radius: 10px;
+}
+
+.theme-btn.active {
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-theme="light"] .theme-btn.active {
+    background: rgba(0, 0, 0, 0.05) !important;
 }
 
 ::-webkit-scrollbar-thumb:hover {

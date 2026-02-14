@@ -8,6 +8,7 @@ class RoutineController {
         this.view = view;
         this.editingIndex = null;
 
+        this.currentThemeSet = 1;
         this.init();
     }
 
@@ -17,6 +18,25 @@ class RoutineController {
         this.view.updateSyncUI(this.model.allCourses);
         this.setupEventListeners();
         this.syncWorkspace();
+
+        // Initialize Theme Sets Logic
+        window.cycleThemeSet = () => {
+            this.currentThemeSet = (this.currentThemeSet % 3) + 1;
+            this.updateThemeSetDisplay();
+        };
+
+        this.updateThemeSetDisplay = () => {
+            document.querySelectorAll('.theme-group').forEach((group, idx) => {
+                group.classList.toggle('hidden', (idx + 1) !== this.currentThemeSet);
+            });
+            lucide.createIcons();
+        };
+
+        // Auto-show group with active theme
+        const savedTheme = localStorage.getItem('routine-pro-theme') || 'default';
+        if (['nebula', 'crimson', 'ocean'].includes(savedTheme)) this.currentThemeSet = 2;
+        else if (['sandstone', 'spectrum', 'custom'].includes(savedTheme)) this.currentThemeSet = 3;
+        this.updateThemeSetDisplay();
     }
 
     setupEventListeners() {
@@ -70,8 +90,11 @@ class RoutineController {
                 root.setAttribute('data-theme', theme);
                 localStorage.setItem('routine-pro-theme', theme);
 
-                const btn = document.querySelector(`button[onclick="setTheme('${theme}')"]`);
-                if (btn) btn.classList.add('active');
+                // Update Active State Visuals
+                document.querySelectorAll('.theme-btn').forEach(btn => {
+                    const isMatch = btn.getAttribute('onclick')?.includes(`'${theme}'`);
+                    btn.classList.toggle('active', isMatch);
+                });
             }
             this.syncWorkspace();
         };

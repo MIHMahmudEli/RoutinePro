@@ -36,52 +36,82 @@
             </div>
 
             <div class="flex items-center gap-4">
-                <!-- Theme Switcher -->
+                <!-- Theme Switcher - Minimal Paged -->
                 <div
-                    class="bg-black/40 border border-white/5 rounded-full pl-3 pr-1.5 py-1 flex items-center gap-2 backdrop-blur-md shadow-lg group/theme">
-                    <div class="flex items-center gap-2">
-                        <i data-lucide="palette"
-                            class="w-3 h-3 text-slate-400 group-hover/theme:text-white transition-colors"></i>
-                    </div>
+                    class="bg-black/40 border border-white/5 rounded-2xl p-1 flex items-center gap-1 backdrop-blur-md shadow-lg">
 
-                    <div class="h-3 w-px bg-white/10"></div>
+                    <div id="theme-pagers" class="flex items-center gap-1">
+                        <!-- Group 1 -->
+                        <div class="theme-group flex items-center gap-1" id="theme-set-1">
+                            <button onclick="setTheme('default')"
+                                class="theme-btn w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/5 transition-all"
+                                title="Emerald">
+                                <i data-lucide="leaf" class="w-3.5 h-3.5 text-emerald-500"></i>
+                            </button>
+                            <button onclick="setTheme('light')"
+                                class="theme-btn w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/5 transition-all"
+                                title="Light">
+                                <i data-lucide="sun" class="w-3.5 h-3.5 text-slate-400"></i>
+                            </button>
+                            <button onclick="setTheme('onyx')"
+                                class="theme-btn w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/5 transition-all"
+                                title="Onyx">
+                                <i data-lucide="moon" class="w-3.5 h-3.5 text-slate-400"></i>
+                            </button>
+                        </div>
 
-                    <div class="flex items-center gap-1" id="theme-options">
-                        <button onclick="setTheme('default')"
-                            class="theme-btn w-4 h-4 rounded-full bg-emerald-500 border border-transparent hover:scale-110 hover:border-white/30 transition-all shadow-sm"
-                            title="Emerald"></button>
-                        <button onclick="setTheme('light')"
-                            class="theme-btn w-4 h-4 rounded-full bg-slate-200 border border-slate-300 hover:scale-110 hover:border-white/30 transition-all shadow-sm"
-                            title="Light"></button>
-                        <button onclick="setTheme('onyx')"
-                            class="theme-btn w-4 h-4 rounded-full bg-slate-900 border border-white/10 hover:scale-110 hover:border-white/30 transition-all shadow-sm"
-                            title="Onyx"></button>
-                        <button onclick="setTheme('nebula')"
-                            class="theme-btn w-4 h-4 rounded-full bg-purple-500 border border-transparent hover:scale-110 hover:border-white/30 transition-all shadow-sm"
-                            title="Nebula"></button>
-                        <button onclick="setTheme('crimson')"
-                            class="theme-btn w-4 h-4 rounded-full bg-rose-500 border border-transparent hover:scale-110 hover:border-white/30 transition-all shadow-sm"
-                            title="Crimson"></button>
-                        <button onclick="setTheme('ocean')"
-                            class="theme-btn w-4 h-4 rounded-full bg-cyan-500 border border-transparent hover:scale-110 hover:border-white/30 transition-all shadow-sm"
-                            title="Ocean"></button>
-                        <button onclick="setTheme('sandstone')"
-                            class="theme-btn w-4 h-4 rounded-full bg-amber-500 border border-transparent hover:scale-110 hover:border-white/30 transition-all shadow-sm"
-                            title="Sandstone"></button>
-                        <button onclick="setTheme('spectrum')"
-                            class="theme-btn w-4 h-4 rounded-full bg-gradient-to-tr from-pink-500 via-purple-500 to-cyan-500 border border-transparent hover:scale-110 hover:border-white/30 transition-all shadow-sm"
-                            title="Spectrum"></button>
+                        <!-- Group 2 -->
+                        <div class="theme-group hidden flex items-center gap-1" id="theme-set-2">
+                            <button onclick="setTheme('nebula')"
+                                class="theme-btn w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/5 transition-all"
+                                title="Nebula">
+                                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-purple-400"></i>
+                            </button>
+                            <button onclick="setTheme('crimson')"
+                                class="theme-btn w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/5 transition-all"
+                                title="Crimson">
+                                <i data-lucide="flame" class="w-3.5 h-3.5 text-rose-500"></i>
+                            </button>
+                            <button onclick="setTheme('ocean')"
+                                class="theme-btn w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/5 transition-all"
+                                title="Ocean">
+                                <i data-lucide="waves" class="w-3.5 h-3.5 text-cyan-400"></i>
+                            </button>
+                        </div>
 
-                        <!-- Custom Picker -->
-                        <div class="relative group/picker ml-0.5">
-                            <div
-                                class="w-5 h-5 rounded-full overflow-hidden cursor-pointer border border-white/20 hover:border-white/50 transition-all shadow-sm bg-[conic-gradient(from_0deg,red,yellow,lime,aqua,blue,magenta,red)]">
+                        <!-- Group 3 -->
+                        <div class="theme-group hidden flex items-center gap-1" id="theme-set-3">
+                            <button onclick="setTheme('sandstone')"
+                                class="theme-btn w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/5 transition-all"
+                                title="Sandstone">
+                                <i data-lucide="gem" class="w-3.5 h-3.5 text-amber-500"></i>
+                            </button>
+                            <button onclick="setTheme('spectrum')"
+                                class="theme-btn w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/5 transition-all"
+                                title="Spectrum">
+                                <i data-lucide="zap" class="w-3.5 h-3.5 text-pink-400"></i>
+                            </button>
+                            <!-- Custom Color Picker Hidden inside Palette Icon -->
+                            <div class="relative w-8 h-8 flex items-center justify-center group/picker"
+                                title="Custom Color">
+                                <button
+                                    class="theme-btn w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/5 transition-all">
+                                    <i data-lucide="palette" class="w-3.5 h-3.5 text-slate-400"></i>
+                                </button>
                                 <input type="color" id="custom-theme-picker"
-                                    class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] p-0 border-0 opacity-0 cursor-pointer"
-                                    title="Custom Color" value="#10b981">
+                                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                                    value="#10b981">
                             </div>
                         </div>
                     </div>
+
+                    <div class="h-4 w-px bg-white/10 mx-0.5"></div>
+
+                    <button id="cycle-themes-btn" onclick="cycleThemeSet()"
+                        class="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/5 transition-all text-slate-500 hover:text-white"
+                        title="Next Themes">
+                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                    </button>
                 </div>
 
                 <!-- Stats Chip -->
