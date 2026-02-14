@@ -85,16 +85,36 @@ class RoutineController {
                 localStorage.setItem('routine-pro-theme', 'custom');
                 localStorage.setItem('routine-pro-custom-color', customColor);
 
-                if (pickerContainer) pickerContainer.classList.add('ring-2', 'ring-white');
+                if (pickerContainer) {
+                    pickerContainer.classList.add('ring-2', 'ring-white');
+                    const btn = pickerContainer.querySelector('.theme-btn');
+                    if (btn) btn.classList.add('active');
+                    const icon = pickerContainer.querySelector('i');
+                    if (icon) {
+                        icon.style.color = customColor;
+                        icon.classList.remove('text-slate-400');
+                    }
+                }
             } else {
                 root.setAttribute('data-theme', theme);
                 localStorage.setItem('routine-pro-theme', theme);
 
                 // Update Active State Visuals
                 document.querySelectorAll('.theme-btn').forEach(btn => {
-                    const isMatch = btn.getAttribute('onclick')?.includes(`'${theme}'`);
+                    const onclick = btn.getAttribute('onclick');
+                    const isMatch = onclick ? onclick.includes(`'${theme}'`) : false;
                     btn.classList.toggle('active', isMatch);
                 });
+
+                // Reset Palette icon
+                const pickerContainer = document.querySelector('#custom-theme-picker')?.parentElement;
+                if (pickerContainer) {
+                    const icon = pickerContainer.querySelector('i');
+                    if (icon) {
+                        icon.style.removeProperty('color');
+                        icon.classList.add('text-slate-400');
+                    }
+                }
             }
             this.syncWorkspace();
         };
