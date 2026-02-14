@@ -10,6 +10,7 @@ class RoutineModel {
         this.currentRoutineIndex = 0;
         this.isExplorerMode = false;
         this.focusMode = false;
+        this.twentyFourHourMode = false;
     }
 
     async loadInitialData() {

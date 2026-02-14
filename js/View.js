@@ -123,24 +123,25 @@ class RoutineView {
         lucide.createIcons();
     }
 
-    renderRoutine(items, isExplorerMode, focusMode = false) {
+    renderRoutine(items, isExplorerMode, focusMode = false, twentyFourHourMode = false) {
         const buckets = document.querySelectorAll('.day-bucket');
         buckets.forEach(b => b.innerHTML = '');
         let globalConflict = false;
         const dayData = {};
 
-        // Identify active days and time range if focus mode is on
-        const activeDays = new Set();
+        // Define time range
         let minTime = 8 * 60; // Default 8 AM
         let maxTime = 20 * 60; // Default 8 PM
 
-        if (focusMode && items.length > 0) {
+        if (twentyFourHourMode) {
+            minTime = 7 * 60; // Start at 7 AM as requested
+            maxTime = minTime + (24 * 60); // Full 24 hours
+        } else if (focusMode && items.length > 0) {
             let earliest = 24 * 60;
             let latest = 0;
             items.forEach(item => {
                 const section = isExplorerMode ? item.section : item.course.sections[item.selectedSectionIndex];
                 section.schedules.forEach(sch => {
-                    activeDays.add(sch.day);
                     const s = this.toMin(sch.start);
                     const e = this.toMin(sch.end);
                     if (s < earliest) earliest = s;
@@ -149,14 +150,23 @@ class RoutineView {
             });
 
             // Round to nearest hours for visual comfort
-            minTime = Math.max(8 * 60, Math.floor(earliest / 60) * 60);
-            maxTime = Math.min(20 * 60, Math.ceil(latest / 60) * 60);
+            minTime = Math.max(0, Math.floor(earliest / 60) * 60);
+            maxTime = Math.min(24 * 60, Math.ceil(latest / 60) * 60);
 
             // Ensure at least some range
             if (maxTime <= minTime) maxTime = minTime + 60;
         }
 
-        // Handle day cropping in Focus Mode
+        // Identify active days in Focus Mode
+        const activeDays = new Set();
+        if (focusMode && items.length > 0) {
+            items.forEach(item => {
+                const section = isExplorerMode ? item.section : item.course.sections[item.selectedSectionIndex];
+                section.schedules.forEach(sch => activeDays.add(sch.day));
+            });
+        }
+
+        // Handle day cropping
         const dayList = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         let visibleDayCount = 0;
 
@@ -177,33 +187,55 @@ class RoutineView {
         if (headerRow) headerRow.style.gridTemplateColumns = gridTemplate;
         if (classContainer) classContainer.style.gridTemplateColumns = `repeat(${visibleDayCount}, 1fr)`;
 
-        // Handle time cropping in Focus Mode
-        const timeLabels = document.querySelectorAll('.time-label');
-        const guideLines = document.querySelector('.ml-\\[80px\\].absolute.inset-0.pointer-events-none').children;
+        // Handle dynamic time rail and guide lines
+        const timeRail = document.getElementById('time-rail');
+        const guideLinesContainer = document.getElementById('guide-lines');
         const rowHeight = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--row-height')) || 70;
 
-        let visibleRowCount = 0;
-        for (let i = 0; i < 13; i++) {
-            const hour = 8 + i;
-            const hourMin = hour * 60;
-            const isVisible = !focusMode || (hourMin >= minTime && hourMin < maxTime);
+        if (timeRail && guideLinesContainer) {
+            timeRail.innerHTML = '';
+            guideLinesContainer.innerHTML = '';
 
-            if (timeLabels[i]) timeLabels[i].style.display = isVisible ? 'flex' : 'none';
-            if (guideLines[i]) guideLines[i].style.display = isVisible ? 'block' : 'none';
-            if (isVisible) visibleRowCount++;
+            let visibleRowCount = 0;
+            const startHour = Math.floor(minTime / 60);
+            const endHour = Math.ceil(maxTime / 60);
+
+            for (let h = startHour; h < endHour; h++) {
+                // Time Label
+                const displayH = h % 24;
+                const ampm = displayH >= 12 ? 'PM' : 'AM';
+                const hour12 = displayH % 12 || 12;
+                const timeLabel = document.createElement('div');
+                timeLabel.className = 'flex items-start justify-end pr-4 time-label';
+                timeLabel.style.height = 'var(--row-height)';
+                timeLabel.innerText = `${hour12}:00 ${ampm}`;
+                timeRail.appendChild(timeLabel);
+
+                // Guide Line
+                const guideLine = document.createElement('div');
+                guideLine.className = 'border-b border-white/[0.03]';
+                guideLine.style.height = 'var(--row-height)';
+                guideLinesContainer.appendChild(guideLine);
+
+                visibleRowCount++;
+            }
+
+            // Adjust Container Height
+            const gridWrapper = document.querySelector('.relative.mt-4');
+            if (gridWrapper) gridWrapper.style.height = `${visibleRowCount * rowHeight}px`;
         }
-
-        // Adjust Container Height
-        const gridWrapper = document.querySelector('.relative.mt-4');
-        if (gridWrapper) gridWrapper.style.height = `${visibleRowCount * rowHeight}px`;
 
         items.forEach(item => {
             const title = isExplorerMode ? item.courseTitle : item.course.baseTitle;
             const section = isExplorerMode ? item.section : item.course.sections[item.selectedSectionIndex];
 
             section.schedules.forEach(sch => {
-                const start = this.toMin(sch.start);
-                const end = this.toMin(sch.end);
+                const startRaw = this.toMin(sch.start);
+                const endRaw = this.toMin(sch.end);
+
+                // Handle wrap-around for 24h mode (if start is before minTime, it's considered late night)
+                const start = (twentyFourHourMode && startRaw < minTime) ? startRaw + 1440 : startRaw;
+                const end = (twentyFourHourMode && endRaw < minTime) ? endRaw + 1440 : endRaw;
 
                 const scale = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--routine-scale')) || (window.innerWidth < 768 ? 50 / 60 : 70 / 60);
 

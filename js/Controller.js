@@ -125,8 +125,31 @@ class RoutineController {
 
                 this.model.focusMode = !this.model.focusMode;
 
+                // Disable 24h mode if focus is enabled
+                if (this.model.focusMode) {
+                    this.model.twentyFourHourMode = false;
+                    this.updateTwentyFourToggleUI();
+                }
+
                 // Update UI toggle state
                 this.updateFocusToggleUI();
+                this.syncWorkspace();
+            };
+        }
+
+        // 24-Hour Mode
+        const twentyFourBtn = document.getElementById('twenty-four-toggle');
+        if (twentyFourBtn) {
+            twentyFourBtn.onclick = () => {
+                this.model.twentyFourHourMode = !this.model.twentyFourHourMode;
+
+                // If 24h mode is enabled, disable focus mode for a clear view
+                if (this.model.twentyFourHourMode) {
+                    this.model.focusMode = false;
+                    this.updateFocusToggleUI();
+                }
+
+                this.updateTwentyFourToggleUI();
                 this.syncWorkspace();
             };
         }
@@ -805,7 +828,7 @@ class RoutineController {
                 this.syncWorkspace();
             }
         );
-        this.view.renderRoutine(currentItems, isExplorerMode, this.model.focusMode);
+        this.view.renderRoutine(currentItems, isExplorerMode, this.model.focusMode, this.model.twentyFourHourMode);
         lucide.createIcons(); // Ensure all icons are updated, including some with custom stroke if added
         this.view.totalCreditsEl.innerText = this.model.calculateCredits();
         this.view.updateSyncUI(this.model.allCourses);
@@ -830,6 +853,23 @@ class RoutineController {
                 icon.setAttribute('data-lucide', 'maximize-2');
                 icon.classList.remove('rotate-90');
             }
+        }
+        lucide.createIcons();
+    }
+
+    updateTwentyFourToggleUI() {
+        const btn = document.getElementById('twenty-four-toggle');
+        if (!btn) return;
+
+        const icon = btn.querySelector('i');
+        if (this.model.twentyFourHourMode) {
+            btn.classList.add('!bg-[var(--accent-primary)]', '!text-black', 'shadow-[0_0_15px_var(--accent-glow)]');
+            btn.classList.remove('!bg-white/10', '!text-white', 'border-white/20');
+            if (icon) icon.classList.add('scale-110');
+        } else {
+            btn.classList.remove('!bg-[var(--accent-primary)]', '!text-black', 'shadow-[0_0_15px_var(--accent-glow)]');
+            btn.classList.add('!bg-white/10', '!text-white', 'border-white/20');
+            if (icon) icon.classList.remove('scale-110');
         }
         lucide.createIcons();
     }
