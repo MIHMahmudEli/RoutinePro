@@ -188,6 +188,10 @@ class RoutineController {
                 const status = this.model.focusMode ? "Enabled" : "Disabled";
                 const type = this.model.focusMode ? "success" : "info";
                 this.view.showToast(`Focus Mode ${status}`, type);
+
+                // Track Analytics
+                window.analytics.trackFeatureToggle('focus_mode', this.model.focusMode);
+
                 this.syncWorkspace();
             };
         }
@@ -208,6 +212,10 @@ class RoutineController {
                 const status = this.model.twentyFourHourMode ? "Enabled" : "Disabled";
                 const type = this.model.twentyFourHourMode ? "success" : "info";
                 this.view.showToast(`24-Hour Mode ${status}`, type);
+
+                // Track Analytics
+                window.analytics.trackFeatureToggle('24h_mode', this.model.twentyFourHourMode);
+
                 this.syncWorkspace();
             };
         }
@@ -633,7 +641,13 @@ class RoutineController {
                 const text = await file.text();
                 const data = JSON.parse(text);
                 this.model.saveCourses(data, targetSemester);
-                this.view.showToast(`${data.length} courses loaded from ${file.name}`);
+                this.view.showToast(`Successfully synced ${data.length} courses!`);
+                document.getElementById('sync-modal').classList.add('hidden');
+
+                // Track Analytics
+                window.analytics.trackPortalSync(data.length);
+
+                this.syncWorkspace();
             } else if (file.name.endsWith('.xlsx')) {
                 const reader = new FileReader();
                 reader.onload = async (evt) => {
@@ -802,6 +816,11 @@ class RoutineController {
             this.view.showToast("Export failed. Try a desktop", "error");
             console.error(err);
         } finally {
+            this.view.showToast("Routine Image Exported Successfully!");
+
+            // Track Analytics
+            window.analytics.trackExport('image');
+
             this.view.exportBtn.disabled = false;
             this.view.exportBtn.innerHTML = originalHTML;
             lucide.createIcons();

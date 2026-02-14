@@ -5,6 +5,7 @@ window.app = {};
 
 document.addEventListener('DOMContentLoaded', () => {
     app.model = new RoutineModel();
+    window.analytics = new RoutineAnalytics('G-N12SPXZJ8H');
     app.view = new RoutineView();
     app.controller = new RoutineController(app.model, app.view);
 
