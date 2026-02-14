@@ -187,42 +187,43 @@ class RoutineView {
         if (headerRow) headerRow.style.gridTemplateColumns = gridTemplate;
         if (classContainer) classContainer.style.gridTemplateColumns = `repeat(${visibleDayCount}, 1fr)`;
 
-        // Handle dynamic time rail and guide lines
-        const timeRail = document.getElementById('time-rail');
-        const guideLinesContainer = document.getElementById('guide-lines');
-        const rowHeight = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--row-height')) || 70;
+        // Optimizing: Check if we actually need to redraw labels and guides
+        const stateHash = `${minTime}-${maxTime}-${visibleDayCount}-${focusMode}`;
+        if (this.lastStateHash !== stateHash) {
+            const timeRail = document.getElementById('time-rail');
+            const guideLinesContainer = document.getElementById('guide-lines');
 
-        if (timeRail && guideLinesContainer) {
-            timeRail.innerHTML = '';
-            guideLinesContainer.innerHTML = '';
+            if (timeRail && guideLinesContainer) {
+                timeRail.innerHTML = '';
+                guideLinesContainer.innerHTML = '';
 
-            let visibleRowCount = 0;
-            const startHour = Math.floor(minTime / 60);
-            const endHour = Math.ceil(maxTime / 60);
+                let visibleRowCount = 0;
+                const startHour = Math.floor(minTime / 60);
+                const endHour = Math.ceil(maxTime / 60);
 
-            for (let h = startHour; h < endHour; h++) {
-                // Time Label
-                const displayH = h % 24;
-                const ampm = displayH >= 12 ? 'PM' : 'AM';
-                const hour12 = displayH % 12 || 12;
-                const timeLabel = document.createElement('div');
-                timeLabel.className = 'flex items-start justify-end pr-4 time-label';
-                timeLabel.style.height = 'var(--row-height)';
-                timeLabel.innerText = `${hour12}:00 ${ampm}`;
-                timeRail.appendChild(timeLabel);
+                for (let h = startHour; h < endHour; h++) {
+                    const displayH = h % 24;
+                    const ampm = displayH >= 12 ? 'PM' : 'AM';
+                    const hour12 = displayH % 12 || 12;
 
-                // Guide Line
-                const guideLine = document.createElement('div');
-                guideLine.className = 'border-b border-white/[0.03]';
-                guideLine.style.height = 'var(--row-height)';
-                guideLinesContainer.appendChild(guideLine);
+                    const timeLabel = document.createElement('div');
+                    timeLabel.className = 'flex items-start justify-end pr-4 time-label';
+                    timeLabel.style.height = 'var(--row-height)';
+                    timeLabel.innerText = `${hour12}:00 ${ampm}`;
+                    timeRail.appendChild(timeLabel);
 
-                visibleRowCount++;
+                    const guideLine = document.createElement('div');
+                    guideLine.className = 'border-b border-white/[0.03]';
+                    guideLine.style.height = 'var(--row-height)';
+                    guideLinesContainer.appendChild(guideLine);
+
+                    visibleRowCount++;
+                }
+
+                const gridWrapper = document.querySelector('.relative.mt-4');
+                if (gridWrapper) gridWrapper.style.height = `calc(${visibleRowCount} * var(--row-height))`;
             }
-
-            // Adjust Container Height
-            const gridWrapper = document.querySelector('.relative.mt-4');
-            if (gridWrapper) gridWrapper.style.height = `${visibleRowCount * rowHeight}px`;
+            this.lastStateHash = stateHash;
         }
 
         items.forEach(item => {
@@ -233,14 +234,8 @@ class RoutineView {
                 const startRaw = this.toMin(sch.start);
                 const endRaw = this.toMin(sch.end);
 
-                // Handle wrap-around for 24h mode (if start is before minTime, it's considered late night)
                 const start = (twentyFourHourMode && startRaw < minTime) ? startRaw + 1440 : startRaw;
                 const end = (twentyFourHourMode && endRaw < minTime) ? endRaw + 1440 : endRaw;
-
-                const scale = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--routine-scale')) || (window.innerWidth < 768 ? 50 / 60 : 70 / 60);
-
-                const top = (start - minTime) * scale;
-                const height = (end - start) * scale;
 
                 if (!dayData[sch.day]) dayData[sch.day] = [];
                 const conflict = !isExplorerMode && dayData[sch.day].some(e => (start < e.end && end > e.start));
@@ -249,23 +244,17 @@ class RoutineView {
                 const block = document.createElement('div');
                 block.className = `class-block ${sch.type.toLowerCase()}`;
 
-                if (document.body.getAttribute('data-theme') === 'spectrum') {
-                    const hue = this.getCourseHue(title);
-                    block.style.background = `linear-gradient(135deg, hsla(${hue}, 70%, 60%, 0.15), rgba(255,255,255,0.02))`;
-                    block.style.borderLeft = `4px solid hsla(${hue}, 70%, 60%, 0.9)`;
-                    block.style.backdropFilter = 'blur(10px)';
-                    block.style.webkitBackdropFilter = 'blur(10px)';
-                }
+                // PERFORMANCE OPTIMIZATION: Use CSS calc() for dynamic scaling
+                // This allows the slider to update the view instantly via CSS variables
+                block.style.top = `calc((${start} - ${minTime}) * var(--routine-scale))`;
+                block.style.height = `calc((${end} - ${start}) * var(--routine-scale))`;
 
-                block.style.top = `${top}px`;
-                block.style.height = `${height}px`;
+                block.style.borderColor = `hsl(${this.getCourseHue(title)}, 70%, 50%)`;
+                if (conflict) block.classList.add('ring-2', 'ring-rose-500', 'ring-offset-2', 'ring-offset-slate-900');
+
                 block.innerHTML = `
                     <div class="class-name">${title}</div>
-                    <div class="class-info">${sch.start} - ${sch.end}</div>
-                    <div class="flex justify-between items-center mt-auto opacity-60">
-                        <span class="text-[8px] font-black">SEC ${section.section}</span>
-                        <span class="text-[8px] font-black">RM ${sch.room}</span>
-                    </div>
+                    <div class="class-info">Section ${section.section} • ${sch.room}</div>
                 `;
                 const b = document.querySelector(`.day-bucket[data-day="${sch.day}"]`);
                 if (b && b.style.display !== 'none') {

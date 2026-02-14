@@ -283,18 +283,43 @@ class RoutineController {
         // Export
         this.view.exportBtn.onclick = () => this.handleExport();
 
-        // Slider
+        // Throttled helper for heavy UI updates
+        const throttle = (func, limit) => {
+            let lastFunc;
+            let lastRan;
+            return function () {
+                const context = this;
+                const args = arguments;
+                if (!lastRan) {
+                    func.apply(context, args);
+                    lastRan = Date.now();
+                } else {
+                    clearTimeout(lastFunc);
+                    lastFunc = setTimeout(function () {
+                        if ((Date.now() - lastRan) >= limit) {
+                            func.apply(context, args);
+                            lastRan = Date.now();
+                        }
+                    }, limit - (Date.now() - lastRan));
+                }
+            }
+        };
+
+        const throttledSync = throttle(() => this.syncWorkspace(), 50);
+
+        // Slider (Max Capacity)
         const filterSeats = document.getElementById('filter-seats');
         const seatValDisplay = document.getElementById('seat-val');
         const sliderFill = document.getElementById('slider-fill');
         if (filterSeats) {
             filterSeats.oninput = (e) => {
                 const val = e.target.value;
-                seatValDisplay.innerText = val;
+                if (seatValDisplay) seatValDisplay.innerText = val;
                 if (sliderFill) {
-                    const pct = val; // 0-100 range
-                    sliderFill.style.width = `calc(${pct}% + ${(0.5 - pct / 100) * 20}px)`;
+                    sliderFill.style.width = `calc(${val}% + ${(0.5 - val / 100) * 20}px)`;
                 }
+                // Throttled re-render for generation
+                throttledSync();
             };
         }
 
@@ -310,29 +335,31 @@ class RoutineController {
         const zoomSliderFillFocus = document.getElementById('zoom-slider-fill-focus');
 
         const updateZoom = (val) => {
-            // Update UI Labels
-            if (zoomValDisplay) zoomValDisplay.innerText = val;
-            if (zoomValManualDisplay) zoomValManualDisplay.innerText = val;
-            if (zoomValFocusDisplay) zoomValFocusDisplay.innerText = val;
+            requestAnimationFrame(() => {
+                // Update UI Labels
+                if (zoomValDisplay) zoomValDisplay.innerText = val;
+                if (zoomValManualDisplay) zoomValManualDisplay.innerText = val;
+                if (zoomValFocusDisplay) zoomValFocusDisplay.innerText = val;
 
-            // Update Sliders
-            if (routineZoom) routineZoom.value = val;
-            if (routineZoomManual) routineZoomManual.value = val;
-            if (routineZoomFocus) routineZoomFocus.value = val;
+                // Update Sliders
+                if (routineZoom) routineZoom.value = val;
+                if (routineZoomManual) routineZoomManual.value = val;
+                if (routineZoomFocus) routineZoomFocus.value = val;
 
-            // Update Fill Bars
-            const pct = ((val - 40) / (150 - 40)) * 100;
-            const fillWidth = `calc(${pct}% + ${(0.5 - pct / 100) * 20}px)`;
-            if (zoomSliderFill) zoomSliderFill.style.width = fillWidth;
-            if (zoomSliderFillManual) zoomSliderFillManual.style.width = fillWidth;
-            if (zoomSliderFillFocus) zoomSliderFillFocus.style.width = fillWidth;
+                // Update Fill Bars
+                const pct = ((val - 40) / (150 - 40)) * 100;
+                const fillWidth = `calc(${pct}% + ${(0.5 - pct / 100) * 20}px)`;
+                if (zoomSliderFill) zoomSliderFill.style.width = fillWidth;
+                if (zoomSliderFillManual) zoomSliderFillManual.style.width = fillWidth;
+                if (zoomSliderFillFocus) zoomSliderFillFocus.style.width = fillWidth;
 
-            // Update CSS Variables
-            document.documentElement.style.setProperty('--row-height', `${val}px`);
-            document.documentElement.style.setProperty('--routine-scale', val / 60);
+                // Update CSS Variables (Triggers CSS redraw)
+                document.documentElement.style.setProperty('--row-height', `${val}px`);
+                document.documentElement.style.setProperty('--routine-scale', val / 60);
 
-            // Re-render
-            this.syncWorkspace();
+                // Throttled re-render for position recalculations in JS
+                throttledSync();
+            });
         };
 
         if (routineZoom) routineZoom.oninput = (e) => updateZoom(e.target.value);
@@ -345,16 +372,20 @@ class RoutineController {
         const widthSliderFillFocus = document.getElementById('width-slider-fill-focus');
 
         const updateWidth = (val) => {
-            if (widthValFocusDisplay) widthValFocusDisplay.innerText = val;
-            const pct = ((val - 50) / (100 - 50)) * 100;
-            if (widthSliderFillFocus) widthSliderFillFocus.style.width = `calc(${pct}% + ${(0.5 - pct / 100) * 20}px)`;
+            requestAnimationFrame(() => {
+                if (widthValFocusDisplay) widthValFocusDisplay.innerText = val;
+                const pct = ((val - 50) / (100 - 50)) * 100;
+                if (widthSliderFillFocus) widthSliderFillFocus.style.width = `calc(${pct}% + ${(0.5 - pct / 100) * 20}px)`;
 
-            // Apply Width Change
-            const grid = document.getElementById('routine-actual-grid');
-            if (grid) {
-                grid.style.width = `${val}%`;
-                grid.style.minWidth = 'unset'; // Override the 600px min-width
-            }
+                // Apply Width Change
+                const grid = document.getElementById('routine-actual-grid');
+                if (grid) {
+                    grid.style.width = `${val}%`;
+                    grid.style.minWidth = 'unset'; // Override the 600px min-width
+                }
+                // Throttled re-render for position recalculations in JS
+                throttledSync();
+            });
         };
 
         if (routineWidthFocus) routineWidthFocus.oninput = (e) => updateWidth(e.target.value);
