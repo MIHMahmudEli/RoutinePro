@@ -827,6 +827,39 @@ input.time-select-modern:hover::-webkit-calendar-picker-indicator {
     }
 }
 
+/* Focus Mode & Mode Button Hover Experience */
+#focus-toggle i,
+#focus-toggle svg,
+#twenty-four-toggle i,
+#twenty-four-toggle svg {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+#focus-toggle:hover i,
+#focus-toggle:hover svg {
+    transform: scale(1.25) rotate(15deg);
+    filter: drop-shadow(0 0 8px var(--accent-glow));
+}
+
+/* Reflect functional behavior: Shrink when already active to show "focusing" */
+#focus-toggle[data-active="true"]:hover i,
+#focus-toggle[data-active="true"]:hover svg {
+    transform: scale(0.8) rotate(105deg) !important;
+    /* rotate-90 base + 15deg offset */
+}
+
+#twenty-four-toggle:hover i,
+#twenty-four-toggle:hover svg {
+    transform: scale(1.2) rotate(-15deg);
+    filter: drop-shadow(0 0 8px var(--accent-glow));
+}
+
+#twenty-four-toggle[data-active="true"]:hover i,
+#twenty-four-toggle[data-active="true"]:hover svg {
+    transform: scale(1.1) rotate(195deg) !important;
+    /* scale-110 base + rotate-180 style */
+}
+
 .animate-pop {
     animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }

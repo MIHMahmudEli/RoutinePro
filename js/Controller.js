@@ -865,6 +865,7 @@ class RoutineController {
         if (this.model.focusMode) {
             focusBtn.classList.add('!bg-[var(--accent-primary)]', '!text-black', 'shadow-[0_0_15px_var(--accent-glow)]');
             focusBtn.classList.remove('!bg-white/10', '!text-white', 'border-white/20');
+            focusBtn.setAttribute('data-active', 'true');
             if (icon) {
                 icon.setAttribute('data-lucide', 'minimize-2');
                 icon.classList.add('rotate-90');
@@ -872,6 +873,7 @@ class RoutineController {
         } else {
             focusBtn.classList.remove('!bg-[var(--accent-primary)]', '!text-black', 'shadow-[0_0_15px_var(--accent-glow)]');
             focusBtn.classList.add('!bg-white/10', '!text-white', 'border-white/20');
+            focusBtn.removeAttribute('data-active');
             if (icon) {
                 icon.setAttribute('data-lucide', 'maximize-2');
                 icon.classList.remove('rotate-90');
@@ -888,10 +890,12 @@ class RoutineController {
         if (this.model.twentyFourHourMode) {
             btn.classList.add('!bg-[var(--accent-primary)]', '!text-black', 'shadow-[0_0_15px_var(--accent-glow)]');
             btn.classList.remove('!bg-white/10', '!text-white', 'border-white/20');
+            btn.setAttribute('data-active', 'true');
             if (icon) icon.classList.add('scale-110');
         } else {
             btn.classList.remove('!bg-[var(--accent-primary)]', '!text-black', 'shadow-[0_0_15px_var(--accent-glow)]');
             btn.classList.add('!bg-white/10', '!text-white', 'border-white/20');
+            btn.removeAttribute('data-active');
             if (icon) icon.classList.remove('scale-110');
         }
         lucide.createIcons();
