@@ -850,14 +850,32 @@ input.time-select-modern:hover::-webkit-calendar-picker-indicator {
 
 #twenty-four-toggle:hover i,
 #twenty-four-toggle:hover svg {
-    transform: scale(1.2) rotate(-15deg);
+    transform: scale(1.2) rotate(360deg);
     filter: drop-shadow(0 0 8px var(--accent-glow));
 }
 
 #twenty-four-toggle[data-active="true"]:hover i,
 #twenty-four-toggle[data-active="true"]:hover svg {
-    transform: scale(1.1) rotate(195deg) !important;
-    /* scale-110 base + rotate-180 style */
+    transform: scale(1.1) rotate(-360deg) !important;
+}
+
+/* Download/Export Button Animation */
+#export-btn:hover i,
+#export-btn:hover svg {
+    animation: download-bounce 0.8s infinite cubic-bezier(0.4, 0, 0.2, 1);
+    filter: drop-shadow(0 0 8px var(--accent-glow));
+}
+
+@keyframes download-bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(3px);
+    }
 }
 
 .animate-pop {
