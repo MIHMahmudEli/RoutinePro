@@ -50,6 +50,12 @@
                         <button onclick="setTheme('default')"
                             class="theme-btn w-4 h-4 rounded-full bg-emerald-500 border border-transparent hover:scale-110 hover:border-white/30 transition-all shadow-sm"
                             title="Emerald"></button>
+                        <button onclick="setTheme('light')"
+                            class="theme-btn w-4 h-4 rounded-full bg-slate-200 border border-slate-300 hover:scale-110 hover:border-white/30 transition-all shadow-sm"
+                            title="Light"></button>
+                        <button onclick="setTheme('onyx')"
+                            class="theme-btn w-4 h-4 rounded-full bg-slate-900 border border-white/10 hover:scale-110 hover:border-white/30 transition-all shadow-sm"
+                            title="Onyx"></button>
                         <button onclick="setTheme('nebula')"
                             class="theme-btn w-4 h-4 rounded-full bg-purple-500 border border-transparent hover:scale-110 hover:border-white/30 transition-all shadow-sm"
                             title="Nebula"></button>
@@ -282,7 +288,7 @@
                                 class="flex items-center gap-2 text-[10px] font-black text-slate-500 uppercase tracking-widest pl-1">
                                 <i data-lucide="calendar" class="w-3 h-3"></i> Schedule Days
                             </label>
-                            <div class="grid grid-cols-7 gap-1.5" id="manual-day-container">
+                            <div class="grid grid-cols-4 gap-1.5" id="manual-day-container">
                                 <label><input type="checkbox" name="man-day" value="Sunday" checked class="day-toggle">
                                     <div class="day-chip !w-full !h-9 !text-[11px]">S</div>
                                 </label>
