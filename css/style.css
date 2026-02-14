@@ -414,6 +414,86 @@ input.time-select-modern:hover::-webkit-calendar-picker-indicator {
     background: rgba(255, 255, 255, 0.04);
 }
 
+.section-header-separator {
+    position: relative;
+    margin-left: -1.53rem;
+    margin-right: -1.53rem;
+    margin-top: -1.53rem;
+    padding: 1.1rem 1.5rem;
+    margin-bottom: 0.25rem !important;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, transparent 100%);
+    border-bottom: 1px solid var(--border-glass);
+    border-top-left-radius: 19px;
+    border-top-right-radius: 19px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.section-header-separator::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 14px;
+    background: var(--accent-primary);
+    border-radius: 0 4px 4px 0;
+    box-shadow: 0 0 10px var(--accent-glow);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.section-header-separator:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, transparent 100%);
+}
+
+.section-header-separator:hover::before {
+    opacity: 1;
+    height: 20px;
+}
+
+[data-theme="light"] .section-header-separator {
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.02) 0%, transparent 100%);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .section-header-separator:hover {
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.04) 0%, transparent 100%);
+}
+
+.section-header-separator h2 {
+    font-size: 0.65rem !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.12em !important;
+    margin-bottom: 0 !important;
+    transition: all 0.3s ease;
+}
+
+.prism-card:hover .section-header-separator h2 {
+    color: white !important;
+    letter-spacing: 0.15em !important;
+}
+
+.prism-card:hover .section-header-separator i {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 8px var(--accent-glow));
+    color: var(--accent-primary) !important;
+}
+
+.prism-card:hover .section-header-separator {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, transparent 100%);
+}
+
+.prism-card {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.prism-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+}
+
 /* Routine Grid */
 .grid-container {
     background: var(--bg-surface);

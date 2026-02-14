@@ -18,151 +18,126 @@
     <div class="max-w-[1500px] mx-auto space-y-6 animate-pop">
 
         <!-- Top Navigation / Status -->
-        <header class="prism-card p-3 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex items-center gap-4">
-                <div
-                    class="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center border border-emerald-500/20">
-                    <i data-lucide="layout-grid" class="w-5 h-5 text-emerald-400"></i>
-                </div>
-                <div>
-                    <div class="flex items-center gap-2">
-                        <h1 class="text-lg font-900 tracking-tighter">ROUTINE<span
-                                class="text-emerald-400 italic">PRO</span></h1>
-                        <span id="semester-badge"
-                            class="px-1.5 py-0.5 rounded pl-2.5 text-[8px] font-black text-emerald-400 uppercase tracking-widest hidden bg-emerald-500/10 border border-emerald-500/20">SPRING
-                            24-25</span>
+        <header
+            class="prism-card p-2 md:px-5 md:py-3 flex flex-col md:flex-row justify-between items-center gap-0 md:gap-0">
+            <!-- Part 1: Logo (Line 1 on Mobile, Left on Desktop) -->
+            <div class="w-full md:w-auto flex justify-center md:justify-start py-0 md:py-0">
+                <div class="flex items-center gap-4">
+                    <div
+                        class="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center border border-emerald-500/20">
+                        <i data-lucide="layout-grid" class="w-5 h-5 text-emerald-400"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h1 class="text-lg font-900 tracking-tighter">ROUTINE<span
+                                    class="text-emerald-400 italic">PRO</span></h1>
+                            <span id="semester-badge"
+                                class="px-1.5 py-0.5 rounded pl-2.5 text-[8px] font-black text-emerald-400 uppercase tracking-widest hidden bg-emerald-500/10 border border-emerald-500/20">SPRING
+                                24-25</span>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="flex items-center gap-4">
-                <!-- Theme Switcher - Minimal Paged -->
-                <div
-                    class="bg-black/40 border border-white/5 rounded-2xl p-1 flex items-center gap-1 backdrop-blur-md shadow-lg">
-
-                    <div id="theme-pagers" class="flex items-center gap-1">
-                        <!-- Group 1 -->
-                        <div class="theme-group flex items-center gap-1" id="theme-set-1">
-                            <button onclick="setTheme('default')"
-                                class="theme-btn w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/5 transition-all"
-                                title="Emerald">
-                                <i data-lucide="leaf" class="w-3.5 h-3.5 text-emerald-500"></i>
-                            </button>
-                            <button onclick="setTheme('light')"
-                                class="theme-btn w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/5 transition-all"
-                                title="Light">
-                                <i data-lucide="sun" class="w-3.5 h-3.5 text-slate-400"></i>
-                            </button>
-                            <button onclick="setTheme('onyx')"
-                                class="theme-btn w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/5 transition-all"
-                                title="Onyx">
-                                <i data-lucide="moon" class="w-3.5 h-3.5 text-slate-400"></i>
-                            </button>
-                        </div>
-
-                        <!-- Group 2 -->
-                        <div class="theme-group hidden flex items-center gap-1" id="theme-set-2">
-                            <button onclick="setTheme('nebula')"
-                                class="theme-btn w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/5 transition-all"
-                                title="Nebula">
-                                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-purple-400"></i>
-                            </button>
-                            <button onclick="setTheme('crimson')"
-                                class="theme-btn w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/5 transition-all"
-                                title="Crimson">
-                                <i data-lucide="flame" class="w-3.5 h-3.5 text-rose-500"></i>
-                            </button>
-                            <button onclick="setTheme('ocean')"
-                                class="theme-btn w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/5 transition-all"
-                                title="Ocean">
-                                <i data-lucide="waves" class="w-3.5 h-3.5 text-cyan-400"></i>
-                            </button>
-                        </div>
-
-                        <!-- Group 3 -->
-                        <div class="theme-group hidden flex items-center gap-1" id="theme-set-3">
-                            <button onclick="setTheme('sandstone')"
-                                class="theme-btn w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/5 transition-all"
-                                title="Sandstone">
-                                <i data-lucide="gem" class="w-3.5 h-3.5 text-amber-500"></i>
-                            </button>
-                            <button onclick="setTheme('spectrum')"
-                                class="theme-btn w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/5 transition-all"
-                                title="Spectrum">
-                                <i data-lucide="zap" class="w-3.5 h-3.5 text-pink-400"></i>
-                            </button>
-                            <!-- Custom Color Picker Hidden inside Palette Icon -->
-                            <div class="relative w-8 h-8 flex items-center justify-center group/picker rounded-xl"
-                                title="Custom Color">
-                                <button
-                                    class="theme-btn w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/5 transition-all">
-                                    <i data-lucide="palette" class="w-3.5 h-3.5 text-slate-400"></i>
-                                </button>
-                                <input type="color" id="custom-theme-picker"
-                                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                                    value="#10b981">
+            <!-- Right Group for Desktop (Lines 2, 3, 4 for Mobile) -->
+            <div class="w-full md:w-auto flex flex-col md:flex-row items-center gap-0 md:gap-4 lg:gap-6">
+                <!-- Part 2: Theme Switcher (Line 2 on Mobile) -->
+                <div class="w-full md:w-auto flex justify-center py-0 md:py-0">
+                    <div
+                        class="bg-black/40 border border-white/5 rounded-2xl p-1 flex items-center gap-1 backdrop-blur-md shadow-lg">
+                        <div id="theme-pagers" class="flex items-center gap-1">
+                            <div class="theme-group flex items-center gap-1" id="theme-set-1">
+                                <button onclick="setTheme('default')"
+                                    class="theme-btn w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/5 transition-all"
+                                    title="Emerald"><i data-lucide="leaf"
+                                        class="w-3.5 h-3.5 text-emerald-500"></i></button>
+                                <button onclick="setTheme('light')"
+                                    class="theme-btn w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/5 transition-all"
+                                    title="Light"><i data-lucide="sun" class="w-3.5 h-3.5 text-slate-400"></i></button>
+                                <button onclick="setTheme('onyx')"
+                                    class="theme-btn w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/5 transition-all"
+                                    title="Onyx"><i data-lucide="moon" class="w-3.5 h-3.5 text-slate-400"></i></button>
+                            </div>
+                            <div class="theme-group hidden flex items-center gap-1" id="theme-set-2">
+                                <button onclick="setTheme('nebula')"
+                                    class="theme-btn w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/5 transition-all"
+                                    title="Nebula"><i data-lucide="sparkles"
+                                        class="w-3.5 h-3.5 text-purple-400"></i></button>
+                                <button onclick="setTheme('crimson')"
+                                    class="theme-btn w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/5 transition-all"
+                                    title="Crimson"><i data-lucide="flame"
+                                        class="w-3.5 h-3.5 text-rose-500"></i></button>
+                                <button onclick="setTheme('ocean')"
+                                    class="theme-btn w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/5 transition-all"
+                                    title="Ocean"><i data-lucide="waves" class="w-3.5 h-3.5 text-cyan-400"></i></button>
+                            </div>
+                            <div class="theme-group hidden flex items-center gap-1" id="theme-set-3">
+                                <button onclick="setTheme('sandstone')"
+                                    class="theme-btn w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/5 transition-all"
+                                    title="Sandstone"><i data-lucide="gem"
+                                        class="w-3.5 h-3.5 text-amber-500"></i></button>
+                                <button onclick="setTheme('spectrum')"
+                                    class="theme-btn w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/5 transition-all"
+                                    title="Spectrum"><i data-lucide="zap"
+                                        class="w-3.5 h-3.5 text-pink-400"></i></button>
+                                <div class="relative w-8 h-8 flex items-center justify-center group/picker rounded-xl"
+                                    title="Custom Color">
+                                    <button
+                                        class="theme-btn w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/5 transition-all"><i
+                                            data-lucide="palette" class="w-3.5 h-3.5 text-slate-400"></i></button>
+                                    <input type="color" id="custom-theme-picker"
+                                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                                        value="#10b981">
+                                </div>
                             </div>
                         </div>
+                        <div class="h-4 w-px bg-white/10 mx-0.5"></div>
+                        <button id="cycle-themes-btn" onclick="cycleThemeSet()"
+                            class="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/5 transition-all text-slate-500 hover:text-white"
+                            title="Next Themes">
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                        </button>
                     </div>
-
-                    <div class="h-4 w-px bg-white/10 mx-0.5"></div>
-
-                    <button id="cycle-themes-btn" onclick="cycleThemeSet()"
-                        class="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/5 transition-all text-slate-500 hover:text-white"
-                        title="Next Themes">
-                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                    </button>
                 </div>
 
-                <!-- Stats Chip -->
-                <div class="flex items-center gap-3 bg-black/40 border border-white/5 rounded-2xl p-1.5 px-3 shadow-lg">
-                    <div class="flex flex-col min-w-[60px]">
-                        <span
-                            class="text-[6px] font-black text-slate-500 uppercase tracking-widest leading-none mb-1">Weekly
-                            Waiting</span>
-                        <div class="flex items-baseline gap-1 whitespace-nowrap">
-                            <span id="header-gap-display"
-                                class="text-xs font-900 text-[var(--accent-primary)] leading-none">0m</span>
-                            <span class="text-[6px] font-bold text-slate-600 uppercase">/ WK</span>
+                <!-- Part 3: Stats (Line 3 on Mobile) -->
+                <div class="w-full md:w-auto flex justify-center py-0 md:py-0">
+                    <div
+                        class="flex items-center gap-3 bg-black/40 border border-white/5 rounded-2xl p-1.5 px-3 shadow-lg">
+                        <div class="flex flex-col min-w-[60px]">
+                            <span
+                                class="text-[6px] font-black text-slate-500 uppercase tracking-widest leading-none mb-1">Weekly
+                                Waiting</span>
+                            <div class="flex items-baseline gap-1 whitespace-nowrap">
+                                <span id="header-gap-display"
+                                    class="text-xs font-900 text-[var(--accent-primary)] leading-none">0m</span>
+                                <span class="text-[6px] font-bold text-slate-600 uppercase">/ WK</span>
+                            </div>
+                        </div>
+                        <div class="w-px h-5 bg-white/10 mx-0.5"></div>
+                        <div class="flex flex-col pr-0.5">
+                            <span
+                                class="text-[6px] font-black text-slate-500 uppercase tracking-widest leading-none mb-1">Credits</span>
+                            <span id="total-credits" class="text-xs font-900 text-white leading-none">0</span>
                         </div>
                     </div>
-                    <div class="w-px h-5 bg-white/10 mx-0.5"></div>
-                    <div class="flex flex-col pr-0.5">
-                        <span
-                            class="text-[6px] font-black text-slate-500 uppercase tracking-widest leading-none mb-1">Credits</span>
-                        <span id="total-credits" class="text-xs font-900 text-white leading-none">0</span>
-                    </div>
                 </div>
 
-                <!-- Focus Mode Button -->
-                <button id="focus-toggle"
-                    class="prism-btn group !w-9 !h-9 !p-0 !min-w-0 !rounded-xl !bg-white/10 !text-white border border-white/20 hover:!bg-white/20 flex items-center justify-center transition-all active:scale-90"
-                    title="Focus Mode">
-                    <i data-lucide="maximize-2" class="w-4 h-4 transition-transform duration-500" id="focus-icon"></i>
-                </button>
-
-                <!-- 24-Hour Mode Toggle -->
-                <button id="twenty-four-toggle"
-                    class="prism-btn group !w-9 !h-9 !p-0 !min-w-0 !rounded-xl !bg-white/10 !text-white border border-white/20 hover:!bg-white/20 flex items-center justify-center transition-all active:scale-90"
-                    title="24-Hour Mode">
-                    <i data-lucide="clock" class="w-4 h-4 transition-transform duration-500" id="twenty-four-icon"></i>
-                </button>
-
-                <!-- Action Buttons -->
-                <div class="flex items-center gap-2">
+                <!-- Part 4: Buttons (Line 4 on Mobile) -->
+                <div class="w-full md:w-auto flex items-center justify-center gap-2 py-0 md:py-0">
+                    <button id="focus-toggle"
+                        class="prism-btn group !w-9 !h-9 !p-0 !min-w-0 !rounded-xl !bg-white/10 !text-white border border-white/20 hover:!bg-white/20 flex items-center justify-center transition-all active:scale-90"
+                        title="Focus Mode"><i data-lucide="maximize-2" class="w-4 h-4" id="focus-icon"></i></button>
+                    <button id="twenty-four-toggle"
+                        class="prism-btn group !w-9 !h-9 !p-0 !min-w-0 !rounded-xl !bg-white/10 !text-white border border-white/20 hover:!bg-white/20 flex items-center justify-center transition-all active:scale-90"
+                        title="24-Hour Mode"><i data-lucide="clock" class="w-4 h-4" id="twenty-four-icon"></i></button>
                     <button onclick="document.getElementById('sync-modal').classList.remove('hidden')"
                         class="prism-btn group !w-9 !h-9 !p-0 !min-w-0 !rounded-xl !bg-white/10 !text-white border border-white/20 hover:!bg-white/20 flex items-center justify-center transition-all"
-                        title="Portal Sync">
-                        <div class="relative flex items-center justify-center">
-                            <i data-lucide="refresh-cw"
-                                class="w-4 h-4 group-hover:rotate-180 transition-transform duration-500"></i>
-                        </div>
-                    </button>
+                        title="Portal Sync"><i data-lucide="refresh-cw"
+                            class="w-4 h-4 group-hover:rotate-180 transition-transform duration-500"></i></button>
                     <button id="export-btn"
                         class="prism-btn !w-9 !h-9 !p-0 !min-w-0 !rounded-xl !bg-white/10 !text-white border border-white/10 hover:!bg-white/20 hover:!border-white/30 flex items-center justify-center transition-all"
-                        title="Export PNG">
-                        <i data-lucide="download" class="w-4 h-4"></i>
-                    </button>
+                        title="Export PNG"><i data-lucide="download" class="w-4 h-4"></i></button>
                 </div>
             </div>
         </header>
@@ -174,16 +149,23 @@
 
                 <!-- Selection Panel -->
                 <section id="selection-panel" class="prism-card p-6 space-y-5">
-                    <div class="flex items-center justify-between cursor-pointer group" id="queue-toggle">
-                        <h2
-                            class="text-sm font-800 uppercase tracking-widest text-slate-400 group-hover:text-white transition-colors">
-                            Course Queue</h2>
+                    <div class="flex items-center justify-between cursor-pointer group section-header-separator"
+                        id="queue-toggle">
+                        <div class="flex items-center gap-2">
+                            <div
+                                class="w-8 h-8 rounded-lg bg-[var(--accent-primary)]/10 flex items-center justify-center border border-[var(--accent-primary)]/20 group-hover:bg-[var(--accent-primary)]/20 transition-all">
+                                <i data-lucide="layout-list" class="w-4 h-4 text-[var(--accent-primary)]"></i>
+                            </div>
+                            <h2
+                                class="text-sm font-800 uppercase tracking-widest text-slate-400 group-hover:text-white transition-colors">
+                                Course Queue</h2>
+                        </div>
                         <div class="flex items-center gap-2">
                             <button id="toggle-manual-mode"
-                                class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center hover:bg-emerald-500 hover:text-black transition-all shadow-lg active:scale-90"
+                                class="w-8 h-8 rounded-lg bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/20 flex items-center justify-center hover:bg-[var(--accent-primary)] hover:text-black transition-all shadow-lg active:scale-90"
                                 title="Switch to Manual Mode">
                                 <i data-lucide="pencil-line"
-                                    class="w-4 h-4 text-emerald-400 group-hover:text-inherit"></i>
+                                    class="w-4 h-4 text-[var(--accent-primary)] group-hover:text-inherit"></i>
                             </button>
                             <button
                                 class="w-6 h-6 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-white/10 transition-all">
@@ -225,7 +207,7 @@
                 <!-- Focus Mode Controls -->
                 <section id="focus-controls-section"
                     class="prism-card p-6 space-y-6 hidden border-[var(--accent-primary)]/20 shadow-[0_0_30px_rgba(16,185,129,0.05)]">
-                    <div class="flex items-center gap-2 mb-2">
+                    <div class="flex items-center gap-2 section-header-separator">
                         <div
                             class="w-8 h-8 rounded-lg bg-[var(--accent-primary)]/10 flex items-center justify-center border border-[var(--accent-primary)]/20">
                             <i data-lucide="shrink" class="w-4 h-4 text-[var(--accent-primary)]"></i>
@@ -277,11 +259,12 @@
 
                 <!-- Manual Entry Panel -->
                 <section id="manual-entry-section" class="prism-card p-6 space-y-6 hidden border-emerald-500/20">
-                    <div class="flex items-center justify-between cursor-pointer group" id="manual-toggle">
+                    <div class="flex items-center justify-between cursor-pointer group section-header-separator"
+                        id="manual-toggle">
                         <div class="flex items-center gap-2">
                             <div
-                                class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 group-hover:bg-emerald-500/20 transition-all">
-                                <i data-lucide="pencil-line" class="w-4 h-4 text-emerald-400"></i>
+                                class="w-8 h-8 rounded-lg bg-[var(--accent-primary)]/10 flex items-center justify-center border border-[var(--accent-primary)]/20 group-hover:bg-[var(--accent-primary)]/20 transition-all">
+                                <i data-lucide="pencil-line" class="w-4 h-4 text-[var(--accent-primary)]"></i>
                             </div>
                             <h2
                                 class="text-sm font-800 uppercase tracking-widest text-slate-400 group-hover:text-white transition-colors">
@@ -454,7 +437,7 @@
 
                         <div class="pt-2 flex gap-3">
                             <button id="add-manual-btn"
-                                class="prism-btn flex-1 !py-4 !bg-emerald-500 !text-black shadow-[0_4px_15px_rgba(16,185,129,0.2)]">
+                                class="prism-btn flex-1 !py-4 !bg-[var(--accent-primary)] !text-black shadow-[0_4px_15px_var(--accent-glow)]">
                                 <i data-lucide="plus-circle" class="w-4 h-4"></i> ADD TO ROUTINE
                             </button>
                             <button id="clear-manual-btn"
@@ -468,10 +451,17 @@
 
                 <!-- Configuration Panel -->
                 <section id="parameters-section" class="prism-card p-6 space-y-6">
-                    <div class="flex justify-between items-center cursor-pointer group" id="params-toggle">
-                        <h2
-                            class="text-sm font-800 uppercase tracking-widest text-slate-400 group-hover:text-white transition-colors">
-                            Parameters</h2>
+                    <div class="flex justify-between items-center cursor-pointer group section-header-separator"
+                        id="params-toggle">
+                        <div class="flex items-center gap-2">
+                            <div
+                                class="w-8 h-8 rounded-lg bg-[var(--accent-primary)]/10 flex items-center justify-center border border-[var(--accent-primary)]/20 group-hover:bg-[var(--accent-primary)]/20 transition-all">
+                                <i data-lucide="settings-2" class="w-4 h-4 text-[var(--accent-primary)]"></i>
+                            </div>
+                            <h2
+                                class="text-sm font-800 uppercase tracking-widest text-slate-400 group-hover:text-white transition-colors">
+                                Parameters</h2>
+                        </div>
                         <button
                             class="w-6 h-6 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-white/10 transition-all">
                             <i data-lucide="chevron-up"
