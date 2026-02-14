@@ -129,11 +129,22 @@ class RoutineController {
             window.setTheme(savedTheme);
         }
 
-        // Custom Picker Listener
+        // Custom Picker Listener (Debounced for performance)
         const colorPicker = document.getElementById('custom-theme-picker');
+        let colorPickerTimer;
         if (colorPicker) {
             colorPicker.addEventListener('input', (e) => {
-                window.setTheme('custom', e.target.value);
+                const color = e.target.value;
+
+                // 1. Instant variable update for smooth visual feedback
+                document.body.style.setProperty('--accent-primary', color);
+                document.body.style.setProperty('--accent-glow', `rgba(${parseInt(color.slice(1, 3), 16)}, ${parseInt(color.slice(3, 5), 16)}, ${parseInt(color.slice(5, 7), 16)}, 0.15)`);
+
+                // 2. Debounce the heavy full state sync
+                clearTimeout(colorPickerTimer);
+                colorPickerTimer = setTimeout(() => {
+                    window.setTheme('custom', color);
+                }, 50); // 50ms is enough to feel instant but batch redundant calls
             });
         }
 
