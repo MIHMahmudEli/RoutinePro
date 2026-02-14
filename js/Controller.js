@@ -171,7 +171,7 @@ class RoutineController {
                 const currentItems = this.model.isExplorerMode ? this.model.possibleRoutines[this.model.currentRoutineIndex] : this.model.selectedCourses;
 
                 if (!this.model.focusMode && (!currentItems || currentItems.length === 0)) {
-                    this.view.showToast("Add courses first to use Focus Mode", "error");
+                    this.view.showToast("Please select at least one course first!", "error");
                     return;
                 }
 
@@ -185,6 +185,9 @@ class RoutineController {
 
                 // Update UI toggle state
                 this.updateFocusToggleUI();
+                const status = this.model.focusMode ? "Enabled" : "Disabled";
+                const type = this.model.focusMode ? "success" : "info";
+                this.view.showToast(`Focus Mode ${status}`, type);
                 this.syncWorkspace();
             };
         }
@@ -202,6 +205,9 @@ class RoutineController {
                 }
 
                 this.updateTwentyFourToggleUI();
+                const status = this.model.twentyFourHourMode ? "Enabled" : "Disabled";
+                const type = this.model.twentyFourHourMode ? "success" : "info";
+                this.view.showToast(`24-Hour Mode ${status}`, type);
                 this.syncWorkspace();
             };
         }

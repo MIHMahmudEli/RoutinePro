@@ -692,17 +692,17 @@
 
     <!-- Dynamic Sync Modal -->
     <div id="sync-modal"
-        class="hidden fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-        <div class="prism-card max-w-md w-full p-8 space-y-6 animate-pop border-emerald-500/30">
+        class="hidden fixed inset-0 z-[200] flex items-center justify-center p-2 bg-black/80 backdrop-blur-md overflow-y-auto">
+        <div class="prism-card max-w-md w-full p-4 md:p-6 space-y-3 md:space-y-4 animate-pop border-emerald-500/30">
             <div class="flex justify-between items-center">
                 <div class="flex items-center gap-3">
                     <div
-                        class="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center border border-emerald-500/30">
-                        <i data-lucide="cloud-lightning" class="w-6 h-6 text-emerald-400"></i>
+                        class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center border border-emerald-500/30">
+                        <i data-lucide="cloud-lightning" class="w-5 h-5 text-emerald-400"></i>
                     </div>
                     <div>
-                        <h2 class="text-xl font-900 tracking-tighter uppercase">Sync Manager</h2>
-                        <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Update Course Library
+                        <h2 class="text-lg font-900 tracking-tighter uppercase">Sync Manager</h2>
+                        <p class="text-[9px] text-slate-500 font-bold uppercase tracking-widest">Update Course Library
                         </p>
                     </div>
                 </div>
@@ -713,15 +713,15 @@
             </div>
 
             <div class="space-y-4">
-                <div class="p-4 bg-emerald-500/5 border border-emerald-500/10 rounded-2xl space-y-3">
+                <div class="p-3 bg-emerald-500/5 border border-emerald-500/10 rounded-xl space-y-2">
                     <div
-                        class="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-emerald-400/60">
+                        class="flex justify-between items-center text-[9px] font-black uppercase tracking-widest text-emerald-400/60">
                         <span>Current Database</span>
                         <span id="sync-status-badge">Live View</span>
                     </div>
                     <div class="flex items-center justify-between">
-                        <div id="course-count-display" class="text-2xl font-900">0 Courses</div>
-                        <div id="last-update-display" class="text-[9px] font-bold text-slate-600 uppercase">Never Synced
+                        <div id="course-count-display" class="text-xl font-900">0 Courses</div>
+                        <div id="last-update-display" class="text-[8px] font-bold text-slate-600 uppercase">Never Synced
                         </div>
                     </div>
                 </div>
@@ -737,12 +737,12 @@
                     <input type="file" id="course-file-input"
                         class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" accept=".xlsx,.json">
                     <div
-                        class="border-2 border-dashed border-white/10 group-hover:border-emerald-500/50 rounded-2xl p-8 text-center transition-all bg-white/[0.02] group-hover:bg-emerald-500/5">
+                        class="border-2 border-dashed border-white/10 group-hover:border-emerald-500/50 rounded-xl p-3 md:p-5 text-center transition-all bg-white/[0.02] group-hover:bg-emerald-500/5">
                         <i data-lucide="upload-cloud"
-                            class="w-10 h-10 text-slate-600 group-hover:text-emerald-400 mx-auto mb-4 transition-all group-hover:-translate-y-1"></i>
-                        <p class="text-xs font-bold text-slate-400 group-hover:text-white transition-colors">Drop
-                            offered course report here</p>
-                        <p class="text-[9px] text-slate-600 font-black uppercase mt-2">Supports .xlsx or .json</p>
+                            class="w-8 h-8 text-slate-600 group-hover:text-emerald-400 mx-auto mb-2 transition-all group-hover:-translate-y-1"></i>
+                        <p class="text-[11px] font-bold text-slate-400 group-hover:text-white transition-colors">Drop
+                            report here</p>
+                        <p class="text-[8px] text-slate-600 font-black uppercase mt-1">Supports .xlsx or .json</p>
                     </div>
                 </div>
 

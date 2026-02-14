@@ -280,8 +280,18 @@ class RoutineView {
     showToast(message, type = 'success') {
         const toast = document.createElement('div');
         toast.className = `toast toast-${type}`;
-        const icon = type === 'success' ? 'check-circle' : 'alert-circle';
-        const iconColor = type === 'success' ? 'text-emerald-400' : 'text-rose-400';
+
+        let icon = 'check-circle';
+        let iconColor = 'text-emerald-400';
+
+        if (type === 'error') {
+            icon = 'alert-circle';
+            iconColor = 'text-rose-400';
+        } else if (type === 'info') {
+            icon = 'info';
+            iconColor = 'text-sky-400';
+        }
+
         toast.innerHTML = `
             <div class="toast-icon"><i data-lucide="${icon}" class="w-5 h-5 ${iconColor}"></i></div>
             <div class="toast-message">${message}</div>
