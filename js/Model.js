@@ -40,7 +40,7 @@ class RoutineModel {
 
     addCourse(course) {
         if (!this.selectedCourses.some(sc => sc.course.baseTitle === course.baseTitle)) {
-            this.selectedCourses.push({ course, selectedSectionIndex: 0, isPinned: false });
+            this.selectedCourses.unshift({ course, selectedSectionIndex: 0, isPinned: false });
             return true;
         }
         return false;
@@ -67,7 +67,7 @@ class RoutineModel {
             }]
         };
 
-        this.selectedCourses.push({ course: manualCourse, selectedSectionIndex: 0, isPinned: false });
+        this.selectedCourses.unshift({ course: manualCourse, selectedSectionIndex: 0, isPinned: false });
         return true;
     }
 
