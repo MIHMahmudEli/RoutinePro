@@ -47,7 +47,6 @@ class RoutineController {
             // Clear active states
             document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
             const pickerContainer = document.querySelector('#custom-theme-picker')?.parentElement;
-            pickerContainer?.classList.remove('ring-2', 'ring-white');
 
             // Remove inline overrides first
             // Remove inline overrides first
@@ -86,7 +85,6 @@ class RoutineController {
                 localStorage.setItem('routine-pro-custom-color', customColor);
 
                 if (pickerContainer) {
-                    pickerContainer.classList.add('ring-2', 'ring-white');
                     const btn = pickerContainer.querySelector('.theme-btn');
                     if (btn) btn.classList.add('active');
                     const icon = pickerContainer.querySelector('i');
