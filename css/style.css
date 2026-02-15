@@ -1186,6 +1186,15 @@ input.time-select-modern:hover::-webkit-calendar-picker-indicator {
         padding: 14px !important;
     }
 
+    .section-header-separator {
+        margin-left: -14px !important;
+        margin-right: -14px !important;
+        margin-top: -14px !important;
+        padding: 12px 14px !important;
+        border-top-left-radius: 13px !important;
+        border-top-right-radius: 13px !important;
+    }
+
     .space-y-6 {
         gap: 12px !important;
     }
@@ -1516,6 +1525,15 @@ input.time-select-modern:hover::-webkit-calendar-picker-indicator {
     /* Sidebar Ultra Compact */
     aside .prism-card {
         padding: 12px !important;
+    }
+
+    .section-header-separator {
+        margin-left: -12px !important;
+        margin-right: -12px !important;
+        margin-top: -12px !important;
+        padding: 10px 12px !important;
+        border-top-left-radius: 11px !important;
+        border-top-right-radius: 11px !important;
     }
 
     /* Status Chips Stack Vertically */
