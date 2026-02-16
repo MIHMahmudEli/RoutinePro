@@ -27,10 +27,15 @@ class RoutineController {
 
             const featureToggle = document.getElementById('admin-ramadan-feature-toggle');
             if (featureToggle) {
+                // Initialize toggle from Model (which now checks localStorage)
                 featureToggle.checked = this.model.ramadanFeatureEnabled;
+
                 featureToggle.onchange = (e) => {
                     this.model.ramadanFeatureEnabled = e.target.checked;
-                    this.view.showToast(`Ramadan Feature ${e.target.checked ? 'Enabled' : 'Disabled'} Globally`, "info");
+                    // Save locally so it persists after refresh for the admin
+                    localStorage.setItem('routine-pro-ramadan-admin-feature', e.target.checked);
+
+                    this.view.showToast(`Ramadan Feature ${e.target.checked ? 'Enabled' : 'Disabled'} Locally (Push JSON to go Global)`, "info");
                     this.syncWorkspace();
                 };
             }

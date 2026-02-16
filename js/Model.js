@@ -12,7 +12,8 @@ class RoutineModel {
         this.focusMode = false;
         this.twentyFourHourMode = false;
         this.ramadanMode = false;
-        this.ramadanFeatureEnabled = false;
+        // Check local storage FIRST (for admin persistence), default to false
+        this.ramadanFeatureEnabled = localStorage.getItem('routine-pro-ramadan-admin-feature') === 'true';
         this.globalRamadanMap = null;
         this.customRamadanMap = this.loadRamadanMappings();
     }
@@ -35,12 +36,21 @@ class RoutineModel {
             const ramRes = await fetch('data/ramadan-mappings.json');
             if (ramRes.ok) {
                 const ramData = await ramRes.json();
-                this.ramadanFeatureEnabled = ramData.featureEnabled !== false;
+
+                // Only use server value if admin hasn't set a local override
+                const hasLocalOverride = localStorage.getItem('routine-pro-ramadan-admin-feature') !== null;
+                if (!hasLocalOverride) {
+                    this.ramadanFeatureEnabled = ramData.featureEnabled !== false;
+                }
+
                 this.globalRamadanMap = ramData.mappings || null;
             }
         } catch (e) {
             console.warn("No global ramadan map found");
-            this.ramadanFeatureEnabled = false;
+            // If fetch fails and no local override, keep it false
+            if (localStorage.getItem('routine-pro-ramadan-admin-feature') === null) {
+                this.ramadanFeatureEnabled = false;
+            }
         }
 
         const localCourses = localStorage.getItem('routine-pro-courses');
