@@ -1098,6 +1098,11 @@ input.time-select-modern:hover::-webkit-calendar-picker-indicator {
         font-size: 14px;
     }
 
+    /* Hide Old Ramadan Time on Mobile */
+    .ramadan-old-time {
+        display: none !important;
+    }
+
     .space-y-6>*+* {
         margin-top: 12px !important;
     }
