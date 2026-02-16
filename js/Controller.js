@@ -497,8 +497,10 @@ class RoutineController {
 
         // Time Input Formatting (Clamp & Pad)
         const formatTimeInput = (el, max) => {
+            if (el.value === '') return; // Allow empty state
             let v = parseInt(el.value);
-            if (isNaN(v)) return; // Don't wipe if empty yet or partial
+            if (isNaN(v)) return; // Don't wipe if partial
+
             if (v < 0) v = 0;
             if (v > max) v = max;
             // Special case for hours 1-12
@@ -590,12 +592,12 @@ class RoutineController {
         document.getElementById('manual-section').value = '';
         document.getElementById('manual-room').value = '';
 
-        // Reset time selects to defaults
-        document.getElementById('man-start-h').value = '08';
-        document.getElementById('man-start-m').value = '00';
+        // Reset time selects to defaults (Blank for placeholders)
+        document.getElementById('man-start-h').value = '';
+        document.getElementById('man-start-m').value = '';
         document.getElementById('man-start-p').value = 'AM';
-        document.getElementById('man-end-h').value = '09';
-        document.getElementById('man-end-m').value = '30';
+        document.getElementById('man-end-h').value = '';
+        document.getElementById('man-end-m').value = '';
         document.getElementById('man-end-p').value = 'AM';
 
         document.querySelectorAll('input[name="man-day"]').forEach((cb, i) => cb.checked = i === 0);
@@ -622,6 +624,10 @@ class RoutineController {
 
         if (!subject || days.length === 0) {
             return this.view.showToast("Subject and at least one Day are required!", "error");
+        }
+
+        if (!sh || !sm || !eh || !em) {
+            return this.view.showToast("Please enter complete start and end times!", "error");
         }
 
         const start = `${sh}:${sm} ${sp}`;
