@@ -910,6 +910,7 @@ class RoutineController {
         if (!ramadanFeatureEnabled) {
             this.model.ramadanMode = false;
         }
+        this.updateRamadanToggleUI();
 
         const ramadanToggle = document.getElementById('ramadan-toggle');
         if (ramadanToggle) {
@@ -1022,6 +1023,25 @@ class RoutineController {
         lucide.createIcons();
     }
 
+    updateRamadanToggleUI() {
+        const btn = document.getElementById('ramadan-toggle');
+        if (!btn) return;
+
+        const icon = btn.querySelector('i');
+        if (this.model.ramadanMode) {
+            btn.classList.add('!bg-[var(--accent-primary)]', '!text-black', 'shadow-[0_0_15px_var(--accent-glow)]');
+            btn.classList.remove('!bg-white/10', '!text-white', 'border-white/20');
+            btn.setAttribute('data-active', 'true');
+            if (icon) icon.classList.add('scale-110');
+        } else {
+            btn.classList.remove('!bg-[var(--accent-primary)]', '!text-black', 'shadow-[0_0_15px_var(--accent-glow)]');
+            btn.classList.add('!bg-white/10', '!text-white', 'border-white/20');
+            btn.removeAttribute('data-active');
+            if (icon) icon.classList.remove('scale-110');
+        }
+        lucide.createIcons();
+    }
+
     async handleRamadanUpload(e) {
         const file = e.target.files[0];
         if (!file) return;
@@ -1042,7 +1062,16 @@ class RoutineController {
             for (let i = 1; i <= pdf.numPages; i++) {
                 const page = await pdf.getPage(i);
                 const textContent = await page.getTextContent();
-                const pageText = textContent.items.map(item => item.str).join(' ');
+
+                // Sort items by Y (top to bottom) then X (left to right)
+                // This correctly reconstructs rows even in multi-column PDFs
+                const items = textContent.items.sort((a, b) => {
+                    const yDiff = b.transform[5] - a.transform[5];
+                    if (Math.abs(yDiff) > 5) return yDiff; // Different rows
+                    return a.transform[4] - b.transform[4]; // Same row, left to right
+                });
+
+                const pageText = items.map(item => item.str).join(' ');
                 fullText += pageText + "\n";
             }
 
@@ -1104,7 +1133,8 @@ class RoutineController {
     formatTimeWithPadding(s) {
         if (!s) return "";
         let [t, p] = s.trim().split(' ');
-        let [h, m] = t.split(':');
+        const separator = t.includes(':') ? ':' : '.';
+        let [h, m] = t.split(separator);
         return `${h.padStart(2, '0')}:${m.padStart(2, '0')} ${p}`;
     }
 

@@ -253,56 +253,59 @@ class RoutineModel {
         const end = schedule.end.trim().toUpperCase();
         const slotKey = `${this.formatTime(start)} - ${this.formatTime(end)}`;
 
-        const ramadanMap = this.customRamadanMap || this.globalRamadanMap || {
-            // Lecture (1h 30min) -> 1h
-            "08:00 AM - 09:30 AM": ["09:00 AM", "10:00 AM"],
-            "09:40 AM - 11:10 AM": ["10:00 AM", "11:00 AM"],
-            "11:20 AM - 12:50 PM": ["11:00 AM", "12:00 PM"],
-            "01:00 PM - 02:30 PM": ["12:00 PM", "01:00 PM"],
-            "02:40 PM - 04:10 PM": ["01:20 PM", "02:20 PM"],
-            "04:20 PM - 05:50 PM": ["02:20 PM", "03:20 PM"],
+        // Priority Logic: Try each map for a specific key match
+        const findMapping = (key) => {
+            if (this.customRamadanMap && this.customRamadanMap[key]) return this.customRamadanMap[key];
+            if (this.globalRamadanMap && this.globalRamadanMap[key]) return this.globalRamadanMap[key];
 
-            // Pharmacy/LLB/BPharm variants (1h 20m -> 1h)
-            "08:00 AM - 09:20 AM": ["09:00 AM", "10:00 AM"],
-            "09:40 AM - 11:00 AM": ["10:00 AM", "11:00 AM"],
-            "11:20 AM - 12:40 PM": ["11:00 AM", "12:00 PM"],
-            "01:00 PM - 02:20 PM": ["12:00 PM", "01:00 PM"],
-            "02:40 PM - 04:00 PM": ["01:00 PM", "02:00 PM"],
+            const defaults = {
+                // Lecture (1h 30min) -> 1h
+                "08:00 AM - 09:30 AM": ["09:00 AM", "10:00 AM"],
+                "09:40 AM - 11:10 AM": ["10:00 AM", "11:00 AM"],
+                "11:20 AM - 12:50 PM": ["11:00 AM", "12:00 PM"],
+                "01:00 PM - 02:30 PM": ["12:00 PM", "01:00 PM"],
+                "02:40 PM - 04:10 PM": ["01:20 PM", "02:20 PM"],
+                "04:20 PM - 05:50 PM": ["02:20 PM", "03:20 PM"],
+                "08:00 AM - 09:20 AM": ["09:00 AM", "10:00 AM"],
+                "09:40 AM - 11:00 AM": ["10:00 AM", "11:00 AM"],
+                "11:20 AM - 12:40 PM": ["11:00 AM", "12:00 PM"],
+                "01:00 PM - 02:20 PM": ["12:00 PM", "01:00 PM"],
+                "02:40 PM - 04:00 PM": ["01:00 PM", "02:00 PM"],
+                "08:00 AM - 10:00 AM": ["09:00 AM", "10:20 AM"],
+                "10:20 AM - 12:20 PM": ["10:30 AM", "11:50 AM"],
+                "12:40 PM - 02:40 PM": ["12:00 PM", "01:20 PM"],
+                "03:00 PM - 05:00 PM": ["01:30 PM", "02:50 PM"],
+                "08:00 AM - 09:00 AM": ["09:00 AM", "09:40 AM"],
+                "09:10 AM - 10:10 AM": ["09:40 AM", "10:20 AM"],
+                "10:20 AM - 11:20 AM": ["10:20 AM", "11:00 AM"],
+                "11:30 AM - 12:30 PM": ["11:10 AM", "11:50 AM"],
+                "12:40 PM - 01:40 PM": ["12:00 PM", "12:40 PM"],
+                "01:50 PM - 02:50 PM": ["12:40 PM", "01:20 PM"],
+                "08:00 AM - 10:20 AM": ["09:00 AM", "10:30 AM"],
+                "10:20 AM - 12:40 PM": ["10:30 AM", "12:00 PM"],
+                "12:40 PM - 03:00 PM": ["12:00 PM", "01:30 PM"],
+                "03:00 PM - 05:20 PM": ["01:30 PM", "03:00 PM"],
+                "08:00 AM - 11:00 AM": ["09:00 AM", "11:00 AM"],
+                "11:00 AM - 02:00 PM": ["11:00 AM", "01:00 PM"],
+                "02:00 PM - 05:00 PM": ["01:00 PM", "03:00 PM"],
+                "08:30 AM - 11:30 AM": ["09:00 AM", "11:00 AM"],
+                "08:30 AM - 01:00 PM": ["09:00 AM", "12:20 PM"],
+                "08:30 AM - 02:00 PM": ["09:00 AM", "01:00 PM"],
+                "02:00 PM - 05:00 PM": ["01:00 PM", "03:00 PM"],
 
-            // Lecture (2h) -> 1h 20m
-            "08:00 AM - 10:00 AM": ["09:00 AM", "10:20 AM"],
-            "10:20 AM - 12:20 PM": ["10:30 AM", "11:50 AM"],
-            "12:40 PM - 02:40 PM": ["12:00 PM", "01:20 PM"],
-            "03:00 PM - 05:00 PM": ["01:30 PM", "02:50 PM"],
-
-            // Lecture (1h) -> 40m
-            "08:00 AM - 09:00 AM": ["09:00 AM", "09:40 AM"],
-            "09:10 AM - 10:10 AM": ["09:40 AM", "10:20 AM"],
-            "10:20 AM - 11:20 AM": ["10:20 AM", "11:00 AM"],
-            "11:30 AM - 12:30 PM": ["11:10 AM", "11:50 AM"],
-            "12:40 PM - 01:40 PM": ["12:00 PM", "12:40 PM"],
-            "01:50 PM - 02:50 PM": ["12:40 PM", "01:20 PM"],
-
-            // Laboratory (2h 20m) -> 1h 30m
-            "08:00 AM - 10:20 AM": ["09:00 AM", "10:30 AM"],
-            "10:20 AM - 12:40 PM": ["10:30 AM", "12:00 PM"],
-            "12:40 PM - 03:00 PM": ["12:00 PM", "01:30 PM"],
-            "03:00 PM - 05:20 PM": ["01:30 PM", "03:00 PM"],
-
-            // Laboratory (3h) -> 2h
-            "08:00 AM - 11:00 AM": ["09:00 AM", "11:00 AM"],
-            "11:00 AM - 02:00 PM": ["11:00 AM", "01:00 PM"],
-            "02:00 PM - 05:00 PM": ["01:00 PM", "03:00 PM"],
-
-            // Studio variants
-            "08:30 AM - 11:30 AM": ["09:00 AM", "11:00 AM"],
-            "08:30 AM - 12:30 PM": ["09:00 AM", "12:00 PM"],
-            "08:30 AM - 01:00 PM": ["09:00 AM", "12:20 PM"],
-            "08:30 AM - 02:00 PM": ["09:00 AM", "01:00 PM"],
-            "02:00 PM - 05:00 PM": ["01:00 PM", "03:00 PM"]
+                // Common 3h and 1.5h postgraduate/specialized shifts
+                "10:00 AM - 01:00 PM": ["11:00 AM", "01:00 PM"],
+                "01:00 PM - 04:00 PM": ["12:00 PM", "02:00 PM"],
+                "04:00 PM - 07:00 PM": ["02:00 PM", "04:00 PM"],
+                "01:30 PM - 03:00 PM": ["01:20 PM", "02:20 PM"],
+                "06:30 PM - 09:30 PM": ["03:30 PM", "05:30 PM"],
+                "06:30 PM - 08:00 PM": ["03:30 PM", "04:30 PM"],
+                "08:00 PM - 09:30 PM": ["04:30 PM", "05:30 PM"]
+            };
+            return defaults[key];
         };
 
-        const result = ramadanMap[slotKey];
+        const result = findMapping(slotKey);
         if (result) {
             return {
                 start: this.toMin(result[0]),
@@ -331,7 +334,8 @@ class RoutineModel {
     formatTime(s) {
         if (!s) return "";
         let [t, p] = s.trim().split(' ');
-        let [h, m] = t.split(':');
+        const separator = t.includes(':') ? ':' : '.';
+        let [h, m] = t.split(separator);
         return `${h.padStart(2, '0')}:${m.padStart(2, '0')} ${p}`;
     }
 
