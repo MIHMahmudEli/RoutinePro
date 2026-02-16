@@ -123,7 +123,8 @@ class RoutineView {
         lucide.createIcons();
     }
 
-    renderRoutine(items, isExplorerMode, focusMode = false, twentyFourHourMode = false) {
+    renderRoutine(items, isExplorerMode, model) {
+        const { focusMode, twentyFourHourMode, ramadanMode } = model;
         const buckets = document.querySelectorAll('.day-bucket');
         buckets.forEach(b => b.innerHTML = '');
         let globalConflict = false;
@@ -142,10 +143,9 @@ class RoutineView {
             items.forEach(item => {
                 const section = isExplorerMode ? item.section : item.course.sections[item.selectedSectionIndex];
                 section.schedules.forEach(sch => {
-                    const s = this.toMin(sch.start);
-                    const e = this.toMin(sch.end);
-                    if (s < earliest) earliest = s;
-                    if (e > latest) latest = e;
+                    const times = model.getEffectiveTimes(sch);
+                    if (times.start < earliest) earliest = times.start;
+                    if (times.end > latest) latest = times.end;
                 });
             });
 
@@ -230,12 +230,13 @@ class RoutineView {
             const section = isExplorerMode ? item.section : item.course.sections[item.selectedSectionIndex];
 
             section.schedules.forEach(sch => {
-                const startRaw = this.toMin(sch.start);
-                const endRaw = this.toMin(sch.end);
+                const effective = model.getEffectiveTimes(sch);
+                let start = effective.start;
+                let end = effective.end;
 
-                // Handle wrap-around for 24h mode (if start is before minTime, it's considered late night)
-                const start = (twentyFourHourMode && startRaw < minTime) ? startRaw + 1440 : startRaw;
-                const end = (twentyFourHourMode && endRaw < minTime) ? endRaw + 1440 : endRaw;
+                // Handle wrap-around for 24h mode
+                if (twentyFourHourMode && start < minTime) start += 1440;
+                if (twentyFourHourMode && end < minTime) end += 1440;
 
                 const scale = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--routine-scale')) || (window.innerWidth < 768 ? 50 / 60 : 70 / 60);
 
@@ -261,7 +262,7 @@ class RoutineView {
                 block.style.height = `${height}px`;
                 block.innerHTML = `
                     <div class="class-name">${title}</div>
-                    <div class="class-info">${sch.start} - ${sch.end}</div>
+                    <div class="class-info">${effective.startStr} - ${effective.endStr}</div>
                     <div class="flex justify-between items-center mt-auto opacity-60">
                         <span class="text-[8px] font-black">SEC ${section.section}</span>
                         <span class="text-[8px] font-black">RM ${sch.room}</span>

@@ -19,6 +19,29 @@ class RoutineController {
         this.setupEventListeners();
         this.syncWorkspace();
 
+        // Reveal Admin Features if ?admin=true
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('admin') === 'true') {
+            const syncBtn = document.getElementById('ramadan-sync-btn');
+            if (syncBtn) syncBtn.classList.remove('hidden');
+
+            const featureToggle = document.getElementById('admin-ramadan-feature-toggle');
+            if (featureToggle) {
+                featureToggle.checked = this.model.ramadanFeatureEnabled;
+                featureToggle.onchange = (e) => {
+                    this.model.ramadanFeatureEnabled = e.target.checked;
+                    this.view.showToast(`Ramadan Feature ${e.target.checked ? 'Enabled' : 'Disabled'} Globally`, "info");
+                    this.syncWorkspace();
+                };
+            }
+        }
+
+        // Global Ramadan Visibility
+        const ramadanToggle = document.getElementById('ramadan-toggle');
+        if (ramadanToggle) {
+            ramadanToggle.classList.toggle('hidden', !this.model.ramadanFeatureEnabled);
+        }
+
         // Initialize Theme Sets Logic
         window.cycleThemeSet = () => {
             this.currentThemeSet = (this.currentThemeSet % 3) + 1;
@@ -218,6 +241,39 @@ class RoutineController {
 
                 this.syncWorkspace();
             };
+        }
+
+        // Initialize Modes from local storage
+        const savedRamadan = localStorage.getItem('routine-pro-ramadan') === 'true';
+        if (savedRamadan) {
+            this.model.ramadanMode = true;
+            this.updateRamadanToggleUI();
+        }
+
+        // Ramadan Mode
+        const ramadanBtn = document.getElementById('ramadan-toggle');
+        if (ramadanBtn) {
+            ramadanBtn.onclick = () => {
+                this.model.ramadanMode = !this.model.ramadanMode;
+                localStorage.setItem('routine-pro-ramadan', this.model.ramadanMode);
+                this.updateRamadanToggleUI();
+                const status = this.model.ramadanMode ? "Enabled" : "Disabled";
+                const type = this.model.ramadanMode ? "success" : "info";
+                this.view.showToast(`Ramadan Mode ${status}`, type);
+
+                window.analytics.trackFeatureToggle('ramadan_mode', this.model.ramadanMode);
+                this.syncWorkspace();
+            };
+        }
+
+        // Ramadan Sync Modal Logic
+        const ramadanUpload = document.getElementById('ramadan-pdf-upload');
+        const processRamadanBtn = document.getElementById('process-ramadan-btn');
+        if (ramadanUpload) {
+            ramadanUpload.onchange = (e) => this.handleRamadanUpload(e);
+        }
+        if (processRamadanBtn) {
+            processRamadanBtn.onclick = () => ramadanUpload && ramadanUpload.click();
         }
 
         // Parameters Section Toggle
@@ -472,6 +528,21 @@ class RoutineController {
                 });
             }
         });
+    }
+
+    updateRamadanToggleUI() {
+        const btn = document.getElementById('ramadan-toggle');
+        const icon = document.getElementById('ramadan-icon');
+        if (btn && icon) {
+            if (this.model.ramadanMode) {
+                btn.classList.add('!bg-amber-500/20', '!text-amber-400', '!border-amber-500/30');
+                icon.setAttribute('data-lucide', 'sun');
+            } else {
+                btn.classList.remove('!bg-amber-500/20', '!text-amber-400', '!border-amber-500/30');
+                icon.setAttribute('data-lucide', 'moon-star');
+            }
+            lucide.createIcons();
+        }
     }
 
     toggleManualMode(show) {
@@ -828,7 +899,17 @@ class RoutineController {
     }
 
     syncWorkspace() {
-        const { isExplorerMode, currentRoutineIndex, possibleRoutines, selectedCourses, focusMode } = this.model;
+        const { isExplorerMode, currentRoutineIndex, possibleRoutines, selectedCourses, focusMode, ramadanFeatureEnabled } = this.model;
+
+        // Force disable Ramadan Mode if feature is disabled globally
+        if (!ramadanFeatureEnabled) {
+            this.model.ramadanMode = false;
+        }
+
+        const ramadanToggle = document.getElementById('ramadan-toggle');
+        if (ramadanToggle) {
+            ramadanToggle.classList.toggle('hidden', !ramadanFeatureEnabled);
+        }
 
         this.view.explorerNav.classList.toggle('hidden', !isExplorerMode);
         this.view.explorerNav.classList.toggle('flex', isExplorerMode);
@@ -905,7 +986,7 @@ class RoutineController {
                 this.syncWorkspace();
             }
         );
-        this.view.renderRoutine(currentItems, isExplorerMode, this.model.focusMode, this.model.twentyFourHourMode);
+        this.view.renderRoutine(currentItems, isExplorerMode, this.model);
         lucide.createIcons(); // Ensure all icons are updated, including some with custom stroke if added
         this.view.totalCreditsEl.innerText = this.model.calculateCredits();
         this.view.updateSyncUI(this.model.allCourses);
@@ -934,6 +1015,110 @@ class RoutineController {
             }
         }
         lucide.createIcons();
+    }
+
+    async handleRamadanUpload(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const statusContainer = document.getElementById('ramadan-sync-status');
+        const statusText = document.getElementById('ramadan-status-text');
+        const btn = document.getElementById('process-ramadan-btn');
+
+        if (statusContainer) statusContainer.classList.remove('hidden');
+        if (statusText) statusText.innerText = "Reading PDF...";
+        if (btn) btn.disabled = true;
+
+        try {
+            const arrayBuffer = await file.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+            let fullText = "";
+
+            for (let i = 1; i <= pdf.numPages; i++) {
+                const page = await pdf.getPage(i);
+                const textContent = await page.getTextContent();
+                const pageText = textContent.items.map(item => item.str).join(' ');
+                fullText += pageText + "\n";
+            }
+
+            // Extract timing slots
+            // Pattern: Looking for pairs of "HH:MM - HH:MM" slots
+            // The AIUB format is usually "Regular Ramadan" side by side
+            // 8:00 - 9:30 9:00 - 10:00
+
+            // Handle both ":" and "." as separators, and various dash types
+            const timeRangeRegex = /(\d{1,2}[:.]\d{2})\s*[-û–—]\s*(\d{1,2}[:.]\d{2})/g;
+            const matches = [...fullText.matchAll(timeRangeRegex)];
+
+            const mappings = {};
+            // We expect pairs: [RegularSlot, RamadanSlot]
+            for (let i = 0; i < matches.length - 1; i += 2) {
+                const reg = matches[i];
+                const ram = matches[i + 1];
+
+                // Helper to detect AM/PM based on context
+                const normalize = (timeStr) => {
+                    const separator = timeStr.includes(':') ? ':' : '.';
+                    let [h, m] = timeStr.split(separator).map(Number);
+                    let period = "AM";
+                    if (h >= 12) period = "PM";
+                    if (h < 8) period = "PM"; // Classes before 8 AM are PM
+                    return this.formatTimeWithPadding(`${h}:${m} ${period}`);
+                };
+
+                const regStart = normalize(reg[1]);
+                const regEnd = normalize(reg[2]);
+                const ramStart = normalize(ram[1]);
+                const ramEnd = normalize(ram[2]);
+
+                mappings[`${regStart} - ${regEnd}`] = [ramStart, ramEnd];
+            }
+
+            if (Object.keys(mappings).length === 0) {
+                throw new Error("No timing slots detected. Is this an official AIUB notice?");
+            }
+
+            this.model.saveRamadanMappings(mappings);
+            this.view.showToast(`Successfully synced ${Object.keys(mappings).length} timing slots!`);
+
+            if (statusText) statusText.innerText = `Success: ${Object.keys(mappings).length} slots found`;
+            setTimeout(() => {
+                document.getElementById('ramadan-sync-modal').classList.add('hidden');
+                if (statusContainer) statusContainer.classList.add('hidden');
+            }, 1000);
+
+        } catch (err) {
+            console.error(err);
+            this.view.showToast(err.message || "Failed to parse PDF.", "error");
+            if (statusText) statusText.innerText = "Error parsing file";
+        } finally {
+            if (btn) btn.disabled = false;
+        }
+    }
+
+    formatTimeWithPadding(s) {
+        if (!s) return "";
+        let [t, p] = s.trim().split(' ');
+        let [h, m] = t.split(':');
+        return `${h.padStart(2, '0')}:${m.padStart(2, '0')} ${p}`;
+    }
+
+    downloadRamadanJSON() {
+        const mappings = this.model.customRamadanMap || this.model.globalRamadanMap;
+        if (!mappings) return this.view.showToast("No mappings found. Upload a PDF first.", "info");
+
+        const exportData = {
+            featureEnabled: this.model.ramadanFeatureEnabled,
+            mappings: mappings
+        };
+
+        const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `ramadan-mappings.json`;
+        a.click();
+        URL.revokeObjectURL(url);
     }
 
     updateTwentyFourToggleUI() {

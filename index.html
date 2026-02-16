@@ -131,10 +131,17 @@
                     <button id="twenty-four-toggle"
                         class="prism-btn group !w-9 !h-9 !p-0 !min-w-0 !rounded-xl !bg-white/10 !text-white border border-white/20 hover:!bg-white/20 flex items-center justify-center transition-all active:scale-90"
                         title="24-Hour Mode"><i data-lucide="clock" class="w-4 h-4" id="twenty-four-icon"></i></button>
+                    <button id="ramadan-toggle"
+                        class="prism-btn group !w-9 !h-9 !p-0 !min-w-0 !rounded-xl !bg-white/10 !text-white border border-white/20 hover:!bg-white/20 flex items-center justify-center transition-all active:scale-90"
+                        title="Ramadan Mode"><i data-lucide="moon-star" class="w-4 h-4" id="ramadan-icon"></i></button>
                     <button onclick="document.getElementById('sync-modal').classList.remove('hidden')"
                         class="prism-btn group !w-9 !h-9 !p-0 !min-w-0 !rounded-xl !bg-white/10 !text-white border border-white/20 hover:!bg-white/20 flex items-center justify-center transition-all"
                         title="Portal Sync"><i data-lucide="refresh-cw"
                             class="w-4 h-4 group-hover:rotate-180 transition-transform duration-500"></i></button>
+                    <button id="ramadan-sync-btn"
+                        onclick="document.getElementById('ramadan-sync-modal').classList.remove('hidden')"
+                        class="hidden prism-btn group !w-9 !h-9 !p-0 !min-w-0 !rounded-xl !bg-amber-500/20 !text-amber-400 border border-amber-500/30 hover:!bg-amber-500/30 flex items-center justify-center transition-all"
+                        title="Ramadan Sync"><i data-lucide="cloud-lightning" class="w-4 h-4"></i></button>
                     <button id="export-btn"
                         class="prism-btn !w-9 !h-9 !p-0 !min-w-0 !rounded-xl !bg-white/10 !text-white border border-white/10 hover:!bg-white/20 hover:!border-white/30 flex items-center justify-center transition-all"
                         title="Export PNG"><i data-lucide="download" class="w-4 h-4"></i></button>
@@ -760,6 +767,92 @@
     </div>
 
     <div id="toast-container" class="fixed bottom-6 right-6 z-[300] space-y-3 pointer-events-none"></div>
+
+    <!-- PDF.js for Ramadan Sync -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    </script>
+
+    <!-- Ramadan Sync Modal -->
+    <div id="ramadan-sync-modal"
+        class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+        <div class="prism-card w-full max-w-sm p-6 relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 to-orange-600"></div>
+
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
+                        <i data-lucide="moon-star" class="w-5 h-5 text-amber-500"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-sm font-black uppercase tracking-tighter text-white">Ramadan Sync</h2>
+                        <p class="text-[10px] text-slate-500 font-bold uppercase">Update Timing Slots</p>
+                    </div>
+                </div>
+                <button onclick="document.getElementById('ramadan-sync-modal').classList.add('hidden')"
+                    class="text-slate-500 hover:text-white transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4">
+                <div class="p-4 rounded-xl bg-white/5 border border-white/5 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-[10px] text-white font-black uppercase tracking-widest">Global Feature</p>
+                            <p class="text-[8px] text-slate-500 font-bold uppercase">Visibility for all users</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="admin-ramadan-feature-toggle" class="sr-only peer">
+                            <div
+                                class="w-9 h-5 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-400 after:border-slate-400 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500 peer-checked:after:bg-black peer-checked:after:border-black">
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="h-px bg-white/5 mx-2"></div>
+
+                    <div>
+                        <p class="text-[10px] text-slate-400 font-medium leading-relaxed mb-3">
+                            Upload the official <span class="text-amber-400 font-bold">Ramadan Class Timing PDF</span>.
+                            The system will automatically extract new shift slots.
+                        </p>
+                        <label
+                            class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-white/10 rounded-xl cursor-pointer hover:bg-white/[0.02] hover:border-amber-500/30 transition-all group">
+                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                <i data-lucide="file-text"
+                                    class="w-8 h-8 text-slate-500 mb-2 group-hover:text-amber-500 transition-colors"></i>
+                                <p
+                                    class="text-[10px] text-slate-500 group-hover:text-slate-300 transition-colors uppercase font-black">
+                                    Click to upload PDF</p>
+                            </div>
+                            <input type="file" id="ramadan-pdf-upload" class="hidden" accept=".pdf" />
+                        </label>
+                    </div>
+                </div>
+
+                <div id="ramadan-sync-status" class="hidden p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="info" class="w-3 h-3 text-amber-500"></i>
+                        <p class="text-[9px] text-amber-200 font-bold uppercase" id="ramadan-status-text">Parsing PDF...
+                        </p>
+                    </div>
+                </div>
+
+                <button id="process-ramadan-btn"
+                    class="prism-btn !w-full !rounded-xl !bg-amber-500 !text-black hover:!bg-amber-400">
+                    UPDATE RAMADAN SLOTS
+                </button>
+
+                <button onclick="app.controller.downloadRamadanJSON()"
+                    class="w-full flex items-center justify-center gap-2 py-2 text-[10px] font-black text-slate-500 uppercase hover:text-amber-400 transition-colors">
+                    <i data-lucide="download" class="w-3 h-3"></i>
+                    Download Mappings as JSON
+                </button>
+            </div>
+        </div>
+    </div>
 
     <script src="js/Model.js?v=1.1"></script>
     <script src="js/Analytics.js?v=1.1"></script>

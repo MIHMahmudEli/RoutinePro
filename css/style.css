@@ -569,6 +569,7 @@ input.time-select-modern:hover::-webkit-calendar-picker-indicator {
     border-left: 3px solid var(--accent-secondary);
 }
 
+
 .class-name {
     font-weight: 800;
     color: white;

@@ -11,9 +11,38 @@ class RoutineModel {
         this.isExplorerMode = false;
         this.focusMode = false;
         this.twentyFourHourMode = false;
+        this.ramadanMode = false;
+        this.ramadanFeatureEnabled = false;
+        this.globalRamadanMap = null;
+        this.customRamadanMap = this.loadRamadanMappings();
+    }
+
+    loadRamadanMappings() {
+        try {
+            const saved = localStorage.getItem('routine-pro-ramadan-map');
+            return saved ? JSON.parse(saved) : null;
+        } catch (e) { return null; }
+    }
+
+    saveRamadanMappings(map) {
+        this.customRamadanMap = map;
+        localStorage.setItem('routine-pro-ramadan-map', JSON.stringify(map));
     }
 
     async loadInitialData() {
+        // Load Global Ramadan Mappings
+        try {
+            const ramRes = await fetch('data/ramadan-mappings.json');
+            if (ramRes.ok) {
+                const ramData = await ramRes.json();
+                this.ramadanFeatureEnabled = ramData.featureEnabled !== false;
+                this.globalRamadanMap = ramData.mappings || null;
+            }
+        } catch (e) {
+            console.warn("No global ramadan map found");
+            this.ramadanFeatureEnabled = false;
+        }
+
         const localCourses = localStorage.getItem('routine-pro-courses');
         if (localCourses) {
             this.allCourses = JSON.parse(localCourses);
@@ -125,7 +154,8 @@ class RoutineModel {
 
                 let validTime = true;
                 for (const s of sec.schedules) {
-                    if (this.toMin(s.start) < minS || this.toMin(s.end) > maxE || !allowedDays.includes(s.day.substring(0, 3).toLowerCase())) {
+                    const times = this.getEffectiveTimes(s);
+                    if (times.start < minS || times.end > maxE || !allowedDays.includes(s.day.substring(0, 3).toLowerCase())) {
                         validTime = false;
                         break;
                     }
@@ -166,7 +196,9 @@ class RoutineModel {
                 const dayA = this.normalizeDay(schA.day);
                 const dayB = this.normalizeDay(schB.day);
                 if (dayA !== dayB) return false;
-                return (this.toMin(schA.start) < this.toMin(schB.end) && this.toMin(schA.end) > this.toMin(schB.start));
+                const timesA = this.getEffectiveTimes(schA);
+                const timesB = this.getEffectiveTimes(schB);
+                return (timesA.start < timesB.end && timesA.end > timesB.start);
             }));
         });
     }
@@ -196,6 +228,103 @@ class RoutineModel {
         } catch (e) { return 0; }
     }
 
+    // Helper to get effective start/end minutes
+    getEffectiveTimes(schedule) {
+        if (!this.ramadanMode) {
+            return {
+                start: this.toMin(schedule.start),
+                end: this.toMin(schedule.end),
+                startStr: schedule.start,
+                endStr: schedule.end
+            };
+        }
+
+        const start = schedule.start.trim().toUpperCase();
+        const end = schedule.end.trim().toUpperCase();
+        const slotKey = `${this.formatTime(start)} - ${this.formatTime(end)}`;
+
+        const ramadanMap = this.customRamadanMap || this.globalRamadanMap || {
+            // Lecture (1h 30min) -> 1h
+            "08:00 AM - 09:30 AM": ["09:00 AM", "10:00 AM"],
+            "09:40 AM - 11:10 AM": ["10:00 AM", "11:00 AM"],
+            "11:20 AM - 12:50 PM": ["11:00 AM", "12:00 PM"],
+            "01:00 PM - 02:30 PM": ["12:00 PM", "01:00 PM"],
+            "02:40 PM - 04:10 PM": ["01:20 PM", "02:20 PM"],
+            "04:20 PM - 05:50 PM": ["02:20 PM", "03:20 PM"],
+
+            // Pharmacy/LLB/BPharm variants (1h 20m -> 1h)
+            "08:00 AM - 09:20 AM": ["09:00 AM", "10:00 AM"],
+            "09:40 AM - 11:00 AM": ["10:00 AM", "11:00 AM"],
+            "11:20 AM - 12:40 PM": ["11:00 AM", "12:00 PM"],
+            "01:00 PM - 02:20 PM": ["12:00 PM", "01:00 PM"],
+            "02:40 PM - 04:00 PM": ["01:00 PM", "02:00 PM"],
+
+            // Lecture (2h) -> 1h 20m
+            "08:00 AM - 10:00 AM": ["09:00 AM", "10:20 AM"],
+            "10:20 AM - 12:20 PM": ["10:30 AM", "11:50 AM"],
+            "12:40 PM - 02:40 PM": ["12:00 PM", "01:20 PM"],
+            "03:00 PM - 05:00 PM": ["01:30 PM", "02:50 PM"],
+
+            // Lecture (1h) -> 40m
+            "08:00 AM - 09:00 AM": ["09:00 AM", "09:40 AM"],
+            "09:10 AM - 10:10 AM": ["09:40 AM", "10:20 AM"],
+            "10:20 AM - 11:20 AM": ["10:20 AM", "11:00 AM"],
+            "11:30 AM - 12:30 PM": ["11:10 AM", "11:50 AM"],
+            "12:40 PM - 01:40 PM": ["12:00 PM", "12:40 PM"],
+            "01:50 PM - 02:50 PM": ["12:40 PM", "01:20 PM"],
+
+            // Laboratory (2h 20m) -> 1h 30m
+            "08:00 AM - 10:20 AM": ["09:00 AM", "10:30 AM"],
+            "10:20 AM - 12:40 PM": ["10:30 AM", "12:00 PM"],
+            "12:40 PM - 03:00 PM": ["12:00 PM", "01:30 PM"],
+            "03:00 PM - 05:20 PM": ["01:30 PM", "03:00 PM"],
+
+            // Laboratory (3h) -> 2h
+            "08:00 AM - 11:00 AM": ["09:00 AM", "11:00 AM"],
+            "11:00 AM - 02:00 PM": ["11:00 AM", "01:00 PM"],
+            "02:00 PM - 05:00 PM": ["01:00 PM", "03:00 PM"],
+
+            // Studio variants
+            "08:30 AM - 11:30 AM": ["09:00 AM", "11:00 AM"],
+            "08:30 AM - 12:30 PM": ["09:00 AM", "12:00 PM"],
+            "08:30 AM - 01:00 PM": ["09:00 AM", "12:20 PM"],
+            "08:30 AM - 02:00 PM": ["09:00 AM", "01:00 PM"],
+            "02:00 PM - 05:00 PM": ["01:00 PM", "03:00 PM"]
+        };
+
+        const result = ramadanMap[slotKey];
+        if (result) {
+            return {
+                start: this.toMin(result[0]),
+                end: this.toMin(result[1]),
+                startStr: result[0],
+                endStr: result[1]
+            };
+        }
+
+        // Fallback: If no exact slot match, shift by 1 hour later if it starts at 8:00 AM
+        let shift = 0;
+        const startMin = this.toMin(start);
+        if (startMin >= 480 && startMin <= 900) { // 8 AM to 3 PM
+            // Standard shift: most classes start 1 hour later (9:00 instead of 8:00)
+            // But let's just return original if no clear mapping to avoid mess
+        }
+
+        return {
+            start: this.toMin(schedule.start),
+            end: this.toMin(schedule.end),
+            startStr: schedule.start,
+            endStr: schedule.end
+        };
+    }
+
+    formatTime(s) {
+        if (!s) return "";
+        let [t, p] = s.trim().split(' ');
+        let [h, m] = t.split(':');
+        return `${h.padStart(2, '0')}:${m.padStart(2, '0')} ${p}`;
+    }
+
     countDays(routine) {
         const days = new Set();
         routine.forEach(item => {
@@ -219,7 +348,8 @@ class RoutineModel {
 
                 section.schedules.forEach(s => {
                     if (s.day && s.day.toUpperCase().startsWith(day)) {
-                        schs.push({ start: this.toMin(s.start), end: this.toMin(s.end) });
+                        const times = this.getEffectiveTimes(s);
+                        schs.push({ start: times.start, end: times.end });
                     }
                 });
             });
