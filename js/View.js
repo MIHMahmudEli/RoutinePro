@@ -261,10 +261,10 @@ class RoutineView {
                 block.style.top = `${top}px`;
                 block.style.height = `${height}px`;
                 const timeHtml = model.ramadanMode
-                    ? `<div class="flex flex-col items-center">
-                        <div class="relative">
+                    ? `<div class="flex flex-col items-center ramadan-time-container">
+                        <div class="relative ramadan-old-time">
                             <span class="text-[8px] opacity-40 leading-none">${sch.start} - ${sch.end}</span>
-                            <div class="absolute top-1/2 left-0 w-full h-[0.5px] bg-white/40 -translate-y-1/2"></div>
+                            <div class="ramadan-strike absolute top-1/2 left-0 w-full h-[0.5px] bg-white/40 -translate-y-1/2"></div>
                         </div>
                         <div class="class-info text-amber-400 font-bold leading-tight">${effective.startStr} - ${effective.endStr}</div>
                        </div>`

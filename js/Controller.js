@@ -845,13 +845,23 @@ class RoutineController {
                 onclone: (clonedDoc) => {
                     // Fix the -4px/-6px alignment shift in the exported image
                     const labels = clonedDoc.querySelectorAll('.time-label');
-                    const isMob = window.innerWidth < 768;
                     labels.forEach(l => {
                         const actualHeight = getComputedStyle(document.documentElement).getPropertyValue('--row-height');
                         l.style.position = 'relative';
                         l.style.display = 'flex';
                         l.style.alignItems = 'flex-start';
                         l.style.height = actualHeight;
+                    });
+
+                    // Hide original timings in export if Ramadan mode is active
+                    clonedDoc.querySelectorAll('.ramadan-old-time').forEach(el => {
+                        el.style.display = 'none';
+                    });
+
+                    // Ensure the shifted time is centered and bold in the export
+                    clonedDoc.querySelectorAll('.ramadan-time-container .class-info').forEach(info => {
+                        info.style.fontSize = '10px';
+                        info.style.marginTop = '0px';
                     });
                 }
             });
