@@ -101,7 +101,8 @@ class RoutineModel {
                     start: start,
                     end: end,
                     room: room || "N/A",
-                    type: "Theory"
+                    type: "Theory",
+                    isManual: true
                 }))
             }]
         };
@@ -122,7 +123,8 @@ class RoutineModel {
                 start: start,
                 end: end,
                 room: room || "N/A",
-                type: "Theory"
+                type: "Theory",
+                isManual: true
             }));
             return true;
         }
@@ -244,7 +246,7 @@ class RoutineModel {
 
     // Helper to get effective start/end minutes
     getEffectiveTimes(schedule) {
-        if (!this.ramadanMode) {
+        if (!this.ramadanMode || schedule.isManual) {
             return {
                 start: this.toMin(schedule.start),
                 end: this.toMin(schedule.end),
