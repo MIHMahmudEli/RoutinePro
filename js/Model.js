@@ -225,16 +225,20 @@ class RoutineModel {
 
     toMin(s) {
         try {
-            if (!s.includes(' ')) {
-                // Handle 24h format (HH:MM)
-                const [h, m] = s.split(':').map(Number);
-                return h * 60 + m;
+            if (!s || typeof s !== 'string') return 0;
+            const parts = s.trim().split(' ');
+            if (parts.length < 2) {
+                // Handle 24h format (HH:MM or HH.MM)
+                const separator = parts[0].includes(':') ? ':' : '.';
+                const [h, m] = parts[0].split(separator).map(Number);
+                return (h || 0) * 60 + (m || 0);
             }
-            const [t, m] = s.trim().split(' ');
-            let [h, min] = t.split(':').map(Number);
+            const [t, m] = parts;
+            const separator = t.includes(':') ? ':' : '.';
+            let [h, min] = t.split(separator).map(Number);
             if (h === 12) h = 0;
-            if (m === 'PM') h += 12;
-            return h * 60 + min;
+            if (m.toUpperCase().includes('PM')) h += 12;
+            return (h || 0) * 60 + (min || 0);
         } catch (e) { return 0; }
     }
 
@@ -255,8 +259,23 @@ class RoutineModel {
 
         // Priority Logic: Try each map for a specific key match
         const findMapping = (key) => {
-            if (this.customRamadanMap && this.customRamadanMap[key]) return this.customRamadanMap[key];
-            if (this.globalRamadanMap && this.globalRamadanMap[key]) return this.globalRamadanMap[key];
+            let result = null;
+
+            // 1. Check Custom Map (User Uploaded)
+            if (this.customRamadanMap && this.customRamadanMap[key]) {
+                const custom = this.customRamadanMap[key];
+                // Only use if it actually defines a shift (different from key)
+                if (key !== `${this.formatTime(custom[0])} - ${this.formatTime(custom[1])}`) {
+                    result = custom;
+                }
+            }
+
+            // 2. Check Global Admin Map
+            if (!result && this.globalRamadanMap && this.globalRamadanMap[key]) {
+                result = this.globalRamadanMap[key];
+            }
+
+            if (result) return result;
 
             const defaults = {
                 // Lecture (1h 30min) -> 1h

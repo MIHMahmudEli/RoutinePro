@@ -1080,8 +1080,8 @@ class RoutineController {
             // The AIUB format is usually "Regular Ramadan" side by side
             // 8:00 - 9:30 9:00 - 10:00
 
-            // Handle both ":" and "." as separators, and various dash types
-            const timeRangeRegex = /(\d{1,2}[:.]\d{2})\s*[-û–—]\s*(\d{1,2}[:.]\d{2})/g;
+            // Handle both ":" and "." as separators (allowing spaces around them), and various dash types
+            const timeRangeRegex = /(\d{1,2}\s*[:.]\s*\d{2})\s*[-û–—]\s*(\d{1,2}\s*[:.]\s*\d{2})/g;
             const matches = [...fullText.matchAll(timeRangeRegex)];
 
             const mappings = {};
@@ -1092,8 +1092,9 @@ class RoutineController {
 
                 // Helper to detect AM/PM based on context
                 const normalize = (timeStr) => {
-                    const separator = timeStr.includes(':') ? ':' : '.';
-                    let [h, m] = timeStr.split(separator).map(Number);
+                    const cleanStr = timeStr.replace(/\s+/g, ''); // Remove spaces inside time
+                    const separator = cleanStr.includes(':') ? ':' : '.';
+                    let [h, m] = cleanStr.split(separator).map(Number);
                     let period = "AM";
                     if (h >= 12) period = "PM";
                     if (h < 8) period = "PM"; // Classes before 8 AM are PM

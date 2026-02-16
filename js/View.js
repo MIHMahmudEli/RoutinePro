@@ -260,9 +260,16 @@ class RoutineView {
 
                 block.style.top = `${top}px`;
                 block.style.height = `${height}px`;
+                const timeHtml = model.ramadanMode
+                    ? `<div class="flex flex-col items-center">
+                        <span class="text-[8px] opacity-50 line-through leading-none">${sch.start} - ${sch.end}</span>
+                        <div class="class-info text-amber-400 font-bold">${effective.startStr} - ${effective.endStr}</div>
+                       </div>`
+                    : `<div class="class-info">${effective.startStr} - ${effective.endStr}</div>`;
+
                 block.innerHTML = `
                     <div class="class-name">${title}</div>
-                    <div class="class-info">${effective.startStr} - ${effective.endStr}</div>
+                    ${timeHtml}
                     <div class="flex justify-between items-center mt-auto opacity-60">
                         <span class="text-[8px] font-black">SEC ${section.section}</span>
                         <span class="text-[8px] font-black">RM ${sch.room}</span>
