@@ -1062,16 +1062,12 @@ class RoutineController {
 
         const icon = focusBtn.querySelector('i');
         if (this.model.focusMode) {
-            focusBtn.classList.add('!bg-[var(--accent-primary)]', '!text-black', 'shadow-[0_0_15px_var(--accent-glow)]');
-            focusBtn.classList.remove('!bg-white/10', '!text-white', 'border-white/20');
             focusBtn.setAttribute('data-active', 'true');
             if (icon) {
                 icon.setAttribute('data-lucide', 'minimize-2');
                 icon.classList.add('rotate-90');
             }
         } else {
-            focusBtn.classList.remove('!bg-[var(--accent-primary)]', '!text-black', 'shadow-[0_0_15px_var(--accent-glow)]');
-            focusBtn.classList.add('!bg-white/10', '!text-white', 'border-white/20');
             focusBtn.removeAttribute('data-active');
             if (icon) {
                 icon.setAttribute('data-lucide', 'maximize-2');
@@ -1087,21 +1083,11 @@ class RoutineController {
 
         const icon = btn.querySelector('i');
         if (this.model.ramadanMode) {
-            btn.classList.add('!bg-amber-500', '!text-black', 'shadow-[0_0_20px_rgba(245,158,11,0.4)]');
-            btn.classList.remove('!bg-white/10', '!text-white', 'border-white/20');
             btn.setAttribute('data-active', 'true');
-            if (icon) {
-                icon.setAttribute('data-lucide', 'sun');
-                icon.classList.add('scale-110', 'rotate-90');
-            }
+            if (icon) icon.setAttribute('data-lucide', 'sun');
         } else {
-            btn.classList.remove('!bg-amber-500', '!text-black', 'shadow-[0_0_20px_rgba(245,158,11,0.4)]');
-            btn.classList.add('!bg-white/10', '!text-white', 'border-white/20');
             btn.removeAttribute('data-active');
-            if (icon) {
-                icon.setAttribute('data-lucide', 'moon-star');
-                icon.classList.remove('scale-110', 'rotate-90');
-            }
+            if (icon) icon.setAttribute('data-lucide', 'moon-star');
         }
         lucide.createIcons();
     }
@@ -1227,13 +1213,9 @@ class RoutineController {
 
         const icon = btn.querySelector('i');
         if (this.model.twentyFourHourMode) {
-            btn.classList.add('!bg-[var(--accent-primary)]', '!text-black', 'shadow-[0_0_15px_var(--accent-glow)]');
-            btn.classList.remove('!bg-white/10', '!text-white', 'border-white/20');
             btn.setAttribute('data-active', 'true');
             if (icon) icon.classList.add('scale-110');
         } else {
-            btn.classList.remove('!bg-[var(--accent-primary)]', '!text-black', 'shadow-[0_0_15px_var(--accent-glow)]');
-            btn.classList.add('!bg-white/10', '!text-white', 'border-white/20');
             btn.removeAttribute('data-active');
             if (icon) icon.classList.remove('scale-110');
         }

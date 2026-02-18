@@ -1685,7 +1685,7 @@ input.time-select-modern:hover::-webkit-calendar-picker-indicator {
     background: rgba(255, 255, 255, 0.15);
     border-radius: 3px;
 }
-}
+
 
 
 /* Extra Small Devices (< 480px) */
@@ -1882,40 +1882,55 @@ input.time-select-modern:hover::-webkit-calendar-picker-indicator {
     }
 }
 
-@keyframes float-ramadan {
+@keyframes premium-glow {
 
     0%,
     100% {
-        transform: translateY(0) rotate(0deg);
+        box-shadow: 0 0 10px var(--accent-glow), inset 0 0 5px rgba(255, 255, 255, 0.05);
     }
 
     50% {
-        transform: translateY(-3px) rotate(15deg);
+        box-shadow: 0 0 20px var(--accent-glow), inset 0 0 10px rgba(255, 255, 255, 0.1);
     }
 }
 
-@keyframes pulse-ramadan {
-    0% {
-        box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.4);
-    }
+@keyframes ramadan-glow {
 
-    70% {
-        box-shadow: 0 0 0 10px rgba(251, 191, 36, 0);
-    }
-
+    0%,
     100% {
-        box-shadow: 0 0 0 0 rgba(251, 191, 36, 0);
+        box-shadow: 0 0 10px rgba(251, 191, 36, 0.2), inset 0 0 5px rgba(251, 191, 36, 0.1);
+    }
+
+    50% {
+        box-shadow: 0 0 25px rgba(251, 191, 36, 0.4), inset 0 0 10px rgba(251, 191, 36, 0.2);
     }
 }
 
-#ramadan-toggle[data-active="true"] i {
-    animation: float-ramadan 3s ease-in-out infinite;
-    color: #fbbf24 !important;
-    filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.6));
+@keyframes ramadan-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.prism-btn[data-active="true"] {
+    background: var(--accent-primary) !important;
+    color: var(--text-on-accent) !important;
+    border-color: var(--accent-primary) !important;
+    animation: premium-glow 3s ease-in-out infinite;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 #ramadan-toggle[data-active="true"] {
-    animation: pulse-ramadan 2s infinite;
-    background: rgba(251, 191, 36, 0.1) !important;
-    border-color: rgba(251, 191, 36, 0.4) !important;
+    background: #fbbf24 !important;
+    color: #000 !important;
+    border-color: #fbbf24 !important;
+    animation: ramadan-glow 3s ease-in-out infinite;
+}
+
+#ramadan-toggle[data-active="true"] i {
+    animation: ramadan-spin 12s linear infinite;
 }
