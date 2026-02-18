@@ -197,16 +197,27 @@ class RoutineModel {
             // Apply strict filter: only show routines with <= 5h 40m (340 mins) of waiting time
             this.possibleRoutines = this.possibleRoutines.filter(r => this.calculateGaps(r) <= 340);
         } else if (sortBy === 'max2hr') {
-            // First calculate and filter
             this.possibleRoutines = this.possibleRoutines.filter(r => this.calculateGaps(r) <= 120);
-
-            // Then sort by gap amount
             this.possibleRoutines.sort((a, b) => {
                 const gapsA = this.calculateGaps(a);
                 const gapsB = this.calculateGaps(b);
                 if (gapsA !== gapsB) return gapsA - gapsB;
                 return this.countDays(a) - this.countDays(b);
             });
+        } else if (sortBy === 'best') {
+            // First, see if any zero-gap routines exist
+            const zeroGaps = this.possibleRoutines.filter(r => this.calculateGaps(r) === 0);
+
+            if (zeroGaps.length > 0) {
+                this.possibleRoutines = zeroGaps;
+            } else {
+                // If no zero-gap routines, find the minimum gap possible in the set
+                const minGap = Math.min(...this.possibleRoutines.map(r => this.calculateGaps(r)));
+                this.possibleRoutines = this.possibleRoutines.filter(r => this.calculateGaps(r) === minGap);
+            }
+
+            // Always sort by days (fewest days on campus)
+            this.possibleRoutines.sort((a, b) => this.countDays(a) - this.countDays(b));
         }
 
         return this.possibleRoutines;
