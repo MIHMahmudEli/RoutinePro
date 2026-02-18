@@ -19,28 +19,38 @@ class RoutineController {
         this.setupEventListeners();
         this.syncWorkspace();
 
-        // Reveal Admin Features if ?admin=true
+        // Reveal Admin Features if ?admin=true with Password Security
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('admin') === 'true') {
-            const syncBtn = document.getElementById('ramadan-sync-btn');
-            if (syncBtn) syncBtn.classList.remove('hidden');
+            const isAuthenticated = sessionStorage.getItem('routine-pro-admin-auth') === 'true';
 
-            const exportLibBtn = document.getElementById('export-library-btn');
-            if (exportLibBtn) exportLibBtn.classList.remove('hidden');
+            if (isAuthenticated) {
+                this.revealAdminFeatures();
+            } else {
+                const passwordModal = document.getElementById('admin-password-modal');
+                const passwordInput = document.getElementById('admin-password-input');
+                const loginBtn = document.getElementById('admin-login-btn');
 
-            const featureToggle = document.getElementById('admin-ramadan-feature-toggle');
-            if (featureToggle) {
-                // Initialize toggle from Model (which now checks localStorage)
-                featureToggle.checked = this.model.ramadanFeatureEnabled;
+                if (passwordModal) passwordModal.classList.remove('hidden');
 
-                featureToggle.onchange = (e) => {
-                    this.model.ramadanFeatureEnabled = e.target.checked;
-                    // Save locally so it persists after refresh for the admin
-                    localStorage.setItem('routine-pro-ramadan-admin-feature', e.target.checked);
-
-                    this.view.showToast(`Ramadan Feature ${e.target.checked ? 'Enabled' : 'Disabled'} Locally (Push JSON to go Global)`, "info");
-                    this.syncWorkspace();
+                const attemptLogin = () => {
+                    if (passwordInput.value === '01716099707') {
+                        sessionStorage.setItem('routine-pro-admin-auth', 'true');
+                        if (passwordModal) passwordModal.classList.add('hidden');
+                        this.revealAdminFeatures();
+                        this.view.showToast("Admin access granted", "success");
+                    } else {
+                        this.view.showToast("Invalid security key", "error");
+                        passwordInput.value = '';
+                    }
                 };
+
+                if (loginBtn) loginBtn.onclick = attemptLogin;
+                if (passwordInput) {
+                    passwordInput.onkeypress = (e) => {
+                        if (e.key === 'Enter') attemptLogin();
+                    };
+                }
             }
         }
 
@@ -68,6 +78,31 @@ class RoutineController {
         if (['nebula', 'crimson', 'ocean'].includes(savedTheme)) this.currentThemeSet = 2;
         else if (['sandstone', 'spectrum', 'custom'].includes(savedTheme)) this.currentThemeSet = 3;
         this.updateThemeSetDisplay();
+    }
+
+    revealAdminFeatures() {
+        const syncBtn = document.getElementById('ramadan-sync-btn');
+        if (syncBtn) syncBtn.classList.remove('hidden');
+
+        const exportLibBtn = document.getElementById('export-library-btn');
+        if (exportLibBtn) exportLibBtn.classList.remove('hidden');
+
+        const featureToggle = document.getElementById('admin-ramadan-feature-toggle');
+        if (featureToggle) {
+            featureToggle.checked = this.model.ramadanFeatureEnabled;
+            featureToggle.classList.remove('hidden');
+
+            // Restore the change listener
+            featureToggle.onchange = (e) => {
+                this.model.ramadanFeatureEnabled = e.target.checked;
+                localStorage.setItem('routine-pro-ramadan-admin-feature', e.target.checked);
+                this.view.showToast(`Ramadan Feature ${e.target.checked ? 'Enabled' : 'Disabled'} Locally`, "info");
+                this.syncWorkspace();
+            };
+
+            const container = featureToggle.closest('div');
+            if (container) container.classList.remove('hidden');
+        }
     }
 
     setupEventListeners() {

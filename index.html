@@ -875,6 +875,45 @@
         gtag('js', new Date());
         gtag('config', 'G-N12SPXZJ8H');
     </script>
+    <!-- Admin Password Modal -->
+    <div id="admin-password-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-xl"></div>
+        <div class="prism-card relative w-full max-w-md p-8 space-y-6 animate-pop">
+            <div class="text-center space-y-2">
+                <div
+                    class="w-16 h-16 bg-amber-500/10 rounded-2xl flex items-center justify-center border border-amber-500/20 mx-auto mb-4">
+                    <i data-lucide="shield-check" class="w-8 h-8 text-amber-400"></i>
+                </div>
+                <h2 class="text-xl font-900 tracking-tight">ADMIN ACCESS</h2>
+                <p class="text-slate-400 text-xs font-medium uppercase tracking-widest">Enter Credentials to Proceed</p>
+            </div>
+
+            <div class="space-y-4">
+                <div class="space-y-1.5">
+                    <label class="text-[9px] font-black text-slate-500 uppercase pl-1">Security Key</label>
+                    <div class="relative">
+                        <input type="password" id="admin-password-input"
+                            class="prism-input !py-4 pr-12 text-center text-lg tracking-[0.5em] font-bold"
+                            placeholder="••••••••">
+                        <div class="absolute inset-y-0 right-4 flex items-center">
+                            <i data-lucide="lock" class="w-4 h-4 text-slate-500"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-2">
+                    <button id="admin-login-btn"
+                        class="prism-btn w-full py-4 !bg-amber-500 !text-black shadow-[0_0_20px_rgba(245,158,11,0.3)]">
+                        AUTHENTICATE
+                    </button>
+                    <button onclick="window.location.href='index.html'"
+                        class="w-full mt-4 py-2 text-[10px] font-black text-slate-500 uppercase tracking-widest hover:text-white transition-colors">
+                        Return to Public View
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

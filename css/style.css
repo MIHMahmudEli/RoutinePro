@@ -1681,32 +1681,241 @@ input.time-select-modern:hover::-webkit-calendar-picker-indicator {
     }
 }
 
+#selected-courses-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 3px;
+}
+}
+
+
+/* Extra Small Devices (< 480px) */
+@media (max-width: 479px) {
+
+    body {
+        padding: 6px !important;
+    }
+
+    /* Header Even More Compact */
+    header {
+        padding: 10px !important;
+    }
+
+    header h1 {
+        font-size: 16px !important;
+    }
+
+    /* 2-Column Theme Switcher */
+    header .flex.gap-1\.5 {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 6px !important;
+        width: 100%;
+    }
+
+    header .flex.gap-1\.5 button {
+        width: 32px !important;
+        height: 32px !important;
+    }
+
+    /* Credits Display Smaller */
+    #total-credits {
+        font-size: 18px !important;
+    }
+
+    /* Sidebar Ultra Compact */
+    aside .prism-card {
+        padding: 12px !important;
+    }
+
+    .section-header-separator {
+        margin-left: -12px !important;
+        margin-right: -12px !important;
+        margin-top: -12px !important;
+        padding: 10px 12px !important;
+        border-top-left-radius: 11px !important;
+        border-top-right-radius: 11px !important;
+    }
+
+    /* Status Chips Stack Vertically */
+    .grid.grid-cols-3.gap-2 {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Day Chips 3 Columns */
+    .grid.grid-cols-4.gap-2 {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+
+    /* Routine Grid Even Smaller */
+    #routine-actual-grid {
+        min-width: 700px;
+    }
+
+    .relative.h-\[910px\],
+    .relative.h-\[600px\] {
+        height: 580px !important;
+    }
+
+    /* Time Rail Ultra Compact */
+    .absolute.left-0.top-0.bottom-0.w-\[80px\],
+    .absolute.left-0.top-0.bottom-0.w-\[60px\] {
+        width: 50px !important;
+    }
+
+    .ml-\[80px\],
+    .ml-\[60px\] {
+        margin-left: 50px !important;
+    }
+
+    .time-label {
+        font-size: 8px !important;
+        padding-right: 6px !important;
+    }
+
+    /* Class Blocks Ultra Compact */
+    .class-block {
+        padding: 3px 4px !important;
+    }
+
+    .class-name {
+        font-size: 7.5px !important;
+    }
+
+    .class-info {
+        font-size: 6.5px !important;
+    }
+}
+
+/* Toast Notification System */
+.toast {
+    pointer-events: auto;
+    background: rgba(10, 13, 20, 0.9);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 12px 18px;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    animation: toast-in 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    min-width: 280px;
+    max-width: 400px;
+}
+
+.toast.removing {
+    animation: toast-out 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.toast-success {
+    border-left: 4px solid var(--accent-primary);
+}
+
+.toast-error {
+    border-left: 4px solid #f43f5e;
+}
+
+.toast-info {
+    border-left: 4px solid #0ea5e9;
+}
+
+.toast-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toast-message {
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+@keyframes toast-in {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes toast-out {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* Landscape Mobile (Small Height) */
+@media (max-height: 600px) and (orientation: landscape) {
+
+    .relative.h-\[800px\],
+    .relative.h-\[600px\],
+    .relative.h-\[500px\] {
+        height: 400px !important;
+    }
+
+    #selected-courses-list {
+        max-height: 200px !important;
+    }
+
+    body {
+        padding: 6px !important;
+    }
+}
+
 /* Desktop Large Screens */
 @media (min-width: 1024px) {
     .main-grid {
         grid-template-columns: 320px 1fr;
     }
-}@ k e y f r a m e s   f l o a t - r a m a d a n   { 
-         0 % ,   1 0 0 %   {   t r a n s f o r m :   t r a n s l a t e Y ( 0 )   r o t a t e ( 0 d e g ) ;   } 
-         5 0 %   {   t r a n s f o r m :   t r a n s l a t e Y ( - 3 p x )   r o t a t e ( 1 5 d e g ) ;   } 
- } 
- 
- @ k e y f r a m e s   p u l s e - r a m a d a n   { 
-         0 %   {   b o x - s h a d o w :   0   0   0   0   r g b a ( 2 5 1 ,   1 9 1 ,   3 6 ,   0 . 4 ) ;   } 
-         7 0 %   {   b o x - s h a d o w :   0   0   0   1 0 p x   r g b a ( 2 5 1 ,   1 9 1 ,   3 6 ,   0 ) ;   } 
-         1 0 0 %   {   b o x - s h a d o w :   0   0   0   0   r g b a ( 2 5 1 ,   1 9 1 ,   3 6 ,   0 ) ;   } 
- } 
- 
- # r a m a d a n - t o g g l e [ d a t a - a c t i v e = \  
- t r u e \ ]   i   { 
-         a n i m a t i o n :   f l o a t - r a m a d a n   3 s   e a s e - i n - o u t   i n f i n i t e ; 
-         c o l o r :   # f b b f 2 4   ! i m p o r t a n t ; 
-         f i l t e r :   d r o p - s h a d o w ( 0   0   8 p x   r g b a ( 2 5 1 ,   1 9 1 ,   3 6 ,   0 . 6 ) ) ; 
- } 
- 
- # r a m a d a n - t o g g l e [ d a t a - a c t i v e = \ t r u e \ ]   { 
-         a n i m a t i o n :   p u l s e - r a m a d a n   2 s   i n f i n i t e ; 
-         b a c k g r o u n d :   r g b a ( 2 5 1 ,   1 9 1 ,   3 6 ,   0 . 1 )   ! i m p o r t a n t ; 
-         b o r d e r - c o l o r :   r g b a ( 2 5 1 ,   1 9 1 ,   3 6 ,   0 . 4 )   ! i m p o r t a n t ; 
- }  
- 
+}
+
+@keyframes float-ramadan {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-3px) rotate(15deg);
+    }
+}
+
+@keyframes pulse-ramadan {
+    0% {
+        box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.4);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba(251, 191, 36, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(251, 191, 36, 0);
+    }
+}
+
+#ramadan-toggle[data-active="true"] i {
+    animation: float-ramadan 3s ease-in-out infinite;
+    color: #fbbf24 !important;
+    filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.6));
+}
+
+#ramadan-toggle[data-active="true"] {
+    animation: pulse-ramadan 2s infinite;
+    background: rgba(251, 191, 36, 0.1) !important;
+    border-color: rgba(251, 191, 36, 0.4) !important;
+}
