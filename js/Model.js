@@ -11,7 +11,7 @@ class RoutineModel {
         this.isExplorerMode = false;
         this.focusMode = false;
         this.twentyFourHourMode = false;
-        this.ramadanMode = true;
+        this.ramadanMode = false;
         // Check local storage FIRST (for admin persistence), default to false
         this.ramadanFeatureEnabled = localStorage.getItem('routine-pro-ramadan-admin-feature') === 'true';
         this.globalRamadanMap = null;

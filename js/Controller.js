@@ -25,6 +25,9 @@ class RoutineController {
             const syncBtn = document.getElementById('ramadan-sync-btn');
             if (syncBtn) syncBtn.classList.remove('hidden');
 
+            const exportLibBtn = document.getElementById('export-library-btn');
+            if (exportLibBtn) exportLibBtn.classList.remove('hidden');
+
             const featureToggle = document.getElementById('admin-ramadan-feature-toggle');
             if (featureToggle) {
                 // Initialize toggle from Model (which now checks localStorage)
