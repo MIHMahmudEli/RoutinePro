@@ -575,20 +575,6 @@ class RoutineController {
         });
     }
 
-    updateRamadanToggleUI() {
-        const btn = document.getElementById('ramadan-toggle');
-        const icon = document.getElementById('ramadan-icon');
-        if (btn && icon) {
-            if (this.model.ramadanMode) {
-                btn.classList.add('!bg-amber-500/20', '!text-amber-400', '!border-amber-500/30');
-                icon.setAttribute('data-lucide', 'sun');
-            } else {
-                btn.classList.remove('!bg-amber-500/20', '!text-amber-400', '!border-amber-500/30');
-                icon.setAttribute('data-lucide', 'moon-star');
-            }
-            lucide.createIcons();
-        }
-    }
 
     toggleManualMode(show) {
         const manualSection = document.getElementById('manual-entry-section');
@@ -1101,15 +1087,21 @@ class RoutineController {
 
         const icon = btn.querySelector('i');
         if (this.model.ramadanMode) {
-            btn.classList.add('!bg-[var(--accent-primary)]', '!text-black', 'shadow-[0_0_15px_var(--accent-glow)]');
+            btn.classList.add('!bg-amber-500/10', '!text-amber-400', '!border-amber-500/30');
             btn.classList.remove('!bg-white/10', '!text-white', 'border-white/20');
             btn.setAttribute('data-active', 'true');
-            if (icon) icon.classList.add('scale-110');
+            if (icon) {
+                icon.setAttribute('data-lucide', 'sun');
+                icon.classList.add('scale-110');
+            }
         } else {
-            btn.classList.remove('!bg-[var(--accent-primary)]', '!text-black', 'shadow-[0_0_15px_var(--accent-glow)]');
+            btn.classList.remove('!bg-amber-500/10', '!text-amber-400', '!border-amber-500/30');
             btn.classList.add('!bg-white/10', '!text-white', 'border-white/20');
             btn.removeAttribute('data-active');
-            if (icon) icon.classList.remove('scale-110');
+            if (icon) {
+                icon.setAttribute('data-lucide', 'moon-star');
+                icon.classList.remove('scale-110');
+            }
         }
         lucide.createIcons();
     }
