@@ -62,11 +62,11 @@ class RoutineView {
 
         this.selectedList.innerHTML = selectedCourses.map((sc, i) => {
             const section = isExplorerMode
-                ? currentRoutine.find(item => item.courseTitle === sc.course.baseTitle).section
+                ? currentRoutine.find(item => item.courseTitle === sc.course.baseTitle && item.dept === sc.course.dept).section
                 : sc.course.sections[sc.selectedSectionIndex];
 
             const statusClass = `tag-${section.status.toLowerCase()}`;
-            const hue = this.getCourseHue(sc.course.baseTitle);
+            const hue = this.getCourseHue(sc.course.baseTitle + (sc.course.dept || ''));
             const accentStyle = document.body.getAttribute('data-theme') === 'spectrum'
                 ? `style="border-left: 4px solid hsla(${hue}, 70%, 60%, 0.8)"`
                 : '';
@@ -83,6 +83,7 @@ class RoutineView {
                         ${!isExplorerMode ? `<button class="remove-btn text-slate-600 hover:text-rose-500 transition-colors" data-index="${i}"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>` : ''}
                     </div>
                     <h3 class="text-xs font-900 uppercase text-white tracking-tight pr-12">${sc.course.baseTitle}</h3>
+                    ${sc.course.dept ? `<p class="text-[8px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">${sc.course.dept}</p>` : ''}
                     
                     <div class="grid grid-cols-4 gap-2 mt-4 py-2 border-y border-white/5">
                         <div class="text-center"><p class="text-[8px] text-slate-600 font-black uppercase">Sec</p><p class="text-[9px] font-bold">${section.section}</p></div>
@@ -251,7 +252,7 @@ class RoutineView {
                 block.className = `class-block ${sch.type.toLowerCase()}`;
 
                 if (document.body.getAttribute('data-theme') === 'spectrum') {
-                    const hue = this.getCourseHue(title);
+                    const hue = this.getCourseHue(title + (isExplorerMode ? item.dept || '' : sc.course.dept || ''));
                     block.style.background = `linear-gradient(135deg, hsla(${hue}, 70%, 60%, 0.15), rgba(255,255,255,0.02))`;
                     block.style.borderLeft = `4px solid hsla(${hue}, 70%, 60%, 0.9)`;
                     block.style.backdropFilter = 'blur(10px)';

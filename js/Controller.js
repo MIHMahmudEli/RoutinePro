@@ -786,8 +786,9 @@ class RoutineController {
 
         if (results.length > 0) {
             this.view.suggestions.innerHTML = results.map(c => `
-                <div class="p-3 hover:bg-emerald-500/5 cursor-pointer border-b border-white/5 group transition-colors" onclick="app.controller.handleAddCourse('${c.baseTitle.replace(/'/g, "\\'")}', '${c.code}')">
+                <div class="p-3 hover:bg-emerald-500/5 cursor-pointer border-b border-white/5 group transition-colors" onclick="app.controller.handleAddCourse('${c.baseTitle.replace(/'/g, "\\'")}', '${c.code}', '${(c.dept || '').replace(/'/g, "\\'")}')">
                     <div class="flex justify-between items-center text-sm font-bold group-hover:text-emerald-400 uppercase">${c.baseTitle}</div>
+                    ${c.dept ? `<div class="text-[9px] text-slate-500 font-bold uppercase tracking-wider mt-0.5">${c.dept}</div>` : ''}
                 </div>
             `).join('');
             this.view.suggestions.classList.remove('hidden');
@@ -796,9 +797,9 @@ class RoutineController {
         }
     }
 
-    handleAddCourse(title, code) {
+    handleAddCourse(title, code, dept) {
         this.model.isExplorerMode = false;
-        const course = this.model.allCourses.find(c => c.baseTitle === title && c.code === code);
+        const course = this.model.allCourses.find(c => c.baseTitle === title && c.code === code && (c.dept || '') === (dept || ''));
         if (course && this.model.addCourse(course)) {
             this.view.searchInput.value = '';
             this.view.suggestions.classList.add('hidden');
@@ -806,6 +807,23 @@ class RoutineController {
         } else {
             this.view.showToast("Course already added or not found", "error");
         }
+    }
+
+    handleExportLibrary() {
+        if (!this.model.allCourses || this.model.allCourses.length === 0) {
+            this.view.showToast("No courses to export!", "error");
+            return;
+        }
+
+        const dataStr = JSON.stringify(this.model.allCourses, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', 'courses.json');
+        linkElement.click();
+
+        this.view.showToast("Library exported successfully!");
     }
 
     handleGenerate() {

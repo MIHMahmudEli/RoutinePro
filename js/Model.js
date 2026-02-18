@@ -78,7 +78,7 @@ class RoutineModel {
     }
 
     addCourse(course) {
-        if (!this.selectedCourses.some(sc => sc.course.baseTitle === course.baseTitle)) {
+        if (!this.selectedCourses.some(sc => sc.course.baseTitle === course.baseTitle && sc.course.dept === course.dept && sc.course.code === course.code)) {
             this.selectedCourses.unshift({ course, selectedSectionIndex: 0, isPinned: false });
             return true;
         }
@@ -175,7 +175,7 @@ class RoutineModel {
                 if (!validTime) continue;
                 if (this.hasConflict(sec, current)) continue;
 
-                current.push({ courseTitle: course.baseTitle, section: sec });
+                current.push({ courseTitle: course.baseTitle, dept: course.dept, section: sec });
                 find(idx + 1, current);
                 current.pop();
             }
@@ -428,6 +428,7 @@ class RoutineModel {
                     if (cell.includes("START TIME")) colMap.start = idx;
                     if (cell.includes("END TIME")) colMap.end = idx;
                     if (cell.includes("ROOM")) colMap.room = idx;
+                    if (cell.includes("DEPARTMENT")) colMap.dept = idx;
                 });
                 break;
             }
@@ -459,16 +460,18 @@ class RoutineModel {
             const startTime = String(row[colMap.start] || '').trim();
             const endTime = String(row[colMap.end] || '').trim();
             const room = String(row[colMap.room] || '').trim();
+            const dept = String(row[colMap.dept] || '').trim();
 
             if (!fullTitle) return;
 
             const baseTitle = fullTitle.replace(/\s*\[.*\]$/, '').trim();
-            const key = `${baseTitle}@@@${currentCourseCode}`;
+            const key = `${baseTitle}@@@${currentCourseCode}@@@${dept}`;
 
             if (!coursesMap[key]) {
                 coursesMap[key] = {
                     code: currentCourseCode,
                     baseTitle: baseTitle,
+                    dept: dept,
                     sections: {}
                 };
             }
