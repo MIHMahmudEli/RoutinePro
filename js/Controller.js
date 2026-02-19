@@ -163,6 +163,8 @@ class RoutineController {
                 root.setAttribute('data-theme', theme);
                 localStorage.setItem('routine-pro-theme', theme);
 
+                if (theme === 'spectrum') this.view.shuffleHues();
+
                 // Update Active State Visuals
                 document.querySelectorAll('.theme-btn').forEach(btn => {
                     const onclick = btn.getAttribute('onclick');

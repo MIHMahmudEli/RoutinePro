@@ -23,6 +23,8 @@ class RoutineView {
         this.manualStart = document.getElementById('manual-start');
         this.manualEnd = document.getElementById('manual-end');
         this.manualAddBtn = document.getElementById('add-manual-btn');
+        this.hueMap = new Map();
+        this.hueSeed = Math.random();
     }
 
     populateTimeFilters() {
@@ -252,7 +254,7 @@ class RoutineView {
                 block.className = `class-block ${sch.type.toLowerCase()}`;
 
                 if (document.body.getAttribute('data-theme') === 'spectrum') {
-                    const hue = this.getCourseHue(title + (isExplorerMode ? item.dept || '' : sc.course.dept || ''));
+                    const hue = this.getCourseHue(title + (isExplorerMode ? item.dept || '' : item.course.dept || ''));
                     block.style.background = `linear-gradient(135deg, hsla(${hue}, 70%, 60%, 0.15), rgba(255,255,255,0.02))`;
                     block.style.borderLeft = `4px solid hsla(${hue}, 70%, 60%, 0.9)`;
                     block.style.backdropFilter = 'blur(10px)';
@@ -332,12 +334,20 @@ class RoutineView {
         }
     }
 
-    getCourseHue(title) {
-        let hash = 0;
-        for (let i = 0; i < title.length; i++) hash = title.charCodeAt(i) + ((hash << 5) - hash);
-        return Math.abs(hash % 360);
+    shuffleHues() {
+        this.hueSeed = Math.random();
+        this.hueMap.clear();
     }
 
+    getCourseHue(title) {
+        if (!this.hueMap.has(title)) {
+            const goldRatio = 0.618033988749895;
+            const count = this.hueMap.size;
+            const h = (this.hueSeed + count * goldRatio) % 1;
+            this.hueMap.set(title, h * 360);
+        }
+        return this.hueMap.get(title);
+    }
     toMin(s) {
         try {
             const [t, m] = s.trim().split(' ');
