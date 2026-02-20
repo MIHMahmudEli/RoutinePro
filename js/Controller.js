@@ -460,9 +460,44 @@ class RoutineController {
 
         if (routineWidthFocus) routineWidthFocus.oninput = (e) => updateWidth(e.target.value);
 
+        // Font Size Control
+        const routineFont = document.getElementById('routine-font');
+        const routineFontManual = document.getElementById('routine-font-manual');
+        const routineFontFocus = document.getElementById('routine-font-focus');
+        const fontValDisplay = document.getElementById('font-val');
+        const fontValManualDisplay = document.getElementById('font-val-manual');
+        const fontValFocusDisplay = document.getElementById('font-val-focus');
+        const fontSliderFill = document.getElementById('font-slider-fill');
+        const fontSliderFillManual = document.getElementById('font-slider-fill-manual');
+        const fontSliderFillFocus = document.getElementById('font-slider-fill-focus');
+
+        const updateFont = (val) => {
+            if (fontValDisplay) fontValDisplay.innerText = val;
+            if (fontValManualDisplay) fontValManualDisplay.innerText = val;
+            if (fontValFocusDisplay) fontValFocusDisplay.innerText = val;
+
+            if (routineFont) routineFont.value = val;
+            if (routineFontManual) routineFontManual.value = val;
+            if (routineFontFocus) routineFontFocus.value = val;
+
+            const pct = ((val - 6) / (24 - 6)) * 100;
+            const fillWidth = `calc(${pct}% + ${(0.5 - pct / 100) * 20}px)`;
+            if (fontSliderFill) fontSliderFill.style.width = fillWidth;
+            if (fontSliderFillManual) fontSliderFillManual.style.width = fillWidth;
+            if (fontSliderFillFocus) fontSliderFillFocus.style.width = fillWidth;
+
+            // Apply Font Change
+            document.documentElement.style.setProperty('--class-font-size', `${val}px`);
+        };
+
+        if (routineFont) routineFont.oninput = (e) => updateFont(e.target.value);
+        if (routineFontManual) routineFontManual.oninput = (e) => updateFont(e.target.value);
+        if (routineFontFocus) routineFontFocus.oninput = (e) => updateFont(e.target.value);
+
         // Initial Calls to set UI states correctly
         updateZoom(70);
         updateWidth(100);
+        updateFont(10);
         if (filterSeats) filterSeats.dispatchEvent(new Event('input', { bubbles: true }));
 
         // File Upload

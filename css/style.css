@@ -14,6 +14,7 @@
     --font-main: 'Inter', sans-serif;
     --row-height: 70px;
     --routine-scale: 1.166666667;
+    --class-font-size: 10px;
     /* 70/60 */
 }
 
@@ -540,7 +541,7 @@ input.time-select-modern:hover::-webkit-calendar-picker-indicator {
     right: 4px;
     border-radius: 12px;
     padding: 5px 7px;
-    font-size: 0.50rem;
+    font-size: calc(var(--class-font-size) * 0.8);
     border: 1px solid rgba(255, 255, 255, 0.08);
     display: flex;
     flex-direction: column;
@@ -574,17 +575,23 @@ input.time-select-modern:hover::-webkit-calendar-picker-indicator {
     font-weight: 800;
     color: white;
     line-height: 1.1;
-    font-size: 0.62rem;
+    font-size: var(--class-font-size);
     word-break: break-word;
     /* Show all text */
     overflow-wrap: break-word;
 }
 
 .class-info {
-    font-size: 0.6rem;
+    font-size: calc(var(--class-font-size) * 0.95);
     color: var(--text-secondary);
     font-weight: 500;
     margin-top: 1px;
+}
+
+.class-label {
+    font-size: calc(var(--class-font-size) * 0.8);
+    font-weight: 900;
+    text-transform: uppercase;
 }
 
 /* Day Checkboxes Styling */

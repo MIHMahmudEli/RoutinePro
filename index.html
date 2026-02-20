@@ -259,6 +259,26 @@
                                     class="prism-slider relative z-10 w-full bg-transparent border-none">
                             </div>
                         </div>
+
+                        <!-- Card Font Size (New) -->
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-end">
+                                <label class="text-[9px] font-black text-slate-600 uppercase pl-1">Card Font</label>
+                                <div class="flex items-center gap-2">
+                                    <span id="font-val-focus"
+                                        class="text-xs font-900 text-[var(--accent-primary)] uppercase">10</span>
+                                    <span
+                                        class="text-[9px] text-slate-600 font-bold uppercase tracking-widest">px</span>
+                                </div>
+                            </div>
+                            <div class="relative flex items-center h-8">
+                                <div id="font-slider-fill-focus"
+                                    class="absolute left-0 h-1.5 bg-[var(--accent-primary)] rounded-full shadow-[0_0_15px_var(--accent-glow)] z-0"
+                                    style="width: 25%"></div>
+                                <input type="range" id="routine-font-focus" min="6" max="24" value="10"
+                                    class="prism-slider relative z-10 w-full bg-transparent border-none">
+                            </div>
+                        </div>
                     </div>
                 </section>
 
@@ -391,22 +411,44 @@
                         </div>
 
                         <!-- Routine Grid Scaling (Manual Mode) -->
-                        <div class="space-y-2 py-2">
-                            <div class="flex justify-between items-end">
-                                <label class="text-[9px] font-black text-slate-600 uppercase pl-1">Routine Zoom</label>
-                                <div class="flex items-center gap-2">
-                                    <span id="zoom-val-manual"
-                                        class="text-xs font-900 text-[var(--accent-primary)] uppercase">70</span>
-                                    <span
-                                        class="text-[9px] text-slate-600 font-bold uppercase tracking-widest">px</span>
+                        <div class="space-y-4 py-2">
+                            <div class="space-y-2">
+                                <div class="flex justify-between items-end">
+                                    <label class="text-[9px] font-black text-slate-600 uppercase pl-1">Routine
+                                        Zoom</label>
+                                    <div class="flex items-center gap-2">
+                                        <span id="zoom-val-manual"
+                                            class="text-xs font-900 text-[var(--accent-primary)] uppercase">70</span>
+                                        <span
+                                            class="text-[9px] text-slate-600 font-bold uppercase tracking-widest">px</span>
+                                    </div>
+                                </div>
+                                <div class="relative flex items-center h-8">
+                                    <div id="zoom-slider-fill-manual"
+                                        class="absolute left-0 h-1.5 bg-[var(--accent-primary)] rounded-full shadow-[0_0_15px_var(--accent-glow)] z-0"
+                                        style="width: 37.5%"></div>
+                                    <input type="range" id="routine-zoom-manual" min="40" max="150" value="70"
+                                        class="prism-slider relative z-10 w-full bg-transparent border-none">
                                 </div>
                             </div>
-                            <div class="relative flex items-center h-8">
-                                <div id="zoom-slider-fill-manual"
-                                    class="absolute left-0 h-1.5 bg-[var(--accent-primary)] rounded-full shadow-[0_0_15px_var(--accent-glow)] z-0"
-                                    style="width: 37.5%"></div>
-                                <input type="range" id="routine-zoom-manual" min="40" max="150" value="70"
-                                    class="prism-slider relative z-10 w-full bg-transparent border-none">
+
+                            <div class="space-y-2">
+                                <div class="flex justify-between items-end">
+                                    <label class="text-[9px] font-black text-slate-600 uppercase pl-1">Card Font</label>
+                                    <div class="flex items-center gap-2">
+                                        <span id="font-val-manual"
+                                            class="text-xs font-900 text-[var(--accent-primary)] uppercase">10</span>
+                                        <span
+                                            class="text-[9px] text-slate-600 font-bold uppercase tracking-widest">px</span>
+                                    </div>
+                                </div>
+                                <div class="relative flex items-center h-8">
+                                    <div id="font-slider-fill-manual"
+                                        class="absolute left-0 h-1.5 bg-[var(--accent-primary)] rounded-full shadow-[0_0_15px_var(--accent-glow)] z-0"
+                                        style="width: 25%"></div>
+                                    <input type="range" id="routine-font-manual" min="6" max="24" value="10"
+                                        class="prism-slider relative z-10 w-full bg-transparent border-none">
+                                </div>
                             </div>
                         </div>
 
@@ -556,23 +598,45 @@
                             </div>
 
                             <!-- Routine Grid Scaling -->
-                            <div class="space-y-2">
-                                <div class="flex justify-between items-end">
-                                    <label class="text-[9px] font-black text-slate-600 uppercase pl-1">Routine
-                                        Zoom</label>
-                                    <div class="flex items-center gap-2">
-                                        <span id="zoom-val"
-                                            class="text-xs font-900 text-[var(--accent-primary)] uppercase">70</span>
-                                        <span
-                                            class="text-[9px] text-slate-600 font-bold uppercase tracking-widest">px</span>
+                            <div class="space-y-4">
+                                <div class="space-y-2">
+                                    <div class="flex justify-between items-end">
+                                        <label class="text-[9px] font-black text-slate-600 uppercase pl-1">Routine
+                                            Zoom</label>
+                                        <div class="flex items-center gap-2">
+                                            <span id="zoom-val"
+                                                class="text-xs font-900 text-[var(--accent-primary)] uppercase">70</span>
+                                            <span
+                                                class="text-[9px] text-slate-600 font-bold uppercase tracking-widest">px</span>
+                                        </div>
+                                    </div>
+                                    <div class="relative flex items-center h-8">
+                                        <div id="zoom-slider-fill"
+                                            class="absolute left-0 h-1.5 bg-[var(--accent-primary)] rounded-full shadow-[0_0_15px_var(--accent-glow)] z-0"
+                                            style="width: 37.5%"></div>
+                                        <input type="range" id="routine-zoom" min="40" max="150" value="70"
+                                            class="prism-slider relative z-10 w-full bg-transparent border-none">
                                     </div>
                                 </div>
-                                <div class="relative flex items-center h-8">
-                                    <div id="zoom-slider-fill"
-                                        class="absolute left-0 h-1.5 bg-[var(--accent-primary)] rounded-full shadow-[0_0_15px_var(--accent-glow)] z-0"
-                                        style="width: 37.5%"></div>
-                                    <input type="range" id="routine-zoom" min="40" max="150" value="70"
-                                        class="prism-slider relative z-10 w-full bg-transparent border-none">
+
+                                <div class="space-y-2">
+                                    <div class="flex justify-between items-end">
+                                        <label class="text-[9px] font-black text-slate-600 uppercase pl-1">Card
+                                            Font</label>
+                                        <div class="flex items-center gap-2">
+                                            <span id="font-val"
+                                                class="text-xs font-900 text-[var(--accent-primary)] uppercase">10</span>
+                                            <span
+                                                class="text-[9px] text-slate-600 font-bold uppercase tracking-widest">px</span>
+                                        </div>
+                                    </div>
+                                    <div class="relative flex items-center h-8">
+                                        <div id="font-slider-fill"
+                                            class="absolute left-0 h-1.5 bg-[var(--accent-primary)] rounded-full shadow-[0_0_15px_var(--accent-glow)] z-0"
+                                            style="width: 25%"></div>
+                                        <input type="range" id="routine-font" min="6" max="24" value="10"
+                                            class="prism-slider relative z-10 w-full bg-transparent border-none">
+                                    </div>
                                 </div>
                             </div>
 

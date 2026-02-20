@@ -266,7 +266,7 @@ class RoutineView {
                 const timeHtml = (model.ramadanMode && !sch.isManual)
                     ? `<div class="flex flex-col items-center ramadan-time-container">
                         <div class="relative ramadan-old-time">
-                            <span class="text-[8px] opacity-40 leading-none">${sch.start} - ${sch.end}</span>
+                            <span class="class-label opacity-40 leading-none">${sch.start} - ${sch.end}</span>
                             <div class="ramadan-strike absolute top-1/2 left-0 w-full h-[0.5px] bg-white/40 -translate-y-1/2"></div>
                         </div>
                         <div class="class-info text-amber-400 font-bold leading-tight">${effective.startStr} - ${effective.endStr}</div>
@@ -277,8 +277,8 @@ class RoutineView {
                     <div class="class-name">${title}</div>
                     ${timeHtml}
                     <div class="flex justify-between items-center mt-auto opacity-60">
-                        <span class="text-[8px] font-black">SEC ${section.section}</span>
-                        <span class="text-[8px] font-black">RM ${sch.room}</span>
+                        <span class="class-label">SEC ${section.section}</span>
+                        <span class="class-label">RM ${sch.room}</span>
                     </div>
                 `;
                 const b = document.querySelector(`.day-bucket[data-day="${sch.day}"]`);
