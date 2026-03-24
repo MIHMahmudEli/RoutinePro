@@ -289,11 +289,8 @@ class RoutineController {
         }
 
         // Initialize Modes from local storage
-        const savedRamadan = localStorage.getItem('routine-pro-ramadan') === 'true';
-        if (savedRamadan) {
-            this.model.ramadanMode = true;
-            this.updateRamadanToggleUI();
-        }
+        this.model.ramadanMode = false;
+        this.updateRamadanToggleUI();
 
         // Ramadan Mode
         const ramadanBtn = document.getElementById('ramadan-toggle');
