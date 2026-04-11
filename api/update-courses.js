@@ -6,11 +6,9 @@ export default async function handler(request, response) {
         return response.status(405).json({ error: 'Method not allowed' });
     }
 
-    // Security: Check for the admin secret key
-    // In production, you should use an environment variable for this (e.g. process.env.ADMIN_SECRET)
-    // but for now we follow the pattern in your Controller.js
+    // Use Environment Variable for security
     const authHeader = request.headers.authorization;
-    if (authHeader !== '01716099707') {
+    if (!process.env.ADMIN_PASSWORD || authHeader !== process.env.ADMIN_PASSWORD) {
         return response.status(401).json({ error: 'Unauthorized' });
     }
 

@@ -34,14 +34,27 @@ class RoutineController {
 
                 if (passwordModal) passwordModal.classList.remove('hidden');
 
-                const attemptLogin = () => {
-                    if (passwordInput.value === '01716099707') {
-                        sessionStorage.setItem('routine-pro-admin-auth', 'true');
-                        if (passwordModal) passwordModal.classList.add('hidden');
-                        this.revealAdminFeatures();
-                        this.view.showToast("Admin access granted", "success");
-                    } else {
-                        this.view.showToast("Invalid security key", "error");
+                const attemptLogin = async () => {
+                    const password = passwordInput.value;
+                    try {
+                        const res = await fetch('/api/check-auth', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ password })
+                        });
+
+                        const result = await res.json();
+                        if (res.ok && result.authenticated) {
+                            sessionStorage.setItem('routine-pro-admin-auth', 'true');
+                            sessionStorage.setItem('routine-pro-admin-key', password); // Store encrypted-ish session
+                            if (passwordModal) passwordModal.classList.add('hidden');
+                            this.revealAdminFeatures();
+                            this.view.showToast("Admin access granted", "success");
+                        } else {
+                            throw new Error(result.error || "Invalid key");
+                        }
+                    } catch (e) {
+                        this.view.showToast(e.message, "error");
                         passwordInput.value = '';
                     }
                 };
@@ -109,7 +122,7 @@ class RoutineController {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
-                                'Authorization': '01716099707'
+                                'Authorization': sessionStorage.getItem('routine-pro-admin-key')
                             },
                             body: JSON.stringify({ ramadanFeatureEnabled: isEnabled })
                         });
@@ -880,11 +893,12 @@ class RoutineController {
             const semester = semInput?.value || this.model.semester || 'Updated Semester';
 
             try {
+                const password = sessionStorage.getItem('routine-pro-admin-key');
                 const response = await fetch('/api/update-courses', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': '01716099707'
+                        'Authorization': password
                     },
                     body: JSON.stringify({ data, semester })
                 });
@@ -1293,11 +1307,12 @@ class RoutineController {
         if (confirm("You are an Admin. Do you want to sync these RAMADAN MAPPINGS globally for everyone?")) {
             this.view.showToast("Updating Global Ramadan Data...", "info");
             try {
+                const password = sessionStorage.getItem('routine-pro-admin-key');
                 const response = await fetch('/api/update-ramadan', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': '01716099707'
+                        'Authorization': password
                     },
                     body: JSON.stringify(data)
                 });

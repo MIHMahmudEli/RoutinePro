@@ -6,7 +6,7 @@ export default async function handler(request, response) {
     }
 
     const authHeader = request.headers.authorization;
-    if (authHeader !== '01716099707') {
+    if (!process.env.ADMIN_PASSWORD || authHeader !== process.env.ADMIN_PASSWORD) {
         return response.status(401).json({ error: 'Unauthorized' });
     }
 
