@@ -57,9 +57,20 @@ class RoutineModel {
         if (localCourses) {
             this.allCourses = JSON.parse(localCourses);
         } else {
-            const res = await fetch('data/courses.json');
-            if (res.ok) {
-                this.allCourses = await res.json();
+            // Priority 1: Try Cloud/API for everyone
+            try {
+                const apiRes = await fetch('/api/get-courses', { cache: 'no-store' });
+                if (apiRes.ok) {
+                    this.allCourses = await apiRes.json();
+                } else {
+                    throw new Error("No cloud data");
+                }
+            } catch (e) {
+                // Priority 2: Fallback to local static file
+                const res = await fetch('data/courses.json');
+                if (res.ok) {
+                    this.allCourses = await res.json();
+                }
             }
         }
         return this.allCourses;

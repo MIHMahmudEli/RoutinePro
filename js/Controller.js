@@ -777,16 +777,19 @@ class RoutineController {
             const semesterInput = document.getElementById('semester-input');
             const targetSemester = semesterInput?.value || 'Updated Semester';
 
+            let coursesToSync = null;
+
             if (file.name.endsWith('.json')) {
                 const text = await file.text();
-                const data = JSON.parse(text);
-                this.model.saveCourses(data, targetSemester);
-                this.view.showToast(`Successfully synced ${data.length} courses!`);
+                coursesToSync = JSON.parse(text);
+                this.model.saveCourses(coursesToSync, targetSemester);
+                this.view.showToast(`Successfully synced ${coursesToSync.length} courses!`);
+                
+                // Add Cloud Sync check
+                await this.maybeSyncToCloud(coursesToSync);
+
                 document.getElementById('sync-modal').classList.add('hidden');
-
-                // Track Analytics
-                window.analytics.trackPortalSync(data.length);
-
+                window.analytics.trackPortalSync(coursesToSync.length);
                 this.syncWorkspace();
             } else if (file.name.endsWith('.xlsx')) {
                 const reader = new FileReader();
@@ -817,6 +820,10 @@ class RoutineController {
                     this.model.saveCourses(courses, finalSemester);
                     if (semesterInput) semesterInput.value = finalSemester;
                     this.view.showToast(`${courses.length} courses loaded from ${file.name}`);
+
+                    // Add Cloud Sync check
+                    await this.maybeSyncToCloud(courses);
+
                     this.syncWorkspace();
                 };
                 reader.readAsArrayBuffer(file);
@@ -831,6 +838,35 @@ class RoutineController {
                 lucide.createIcons();
                 this.view.syncModal.classList.add('hidden');
             }, 1500);
+        }
+    }
+
+    async maybeSyncToCloud(data) {
+        const isAdmin = sessionStorage.getItem('routine-pro-admin-auth') === 'true';
+        if (!isAdmin) return;
+
+        if (confirm("You are an Admin. Do you want to upload this to the GLOBAL database for EVERY user?")) {
+            this.view.showToast("Uploading to Global Cloud...", "info");
+            try {
+                const response = await fetch('/api/update-courses', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': '01716099707'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    this.view.showToast(result.message || "Global database updated!", "success");
+                } else {
+                    throw new Error(result.error || "Sync failed");
+                }
+            } catch (err) {
+                console.error("Cloud Sync Error:", err);
+                this.view.showToast("Global Cloud Sync failed. Data saved locally only.", "error");
+            }
         }
     }
 
