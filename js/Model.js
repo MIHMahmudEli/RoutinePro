@@ -33,7 +33,14 @@ class RoutineModel {
     async loadInitialData() {
         // Load Global Ramadan Mappings
         try {
-            const ramRes = await fetch('data/ramadan-mappings.json');
+            // Priority 1: Cloud Global
+            let ramRes = await fetch('/api/get-ramadan', { cache: 'no-store' });
+            
+            // Priority 2: Fallback to local
+            if (!ramRes.ok) {
+                ramRes = await fetch('data/ramadan-mappings.json');
+            }
+
             if (ramRes.ok) {
                 const ramData = await ramRes.json();
 

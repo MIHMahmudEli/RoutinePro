@@ -1236,6 +1236,9 @@ class RoutineController {
             this.model.saveRamadanMappings(mappings);
             this.view.showToast(`Successfully synced ${Object.keys(mappings).length} timing slots!`);
 
+            // Add Cloud Sync check for Ramadan
+            await this.maybeSyncRamadanToCloud(mappings);
+
             if (statusText) statusText.innerText = `Success: ${Object.keys(mappings).length} slots found`;
             setTimeout(() => {
                 document.getElementById('ramadan-sync-modal').classList.add('hidden');
@@ -1248,6 +1251,35 @@ class RoutineController {
             if (statusText) statusText.innerText = "Error parsing file";
         } finally {
             if (btn) btn.disabled = false;
+        }
+    }
+
+    async maybeSyncRamadanToCloud(data) {
+        const isAdmin = sessionStorage.getItem('routine-pro-admin-auth') === 'true';
+        if (!isAdmin) return;
+
+        if (confirm("You are an Admin. Do you want to sync these RAMADAN MAPPINGS globally for everyone?")) {
+            this.view.showToast("Updating Global Ramadan Data...", "info");
+            try {
+                const response = await fetch('/api/update-ramadan', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': '01716099707'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    this.view.showToast(result.message || "Global Ramadan Mappings updated!", "success");
+                } else {
+                    throw new Error(result.error || `Server Error ${response.status}`);
+                }
+            } catch (err) {
+                console.error("Ramadan Cloud Sync Error:", err);
+                this.view.showToast(`Ramadan Cloud Sync failed: ${err.message}`, "error");
+            }
         }
     }
 
