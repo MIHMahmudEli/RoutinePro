@@ -773,74 +773,64 @@
 
     <!-- Dynamic Sync Modal -->
     <div id="sync-modal"
-        class="hidden fixed inset-0 z-[200] flex items-center justify-center p-2 bg-black/80 backdrop-blur-md overflow-y-auto">
-        <div class="prism-card max-w-md w-full p-4 md:p-6 space-y-3 md:space-y-4 animate-pop border-emerald-500/30">
-            <div class="flex justify-between items-center">
-                <div class="flex items-center gap-3">
-                    <div
-                        class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center border border-emerald-500/30">
-                        <i data-lucide="cloud-lightning" class="w-5 h-5 text-emerald-400"></i>
-                    </div>
-                    <div>
-                        <h2 class="text-lg font-900 tracking-tighter uppercase">Sync Manager</h2>
-                        <p class="text-[9px] text-slate-500 font-bold uppercase tracking-widest">Update Course Library
-                        </p>
-                    </div>
+        class="hidden fixed inset-0 z-[200] flex items-center justify-center p-2 bg-black/60 backdrop-blur-xl overflow-y-auto">
+        <div class="admin-portal-box max-w-md w-full p-8 space-y-6 animate-pop">
+            <button onclick="document.getElementById('sync-modal').classList.add('hidden')" class="admin-modal-close">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
+                    <i data-lucide="refresh-cw" class="w-6 h-6 text-emerald-400"></i>
                 </div>
-                <button onclick="document.getElementById('sync-modal').classList.add('hidden')"
-                    class="text-slate-500 hover:text-white transition-colors">
-                    <i data-lucide="x" class="w-6 h-6"></i>
-                </button>
+                <div>
+                    <h2 class="text-xl font-900 tracking-tighter uppercase">Sync Manager</h2>
+                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em]">Global Library Update</p>
+                </div>
             </div>
 
-            <div class="space-y-4">
-                <div class="p-3 bg-emerald-500/5 border border-emerald-500/10 rounded-xl space-y-2">
-                    <div
-                        class="flex justify-between items-center text-[9px] font-black uppercase tracking-widest text-emerald-400/60">
-                        <span>Current Database</span>
-                        <span id="sync-status-badge">Live View</span>
+            <div class="space-y-6">
+                <div class="admin-status-indicator space-y-2">
+                    <div class="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-emerald-400/50">
+                        <span>Database Node</span>
+                        <span id="sync-status-badge" class="flex items-center gap-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                            Live View
+                        </span>
                     </div>
                     <div class="flex items-center justify-between">
-                        <div id="course-count-display" class="text-xl font-900">0 Courses</div>
-                        <div id="last-update-display" class="text-[8px] font-bold text-slate-600 uppercase">Never Synced
-                        </div>
+                        <div id="course-count-display" class="text-2xl font-900">0 Courses</div>
+                        <div id="last-update-display" class="text-[9px] font-bold text-slate-600 uppercase">Never Synced</div>
                     </div>
                 </div>
 
-                <div class="space-y-1.5">
-                    <label class="text-[9px] font-black text-slate-600 uppercase pl-1 tracking-widest">Target
-                        Semester</label>
-                    <input type="text" id="semester-input" class="prism-input !py-3 !text-xs"
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-600 uppercase pl-1 tracking-widest">Target Semester</label>
+                    <input type="text" id="semester-input" class="prism-input !py-4 !text-sm"
                         placeholder="e.g. SPRING 2024-25">
                 </div>
 
-                <div class="relative group">
-                    <input type="file" id="course-file-input"
-                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" accept=".xlsx,.json">
-                    <div
-                        class="border-2 border-dashed border-white/10 group-hover:border-emerald-500/50 rounded-xl p-3 md:p-5 text-center transition-all bg-white/[0.02] group-hover:bg-emerald-500/5">
-                        <i data-lucide="upload-cloud"
-                            class="w-8 h-8 text-slate-600 group-hover:text-emerald-400 mx-auto mb-2 transition-all group-hover:-translate-y-1"></i>
-                        <p class="text-[11px] font-bold text-slate-400 group-hover:text-white transition-colors">Drop
-                            report here</p>
-                        <p class="text-[8px] text-slate-600 font-black uppercase mt-1">Supports .xlsx or .json</p>
-                    </div>
+                <div class="relative group admin-upload-zone" onclick="document.getElementById('course-file-input').click()">
+                    <input type="file" id="course-file-input" class="hidden" accept=".xlsx,.json">
+                    <i data-lucide="upload-cloud" class="w-10 h-10 text-slate-600 mb-3"></i>
+                    <p class="text-xs font-bold text-slate-400 group-hover:text-white transition-colors">Select Offered Course Report</p>
+                    <p class="text-[9px] text-slate-600 font-black uppercase mt-1">Supports (.xlsx, .json)</p>
                 </div>
 
-                <div class="text-[9px] text-slate-500 font-bold leading-relaxed text-center px-4">
-                    Upload the <span class="text-emerald-400">Offered Course Report.xlsx</span> exported from the portal
-                    to refresh the entire course database for the current semester.
+                <div class="text-[10px] text-slate-500 font-medium leading-relaxed text-center px-2">
+                    Upload the <span class="text-emerald-400 font-bold">xlsx report</span> from the portal to update <br/>the cloud course database globally.
                 </div>
             </div>
 
             <button onclick="document.getElementById('course-file-input').click()"
-                class="prism-btn w-full py-4 !bg-emerald-500 !text-black shadow-[0_0_20px_rgba(16,185,129,0.3)]">
-                SELECT EXCEL FILE
+                class="admin-glass-btn !bg-emerald-500 !text-black">
+                <i data-lucide="file-check" class="w-5 h-5"></i>
+                PROCESS UPDATE
             </button>
-
+            
             <button id="export-library-btn" onclick="app.controller.handleExportLibrary()"
-                class="hidden w-full py-3 rounded-xl bg-white/5 border border-white/10 text-[10px] font-black text-slate-400 uppercase tracking-widest hover:bg-white/10 hover:text-white transition-all">
-                Export Current Library to JSON
+                class="hidden w-full py-3 rounded-xl bg-white/5 border border-white/10 text-[10px] font-black text-slate-500 uppercase tracking-widest hover:text-white transition-all">
+                Download JSON Backup
             </button>
         </div>
     </div>
@@ -855,80 +845,65 @@
 
     <!-- Ramadan Sync Modal -->
     <div id="ramadan-sync-modal"
-        class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-        <div class="prism-card w-full max-w-sm p-6 relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 to-orange-600"></div>
+        class="hidden fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xl">
+        <div class="admin-portal-box w-full max-w-md p-8 relative overflow-hidden animate-pop">
+            <button onclick="document.getElementById('ramadan-sync-modal').classList.add('hidden')"
+                class="admin-modal-close">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
 
-            <div class="flex items-center justify-between mb-6">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
-                        <i data-lucide="moon-star" class="w-5 h-5 text-amber-500"></i>
-                    </div>
-                    <div>
-                        <h2 class="text-sm font-black uppercase tracking-tighter text-white">Ramadan Sync</h2>
-                        <p class="text-[10px] text-slate-500 font-bold uppercase">Update Timing Slots</p>
-                    </div>
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-12 h-12 rounded-2xl bg-amber-500/10 flex items-center justify-center border border-amber-500/20">
+                    <i data-lucide="moon-star" class="w-6 h-6 text-amber-500"></i>
                 </div>
-                <button onclick="document.getElementById('ramadan-sync-modal').classList.add('hidden')"
-                    class="text-slate-500 hover:text-white transition-colors">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
+                <div>
+                    <h2 class="text-xl font-900 tracking-tighter uppercase">Ramadan Sync</h2>
+                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em]">Global Shift Management</p>
+                </div>
             </div>
 
-            <div class="space-y-4">
-                <div class="p-4 rounded-xl bg-white/5 border border-white/5 space-y-4">
+            <div class="space-y-6">
+                <div class="admin-status-indicator space-y-4">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-[10px] text-white font-black uppercase tracking-widest">Global Feature</p>
-                            <p class="text-[8px] text-slate-500 font-bold uppercase underline decoration-amber-500/30">
-                                Download & Push JSON to apply for everyone</p>
+                            <p class="text-[11px] text-white font-black uppercase tracking-widest">Global Switch</p>
+                            <p class="text-[8px] text-slate-500 font-bold uppercase tracking-wider">
+                                Visible to every user on the platform</p>
                         </div>
                         <label class="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" id="admin-ramadan-feature-toggle" class="sr-only peer">
                             <div
-                                class="w-9 h-5 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-400 after:border-slate-400 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500 peer-checked:after:bg-black peer-checked:after:border-black">
+                                class="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-slate-400 after:border-slate-400 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500 peer-checked:after:bg-black peer-checked:after:border-black shadow-inner">
                             </div>
                         </label>
                     </div>
 
                     <div class="h-px bg-white/5 mx-2"></div>
 
-                    <div>
-                        <p class="text-[10px] text-slate-400 font-medium leading-relaxed mb-3">
-                            Upload the official <span class="text-amber-400 font-bold">Ramadan Class Timing PDF</span>.
-                            The system will automatically extract new shift slots.
-                        </p>
-                        <label
-                            class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-white/10 rounded-xl cursor-pointer hover:bg-white/[0.02] hover:border-amber-500/30 transition-all group">
-                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                                <i data-lucide="file-text"
-                                    class="w-8 h-8 text-slate-500 mb-2 group-hover:text-amber-500 transition-colors"></i>
-                                <p
-                                    class="text-[10px] text-slate-500 group-hover:text-slate-300 transition-colors uppercase font-black">
-                                    Click to upload PDF</p>
-                            </div>
-                            <input type="file" id="ramadan-pdf-upload" class="hidden" accept=".pdf" />
-                        </label>
+                    <div class="admin-upload-zone" onclick="document.getElementById('ramadan-pdf-upload').click()">
+                        <i data-lucide="file-text" class="w-10 h-10 text-slate-600 mb-3"></i>
+                        <p class="text-xs font-bold text-slate-400 group-hover:text-white transition-colors">Upload Timing PDF</p>
+                        <p class="text-[9px] text-slate-600 font-black uppercase mt-1">Parses shift slots automatically</p>
+                        <input type="file" id="ramadan-pdf-upload" class="hidden" accept=".pdf" />
                     </div>
                 </div>
 
-                <div id="ramadan-sync-status" class="hidden p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
-                    <div class="flex items-center gap-2">
-                        <i data-lucide="info" class="w-3 h-3 text-amber-500"></i>
-                        <p class="text-[9px] text-amber-200 font-bold uppercase" id="ramadan-status-text">Parsing PDF...
-                        </p>
+                <div id="ramadan-sync-status" class="hidden p-4 rounded-xl bg-amber-500/5 border border-amber-500/10">
+                    <div class="flex items-center gap-3">
+                        <div class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></div>
+                        <p class="text-[10px] text-amber-200 font-bold uppercase tracking-widest" id="ramadan-status-text">Processing Document...</p>
                     </div>
                 </div>
 
-                <button id="process-ramadan-btn"
-                    class="prism-btn !w-full !rounded-xl !bg-amber-500 !text-black hover:!bg-amber-400">
-                    UPDATE RAMADAN SLOTS
+                <button id="process-ramadan-btn" class="admin-glass-btn">
+                    <i data-lucide="cloud-lightning" class="w-5 h-5"></i>
+                    PUSH TO GLOBAL BLOB
                 </button>
 
                 <button onclick="app.controller.downloadRamadanJSON()"
-                    class="w-full flex items-center justify-center gap-2 py-2 text-[10px] font-black text-slate-500 uppercase hover:text-amber-400 transition-colors">
+                    class="w-full flex items-center justify-center gap-2 py-2 text-[10px] font-black text-slate-500 uppercase hover:text-amber-400 transition-colors tracking-widest">
                     <i data-lucide="download" class="w-3 h-3"></i>
-                    Download Mappings as JSON
+                    Download JSON Backup
                 </button>
             </div>
         </div>
@@ -949,42 +924,47 @@
         gtag('config', 'G-N12SPXZJ8H');
     </script>
     <!-- Admin Password Modal -->
-    <div id="admin-password-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-xl"></div>
-        <div class="prism-card relative w-full max-w-md p-8 space-y-6 animate-pop">
-            <div class="text-center space-y-2">
-                <div
-                    class="w-16 h-16 bg-amber-500/10 rounded-2xl flex items-center justify-center border border-amber-500/20 mx-auto mb-4">
-                    <i data-lucide="shield-check" class="w-8 h-8 text-amber-400"></i>
+    <div id="admin-password-modal" class="hidden fixed inset-0 z-[300] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-3xl"></div>
+        <div class="admin-portal-box relative w-full max-w-md p-10 space-y-10 animate-pop overflow-hidden">
+            <!-- Decorative Background Element -->
+            <div class="absolute -top-24 -right-24 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-emerald-500/5 rounded-full blur-3xl"></div>
+
+            <div class="text-center relative z-10">
+                <div class="security-icon-pulse">
+                    <i data-lucide="shield-check" class="w-10 h-10 text-amber-400"></i>
                 </div>
-                <h2 class="text-xl font-900 tracking-tight">ADMIN ACCESS</h2>
-                <p class="text-slate-400 text-xs font-medium uppercase tracking-widest">Enter Credentials to Proceed</p>
+                <h2 class="text-2xl font-900 tracking-tighter mb-2">RESTRICTED ACCESS</h2>
+                <p class="text-[10px] text-slate-500 font-black uppercase tracking-[0.3em] opacity-80">Security Protocol Required</p>
             </div>
 
-            <div class="space-y-4">
-                <div class="space-y-1.5">
-                    <label class="text-[9px] font-black text-slate-500 uppercase pl-1">Security Key</label>
+            <div class="space-y-6 relative z-10">
+                <div class="space-y-3">
+                    <label class="text-[10px] font-black text-slate-500 uppercase pl-1 tracking-widest text-center block">Enter Master Key</label>
                     <div class="relative">
                         <input type="password" id="admin-password-input"
-                            class="prism-input !py-4 pr-12 text-center text-lg tracking-[0.5em] font-bold"
-                            placeholder="••••••••">
-                        <div class="absolute inset-y-0 right-4 flex items-center">
-                            <i data-lucide="lock" class="w-4 h-4 text-slate-500"></i>
-                        </div>
+                            class="admin-key-input w-full"
+                            placeholder="••••">
                     </div>
                 </div>
 
-                <div class="pt-2">
-                    <button id="admin-login-btn"
-                        class="prism-btn w-full py-4 !bg-amber-500 !text-black shadow-[0_0_20px_rgba(245,158,11,0.3)]">
-                        AUTHENTICATE
+                <div class="pt-4 space-y-4">
+                    <button id="admin-login-btn" class="admin-glass-btn">
+                        <i data-lucide="key" class="w-5 h-5"></i>
+                        VERIFY CREDENTIALS
                     </button>
-                    <button onclick="window.location.href='index.html'"
-                        class="w-full mt-4 py-2 text-[10px] font-black text-slate-500 uppercase tracking-widest hover:text-white transition-colors">
+                    <a href="index.html" class="admin-return-link">
+                        <i data-lucide="arrow-left" class="w-3 h-3"></i>
                         Return to Public View
-                    </button>
+                    </a>
                 </div>
             </div>
+
+            <!-- Bottom Disclaimer -->
+            <p class="text-[8px] text-slate-600 font-bold uppercase tracking-widest text-center relative z-10 opacity-40">
+                Authorized Personnel Only • IP Logged
+            </p>
         </div>
     </div>
 </body>
