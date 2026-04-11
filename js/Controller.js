@@ -861,11 +861,11 @@ class RoutineController {
                 if (response.ok) {
                     this.view.showToast(result.message || "Global database updated!", "success");
                 } else {
-                    throw new Error(result.error || "Sync failed");
+                    throw new Error(result.error || `Server Error ${response.status}`);
                 }
             } catch (err) {
                 console.error("Cloud Sync Error:", err);
-                this.view.showToast("Global Cloud Sync failed. Data saved locally only.", "error");
+                this.view.showToast(`Global Cloud Sync failed: ${err.message}`, "error");
             }
         }
     }
