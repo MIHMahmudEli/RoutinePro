@@ -1,4 +1,5 @@
 import { put } from '@vercel/blob';
+// v1.0.1 - Triggering redeploy for env vars
 
 export default async function handler(request, response) {
     if (request.method !== 'POST') {
