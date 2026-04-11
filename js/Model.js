@@ -31,12 +31,19 @@ class RoutineModel {
     }
 
     async loadInitialData() {
-        // Load Global Ramadan Mappings
+        // Load Global Ramadan Mappings and Feature Flag
         try {
-            // Priority 1: Cloud Global
+            // Priority 1: Cloud Config
+            let configRes = await fetch('/api/get-config', { cache: 'no-store' });
+            if (configRes.ok) {
+                const configData = await configRes.json();
+                this.ramadanFeatureEnabled = configData.ramadanFeatureEnabled;
+            }
+
+            // Priority 2: Cloud Global Ramadan Mappings
             let ramRes = await fetch('/api/get-ramadan', { cache: 'no-store' });
             
-            // Priority 2: Fallback to local
+            // Priority 3: Fallback to local file
             if (!ramRes.ok) {
                 ramRes = await fetch('data/ramadan-mappings.json');
             }
@@ -44,18 +51,17 @@ class RoutineModel {
             if (ramRes.ok) {
                 const ramData = await ramRes.json();
 
-                // Only use server value if admin hasn't set a local override
+                // Only use server value for flag if admin hasn't set a local override
                 const hasLocalOverride = localStorage.getItem('routine-pro-ramadan-admin-feature') !== null;
-                if (!hasLocalOverride) {
+                if (!hasLocalOverride && !configRes.ok) {
                     this.ramadanFeatureEnabled = ramData.featureEnabled !== false;
                 }
 
                 this.globalRamadanMap = ramData.mappings || null;
             }
         } catch (e) {
-            console.warn("No global ramadan map found");
-            // If fetch fails and no local override, keep it false
-            if (localStorage.getItem('routine-pro-ramadan-admin-feature') === null) {
+            console.warn("Global config or ramadan map fetch failed");
+            if (localStorage.getItem('routine-pro-ramadan-admin-feature') === null && !this.ramadanFeatureEnabled) {
                 this.ramadanFeatureEnabled = false;
             }
         }

@@ -93,11 +93,37 @@ class RoutineController {
             featureToggle.classList.remove('hidden');
 
             // Restore the change listener
-            featureToggle.onchange = (e) => {
-                this.model.ramadanFeatureEnabled = e.target.checked;
-                localStorage.setItem('routine-pro-ramadan-admin-feature', e.target.checked);
-                this.view.showToast(`Ramadan Feature ${e.target.checked ? 'Enabled' : 'Disabled'} Locally`, "info");
+            featureToggle.onchange = async (e) => {
+                const isEnabled = e.target.checked;
+                this.model.ramadanFeatureEnabled = isEnabled;
+                localStorage.setItem('routine-pro-ramadan-admin-feature', isEnabled);
+                this.view.showToast(`Ramadan Feature ${isEnabled ? 'Enabled' : 'Disabled'} Locally`, "info");
                 this.syncWorkspace();
+
+                // Global Sync Prompt
+                if (confirm(`Do you want to ${isEnabled ? 'ENABLE' : 'DISABLE'} Ramadan Mode GLOBALLY for every user?`)) {
+                    this.view.showToast("Updating Global Config...", "info");
+                    try {
+                        const response = await fetch('/api/update-config', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': '01716099707'
+                            },
+                            body: JSON.stringify({ ramadanFeatureEnabled: isEnabled })
+                        });
+
+                        const result = await response.json();
+                        if (response.ok) {
+                            this.view.showToast(result.message, "success");
+                        } else {
+                            throw new Error(result.error || "Sync failed");
+                        }
+                    } catch (err) {
+                        console.error("Global Config Error:", err);
+                        this.view.showToast(`Global sync failed: ${err.message}`, "error");
+                    }
+                }
             };
 
             const container = featureToggle.closest('div');
