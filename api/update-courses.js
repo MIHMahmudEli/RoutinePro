@@ -15,7 +15,7 @@ export default async function handler(request, response) {
     }
 
     try {
-        const data = await request.json();
+        const data = request.body;
         
         // Ensure data is an array
         if (!Array.isArray(data)) {
