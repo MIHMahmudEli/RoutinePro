@@ -66,6 +66,16 @@ class RoutineModel {
             }
         }
 
+        // Load Global Metadata
+        try {
+            const metaRes = await fetch('/api/get-metadata', { cache: 'no-store' });
+            if (metaRes.ok) {
+                this.metadata = await metaRes.json();
+            }
+        } catch (e) {
+            console.warn("Global metadata fetch failed");
+        }
+
         const localCourses = localStorage.getItem('routine-pro-courses');
         if (localCourses) {
             this.allCourses = JSON.parse(localCourses);

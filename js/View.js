@@ -23,8 +23,30 @@ class RoutineView {
         this.manualStart = document.getElementById('manual-start');
         this.manualEnd = document.getElementById('manual-end');
         this.manualAddBtn = document.getElementById('add-manual-btn');
+        this.metadataText = document.getElementById('metadata-text');
         this.hueMap = new Map();
         this.hueSeed = Math.random();
+    }
+
+    renderLibraryMetadata(metadata) {
+        if (!this.metadataText || !metadata) return;
+
+        const date = new Date(metadata.lastUpdate);
+        const relativeTime = this.getRelativeTime(date);
+        
+        this.metadataText.innerHTML = `Library: <span class="text-white">${metadata.semester}</span> · Updated <span class="text-white">${relativeTime}</span>`;
+    }
+
+    getRelativeTime(date) {
+        const now = new Date();
+        const diffInSeconds = Math.floor((now - date) / 1000);
+        
+        if (diffInSeconds < 60) return 'Just now';
+        const mins = Math.floor(diffInSeconds / 60);
+        if (mins < 60) return `${mins}m ago`;
+        const hrs = Math.floor(mins / 60);
+        if (hrs < 24) return `${hrs}h ago`;
+        return date.toLocaleDateString();
     }
 
     populateTimeFilters() {

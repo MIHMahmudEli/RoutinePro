@@ -16,6 +16,7 @@ class RoutineController {
         await this.model.loadInitialData();
         this.view.populateTimeFilters();
         this.view.updateSyncUI(this.model.allCourses);
+        this.view.renderLibraryMetadata(this.model.metadata);
         this.setupEventListeners();
         this.syncWorkspace();
 
@@ -873,6 +874,11 @@ class RoutineController {
 
         if (confirm("You are an Admin. Do you want to upload this to the GLOBAL database for EVERY user?")) {
             this.view.showToast("Uploading to Global Cloud...", "info");
+            
+            // Get current semester from input
+            const semInput = document.getElementById('semester-input');
+            const semester = semInput?.value || this.model.semester || 'Updated Semester';
+
             try {
                 const response = await fetch('/api/update-courses', {
                     method: 'POST',
@@ -880,7 +886,7 @@ class RoutineController {
                         'Content-Type': 'application/json',
                         'Authorization': '01716099707'
                     },
-                    body: JSON.stringify(data)
+                    body: JSON.stringify({ data, semester })
                 });
 
                 const result = await response.json();

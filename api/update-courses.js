@@ -15,7 +15,7 @@ export default async function handler(request, response) {
     }
 
     try {
-        const data = request.body;
+        const { data, semester } = request.body;
         
         // Ensure data is an array
         if (!Array.isArray(data)) {
@@ -23,7 +23,6 @@ export default async function handler(request, response) {
         }
 
         // Upload to Vercel Blob
-        // Note: addRandomSuffix: false means it will overwrite if the name is same (useful for routine data)
         const blob = await put('courses.json', JSON.stringify(data), {
             access: 'public',
             contentType: 'application/json',
@@ -33,7 +32,8 @@ export default async function handler(request, response) {
         // Also update a "last sync" metadata blob
         await put('metadata.json', JSON.stringify({
             lastUpdate: new Date().toISOString(),
-            courseCount: data.length
+            courseCount: data.length,
+            semester: semester || "Updated Semester"
         }), {
             access: 'public',
             contentType: 'application/json',
@@ -43,7 +43,7 @@ export default async function handler(request, response) {
         return response.status(200).json({ 
             success: true, 
             url: blob.url,
-            message: `Successfully synced ${data.length} courses globally.`
+            message: `Successfully synced ${data.length} courses for ${semester || 'the semester'} globally.`
         });
     } catch (error) {
         console.error('Upload error:', error);
