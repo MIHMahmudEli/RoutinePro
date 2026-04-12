@@ -1217,7 +1217,8 @@ class RoutineController {
         this.view.totalCreditsEl.innerText = this.model.calculateCredits();
         this.view.updateSyncUI(this.model.allCourses);
         if (this.model.metadata) {
-            this.view.renderLibraryMetadata(this.model.metadata, this.model.dataSource);
+            const displayTime = this.model.dataSource === 'Local' ? this.model.lastLocalSync : this.model.metadata.lastUpdate;
+            this.view.renderLibraryMetadata(this.model.metadata, this.model.dataSource, displayTime);
         }
     }
 

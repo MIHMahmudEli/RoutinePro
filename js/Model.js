@@ -80,6 +80,7 @@ class RoutineModel {
         if (localCourses) {
             this.allCourses = JSON.parse(localCourses);
             this.dataSource = localStorage.getItem('routine-pro-data-source') || 'Local';
+            this.lastLocalSync = localStorage.getItem('routine-pro-last-sync');
         } else {
             // Priority 1: Try Cloud/API for everyone
             try {
@@ -107,10 +108,13 @@ class RoutineModel {
     saveCourses(data, semesterName = null) {
         this.allCourses = data;
         this.dataSource = 'Local';
+        const now = new Date().toISOString();
+        this.lastLocalSync = now;
         localStorage.setItem('routine-pro-data-source', 'Local');
         localStorage.setItem('routine-pro-courses', JSON.stringify(data));
-        localStorage.setItem('routine-pro-last-sync', new Date().toLocaleString());
+        localStorage.setItem('routine-pro-last-sync', now);
         if (semesterName) {
+            this.semester = semesterName;
             localStorage.setItem('routine-pro-semester', semesterName);
         }
         this.selectedCourses = [];
