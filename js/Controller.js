@@ -814,14 +814,18 @@ class RoutineController {
         lucide.createIcons();
 
         try {
-            const targetSemester = 'Updated Semester';
+            let finalSemester = 'Updated Semester';
 
             let coursesToSync = null;
 
             if (file.name.endsWith('.json')) {
                 const text = await file.text();
                 coursesToSync = JSON.parse(text);
-                this.model.saveCourses(coursesToSync, targetSemester);
+                
+                // Detection for JSON
+                finalSemester = this.detectSemester(file.name, text);
+                
+                this.model.saveCourses(coursesToSync, finalSemester);
                 this.view.showToast(`Successfully synced ${coursesToSync.length} courses!`);
                 
                 // Add Cloud Sync check
@@ -843,20 +847,7 @@ class RoutineController {
                             const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
 
                             // Auto-detect semester
-                            let detectedSemester = "";
-                            const headerPeek = JSON.stringify(data.slice(0, 10)).toUpperCase();
-                            const wsUpper = wsname.toUpperCase();
-                            const combinedSearch = wsUpper + " " + headerPeek;
-
-                            if (combinedSearch.includes('SPRING') || combinedSearch.includes('SPRI')) detectedSemester = 'SPRING';
-                            else if (combinedSearch.includes('FALL') || combinedSearch.includes('FAL')) detectedSemester = 'FALL';
-                            else if (combinedSearch.includes('SUMMER') || combinedSearch.includes('SUMM')) detectedSemester = 'SUMMER';
-
-                            const yearMatch = combinedSearch.match(/\d{4}-\d{2,4}/);
-                            if (yearMatch && detectedSemester) detectedSemester += ` ${yearMatch[0]}`;
-                            else if (yearMatch && !detectedSemester) detectedSemester = yearMatch[0];
-
-                            const finalSemester = detectedSemester || targetSemester || 'Updated Semester';
+                            finalSemester = this.detectSemester(file.name + " " + wsname, JSON.stringify(data.slice(0, 10)));
                             const courses = this.model.parseExcelData(data);
 
                             this.model.saveCourses(courses, finalSemester);
@@ -890,6 +881,26 @@ class RoutineController {
                 this.view.syncModal.classList.add('hidden');
             }, 1000);
         }
+    }
+
+    detectSemester(fileName, contentSnippet) {
+        const searchPool = (fileName + " " + contentSnippet).toUpperCase();
+        let detected = "";
+
+        if (searchPool.includes('SPRING') || searchPool.includes('SPRI')) detected = 'SPRING';
+        else if (searchPool.includes('FALL') || searchPool.includes('FAL')) detected = 'FALL';
+        else if (searchPool.includes('SUMMER') || searchPool.includes('SUMM')) detected = 'SUMMER';
+
+        // More robust year matching (2024-25, 2024-2025, 2024 25, etc.)
+        const yearMatch = searchPool.match(/\d{4}[\s-]\d{2,4}/) || searchPool.match(/\d{4}/);
+        
+        if (yearMatch) {
+            const yearStr = yearMatch[0].replace(/\s/g, '-');
+            if (detected) return `${detected} ${yearStr}`;
+            return yearStr;
+        }
+
+        return detected || 'Updated Semester';
     }
 
     async maybeSyncToCloud(data) {
