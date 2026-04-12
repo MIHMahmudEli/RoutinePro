@@ -814,8 +814,7 @@ class RoutineController {
         lucide.createIcons();
 
         try {
-            const semesterInput = document.getElementById('semester-input');
-            const targetSemester = semesterInput?.value || 'Updated Semester';
+            const targetSemester = 'Updated Semester';
 
             let coursesToSync = null;
 
@@ -861,7 +860,6 @@ class RoutineController {
                             const courses = this.model.parseExcelData(data);
 
                             this.model.saveCourses(courses, finalSemester);
-                            if (semesterInput) semesterInput.value = finalSemester;
                             this.view.showToast(`${courses.length} courses loaded from ${file.name}`);
 
                             // Add Cloud Sync check
@@ -901,9 +899,7 @@ class RoutineController {
         if (confirm("You are an Admin. Do you want to upload this to the GLOBAL database for EVERY user?")) {
             this.view.showToast("Uploading to Global Cloud...", "info");
             
-            // Get current semester from input
-            const semInput = document.getElementById('semester-input');
-            const semester = semInput?.value || this.model.semester || 'Updated Semester';
+            const semester = this.model.semester || 'Updated Semester';
 
             try {
                 const password = sessionStorage.getItem('routine-pro-admin-key');
