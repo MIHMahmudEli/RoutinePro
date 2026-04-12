@@ -942,7 +942,8 @@ class RoutineController {
             this.view.showToast("Fetching latest cloud data...", "info");
             
             // Reload everything from cloud
-            localStorage.removeItem('routine-pro-courses'); // Clear local cache to force cloud fetch
+            localStorage.removeItem('routine-pro-courses'); 
+            localStorage.removeItem('routine-pro-data-source');
             await this.model.loadInitialData();
             
             this.view.showToast("Successfully synced with cloud!", "success");
@@ -1216,7 +1217,7 @@ class RoutineController {
         this.view.totalCreditsEl.innerText = this.model.calculateCredits();
         this.view.updateSyncUI(this.model.allCourses);
         if (this.model.metadata) {
-            this.view.renderLibraryMetadata(this.model.metadata);
+            this.view.renderLibraryMetadata(this.model.metadata, this.model.dataSource);
         }
     }
 

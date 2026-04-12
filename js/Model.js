@@ -79,12 +79,15 @@ class RoutineModel {
         const localCourses = localStorage.getItem('routine-pro-courses');
         if (localCourses) {
             this.allCourses = JSON.parse(localCourses);
+            this.dataSource = localStorage.getItem('routine-pro-data-source') || 'Local';
         } else {
             // Priority 1: Try Cloud/API for everyone
             try {
                 const apiRes = await fetch('/api/get-courses', { cache: 'no-store' });
                 if (apiRes.ok) {
                     this.allCourses = await apiRes.json();
+                    this.dataSource = 'Global';
+                    localStorage.setItem('routine-pro-data-source', 'Global');
                 } else {
                     throw new Error("No cloud data");
                 }
@@ -93,6 +96,8 @@ class RoutineModel {
                 const res = await fetch('data/courses.json');
                 if (res.ok) {
                     this.allCourses = await res.json();
+                    this.dataSource = 'Global (Fallback)';
+                    localStorage.setItem('routine-pro-data-source', 'Global (Fallback)');
                 }
             }
         }
@@ -101,6 +106,8 @@ class RoutineModel {
 
     saveCourses(data, semesterName = null) {
         this.allCourses = data;
+        this.dataSource = 'Local';
+        localStorage.setItem('routine-pro-data-source', 'Local');
         localStorage.setItem('routine-pro-courses', JSON.stringify(data));
         localStorage.setItem('routine-pro-last-sync', new Date().toLocaleString());
         if (semesterName) {

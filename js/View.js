@@ -28,13 +28,16 @@ class RoutineView {
         this.hueSeed = Math.random();
     }
 
-    renderLibraryMetadata(metadata) {
+    renderLibraryMetadata(metadata, dataSource = 'Global') {
         if (!this.metadataText || !metadata) return;
 
         const date = new Date(metadata.lastUpdate);
         const relativeTime = this.getRelativeTime(date);
         
-        this.metadataText.innerHTML = `Library: <span class="text-white">${metadata.semester}</span> · Updated <span class="text-white">${relativeTime}</span>`;
+        const sourceColor = dataSource === 'Local' ? 'text-amber-400' : 'text-emerald-400';
+        const sourceLabel = dataSource === 'Local' ? 'Local Sync' : 'Global Sync';
+
+        this.metadataText.innerHTML = `${sourceLabel}: <span class="text-white">${metadata.semester}</span> · <span class="${sourceColor} font-black">${relativeTime}</span>`;
     }
 
     getRelativeTime(date) {
