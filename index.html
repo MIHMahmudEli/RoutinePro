@@ -773,70 +773,69 @@
 
     <!-- Dynamic Sync Modal -->
     <div id="sync-modal"
-        class="hidden fixed inset-0 z-[200] flex items-center justify-center p-2 bg-black/60 backdrop-blur-xl overflow-y-auto">
-        <div class="admin-portal-box max-w-md w-full p-8 space-y-6 animate-pop">
+        class="hidden fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-3xl overflow-y-auto">
+        <div class="admin-portal-box max-w-sm w-full p-6 space-y-5 animate-pop">
             <button onclick="document.getElementById('sync-modal').classList.add('hidden')" class="admin-modal-close">
-                <i data-lucide="x" class="w-6 h-6"></i>
+                <i data-lucide="x" class="w-5 h-5"></i>
             </button>
 
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
-                    <i data-lucide="refresh-cw" class="w-6 h-6 text-emerald-400"></i>
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
+                    <i data-lucide="refresh-cw" class="w-5 h-5 text-emerald-400"></i>
                 </div>
                 <div>
-                    <h2 class="text-xl font-900 tracking-tighter uppercase">Sync Manager</h2>
-                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em]">Global Library Update</p>
+                    <h2 class="text-lg font-900 tracking-tighter uppercase">Sync Manager</h2>
+                    <p class="text-[9px] text-slate-500 font-bold uppercase tracking-widest opacity-60">Global Library Update</p>
                 </div>
             </div>
 
-            <div class="space-y-6">
-                <div class="admin-status-indicator space-y-2">
-                    <div class="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-emerald-400/50">
+            <div class="space-y-4">
+                <div class="minimal-indicator space-y-3">
+                    <div class="flex justify-between items-center text-[9px] font-black uppercase tracking-widest text-emerald-400/50">
                         <span>Database Node</span>
                         <span id="sync-status-badge" class="flex items-center gap-1.5">
                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                            Live View
+                            Live Now
                         </span>
                     </div>
-                    <div class="flex items-center justify-between">
-                        <div id="course-count-display" class="text-2xl font-900">0 Courses</div>
-                        <div id="last-update-display" class="text-[9px] font-bold text-slate-600 uppercase">Never Synced</div>
+                    <div class="flex items-baseline justify-between">
+                        <div id="course-count-display" class="text-xl font-900">0 Courses</div>
+                        <div id="last-update-display" class="text-[8px] font-bold text-slate-600 uppercase tracking-wider">Never Synced</div>
                     </div>
                 </div>
 
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-600 uppercase pl-1 tracking-widest">Target Semester</label>
-                    <input type="text" id="semester-input" class="prism-input !py-4 !text-sm"
+                <div class="space-y-1.5">
+                    <label class="text-[9px] font-black text-slate-600 uppercase pl-1 tracking-widest">Target Semester</label>
+                    <input type="text" id="semester-input" class="prism-input !py-3 !text-xs !bg-black/20"
                         placeholder="e.g. SPRING 2024-25">
                 </div>
 
-                <div class="relative group admin-upload-zone" onclick="document.getElementById('course-file-input').click()">
+                <div class="relative group admin-upload-zone text-center cursor-pointer" onclick="document.getElementById('course-file-input').click()">
                     <input type="file" id="course-file-input" class="hidden" accept=".xlsx,.json">
-                    <i data-lucide="upload-cloud" class="w-10 h-10 text-slate-600 mb-3"></i>
-                    <p class="text-xs font-bold text-slate-400 group-hover:text-white transition-colors">Select Offered Course Report</p>
-                    <p class="text-[9px] text-slate-600 font-black uppercase mt-1">Supports (.xlsx, .json)</p>
-                </div>
-
-                <div class="text-[10px] text-slate-500 font-medium leading-relaxed text-center px-2">
-                    Upload the <span class="text-emerald-400 font-bold">xlsx report</span> from the portal to update <br/>the cloud course database globally.
+                    <i data-lucide="upload-cloud" class="w-8 h-8 text-slate-600 mb-2 mx-auto transition-colors group-hover:text-emerald-400"></i>
+                    <p class="text-[10px] font-bold text-slate-400 group-hover:text-white transition-colors">Select Offered Course Report</p>
+                    <p class="text-[8px] text-slate-600 font-black uppercase mt-0.5 tracking-widest">Support .xlsx, .json</p>
                 </div>
             </div>
 
-            <button id="process-update-btn" onclick="document.getElementById('course-file-input').click()"
-                class="admin-glass-btn !bg-emerald-500 !text-black">
-                <i data-lucide="file-check" class="w-5 h-5"></i>
-                PROCESS UPDATE
-            </button>
-            
-            <button id="sync-from-cloud-btn" onclick="app.controller.handleSyncFromCloud()"
-                class="w-full py-4 rounded-xl bg-white/5 border border-white/10 text-[10px] font-black text-emerald-400 uppercase tracking-widest hover:bg-emerald-500/10 hover:border-emerald-500/20 transition-all flex items-center justify-center gap-2">
-                <i data-lucide="cloud-download" class="w-4 h-4"></i>
-                Sync from Cloud
-            </button>
-            <button id="export-library-btn" onclick="app.controller.handleExportLibrary()"
-                class="hidden w-full py-3 rounded-xl bg-white/5 border border-white/10 text-[10px] font-black text-slate-500 uppercase tracking-widest hover:text-white transition-all">
-                Download JSON Backup
-            </button>
+            <div class="pt-2 space-y-3">
+                <button id="process-update-btn" onclick="document.getElementById('course-file-input').click()"
+                    class="admin-glass-btn !bg-emerald-500 !text-black shadow-lg">
+                    <i data-lucide="file-check" class="w-4 h-4"></i>
+                    PROCESS UPDATE
+                </button>
+                
+                <button id="sync-from-cloud-btn" onclick="app.controller.handleSyncFromCloud()"
+                    class="w-full py-3 rounded-xl bg-white/5 border border-white/5 text-[9px] font-black text-emerald-400/80 uppercase tracking-widest hover:bg-emerald-500/10 hover:text-emerald-400 transition-all flex items-center justify-center gap-2">
+                    <i data-lucide="cloud-download" class="w-3.5 h-3.5"></i>
+                    Sync from Cloud
+                </button>
+
+                <button id="export-library-btn" onclick="app.controller.handleExportLibrary()"
+                    class="hidden w-full py-2.5 rounded-xl text-[8px] font-black text-slate-600 uppercase tracking-widest hover:text-slate-400 transition-all">
+                    Download JSON Backup
+                </button>
+            </div>
         </div>
     </div>
 
@@ -850,64 +849,61 @@
 
     <!-- Ramadan Sync Modal -->
     <div id="ramadan-sync-modal"
-        class="hidden fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xl">
-        <div class="admin-portal-box w-full max-w-md p-8 relative overflow-hidden animate-pop">
+        class="hidden fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-3xl overflow-y-auto">
+        <div class="admin-portal-box max-w-sm w-full p-6 space-y-5 animate-pop">
             <button onclick="document.getElementById('ramadan-sync-modal').classList.add('hidden')"
                 class="admin-modal-close">
-                <i data-lucide="x" class="w-6 h-6"></i>
+                <i data-lucide="x" class="w-5 h-5"></i>
             </button>
 
-            <div class="flex items-center gap-4 mb-8">
-                <div class="w-12 h-12 rounded-2xl bg-amber-500/10 flex items-center justify-center border border-amber-500/20">
-                    <i data-lucide="moon-star" class="w-6 h-6 text-amber-500"></i>
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center border border-amber-500/20">
+                    <i data-lucide="moon" class="w-5 h-5 text-amber-500"></i>
                 </div>
                 <div>
-                    <h2 class="text-xl font-900 tracking-tighter uppercase">Ramadan Sync</h2>
-                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em]">Global Shift Management</p>
+                    <h2 class="text-lg font-900 tracking-tighter uppercase">Ramadan Sync</h2>
+                    <p class="text-[9px] text-slate-500 font-bold uppercase tracking-widest opacity-60">Global Shift Management</p>
                 </div>
             </div>
 
-            <div class="space-y-6">
-                <div class="admin-status-indicator space-y-4">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-[11px] text-white font-black uppercase tracking-widest">Global Switch</p>
-                            <p class="text-[8px] text-slate-500 font-bold uppercase tracking-wider">
-                                Visible to every user on the platform</p>
-                        </div>
+            <div class="space-y-4">
+                <div class="minimal-indicator space-y-3">
+                    <div class="flex justify-between items-center text-[9px] font-black uppercase tracking-widest text-amber-500/50">
+                        <span>Global Switch</span>
                         <label class="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" id="admin-ramadan-feature-toggle" class="sr-only peer">
-                            <div
-                                class="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-slate-400 after:border-slate-400 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500 peer-checked:after:bg-black peer-checked:after:border-black shadow-inner">
-                            </div>
+                            <div class="w-7 h-4 bg-white/10 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-500 after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-amber-500 peer-checked:after:bg-black shadow-inner"></div>
                         </label>
                     </div>
-
-                    <div class="h-px bg-white/5 mx-2"></div>
-
-                    <div class="admin-upload-zone" onclick="document.getElementById('ramadan-pdf-upload').click()">
-                        <i data-lucide="file-text" class="w-10 h-10 text-slate-600 mb-3"></i>
-                        <p class="text-xs font-bold text-slate-400 group-hover:text-white transition-colors">Upload Timing PDF</p>
-                        <p class="text-[9px] text-slate-600 font-black uppercase mt-1">Parses shift slots automatically</p>
-                        <input type="file" id="ramadan-pdf-upload" class="hidden" accept=".pdf" />
+                    <div class="flex items-baseline justify-between">
+                        <div class="text-xl font-900" id="ramadan-slot-count">0 Slots</div>
+                        <div class="text-[8px] font-bold text-slate-600 uppercase tracking-widest">Active Database</div>
                     </div>
                 </div>
 
-                <div id="ramadan-sync-status" class="hidden p-4 rounded-xl bg-amber-500/5 border border-amber-500/10">
+                <div class="relative group admin-upload-zone text-center cursor-pointer" onclick="document.getElementById('ramadan-pdf-upload').click()">
+                    <input type="file" id="ramadan-pdf-upload" class="hidden" accept=".pdf">
+                    <i data-lucide="file-text" class="w-8 h-8 text-slate-600 mb-2 mx-auto transition-colors group-hover:text-amber-500"></i>
+                    <p class="text-[10px] font-bold text-slate-400 group-hover:text-white transition-colors">Upload Schedule PDF</p>
+                    <p class="text-[8px] text-slate-600 font-black uppercase mt-0.5 tracking-widest">Parses shifts automatically</p>
+                </div>
+
+                <div id="ramadan-sync-status" class="hidden minimal-indicator !bg-amber-500/5 !border-amber-500/10">
                     <div class="flex items-center gap-3">
-                        <div class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></div>
-                        <p class="text-[10px] text-amber-200 font-bold uppercase tracking-widest" id="ramadan-status-text">Processing Document...</p>
+                        <div class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></div>
+                        <p class="text-[9px] text-amber-200 font-black uppercase tracking-widest" id="ramadan-status-text">Processing Document...</p>
                     </div>
                 </div>
+            </div>
 
-                <button id="process-ramadan-btn" class="admin-glass-btn">
-                    <i data-lucide="cloud-lightning" class="w-5 h-5"></i>
+            <div class="pt-2 space-y-3">
+                <button id="process-ramadan-btn" class="admin-glass-btn !bg-amber-500 !text-black shadow-lg">
+                    <i data-lucide="cloud-lightning" class="w-4 h-4"></i>
                     PUSH TO GLOBAL BLOB
                 </button>
-
+                
                 <button onclick="app.controller.downloadRamadanJSON()"
-                    class="w-full flex items-center justify-center gap-2 py-2 text-[10px] font-black text-slate-500 uppercase hover:text-amber-400 transition-colors tracking-widest">
-                    <i data-lucide="download" class="w-3 h-3"></i>
+                    class="w-full py-2.5 rounded-xl text-[8px] font-black text-slate-600 uppercase tracking-widest hover:text-amber-400 transition-all">
                     Download JSON Backup
                 </button>
             </div>
@@ -931,44 +927,43 @@
     <!-- Admin Password Modal -->
     <div id="admin-password-modal" class="hidden fixed inset-0 z-[300] flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-black/60 backdrop-blur-3xl"></div>
-        <div class="admin-portal-box relative w-full max-w-md p-10 space-y-10 animate-pop overflow-hidden">
+        <div class="admin-portal-box relative w-full max-w-[340px] p-8 space-y-8 animate-pop overflow-hidden">
             <!-- Decorative Background Element -->
-            <div class="absolute -top-24 -right-24 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl"></div>
-            <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-emerald-500/5 rounded-full blur-3xl"></div>
+            <div class="absolute -top-20 -right-20 w-40 h-40 bg-amber-500/10 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-20 -left-20 w-40 h-40 bg-emerald-500/5 rounded-full blur-3xl"></div>
 
             <div class="text-center relative z-10">
                 <div class="security-icon-pulse">
-                    <i data-lucide="shield-check" class="w-10 h-10 text-amber-400"></i>
+                    <i data-lucide="shield-check" class="w-8 h-8 text-amber-500"></i>
                 </div>
-                <h2 class="text-2xl font-900 tracking-tighter mb-2">RESTRICTED ACCESS</h2>
-                <p class="text-[10px] text-slate-500 font-black uppercase tracking-[0.3em] opacity-80">Security Protocol Required</p>
+                <h2 class="text-xl font-900 tracking-tighter mb-1">RESTRICTED ACCESS</h2>
+                <p class="text-[8px] text-slate-500 font-black uppercase tracking-[0.3em] opacity-60">Security Protocol Locked</p>
             </div>
 
             <div class="space-y-6 relative z-10">
                 <div class="space-y-3">
-                    <label class="text-[10px] font-black text-slate-500 uppercase pl-1 tracking-widest text-center block">Enter Master Key</label>
+                    <label class="text-[9px] font-black text-slate-500 uppercase tracking-widest text-center block opacity-80">Enter Master Key</label>
                     <div class="relative">
                         <input type="password" id="admin-password-input"
-                            class="admin-key-input w-full"
+                            class="admin-key-input w-full !text-lg !py-3"
                             placeholder="••••">
                     </div>
                 </div>
 
-                <div class="pt-4 space-y-4">
-                    <button id="admin-login-btn" class="admin-glass-btn">
-                        <i data-lucide="key" class="w-5 h-5"></i>
+                <div class="space-y-3">
+                    <button id="admin-login-btn" class="admin-glass-btn !h-12 shadow-xl">
+                        <i data-lucide="key" class="w-4 h-4"></i>
                         VERIFY CREDENTIALS
                     </button>
-                    <a href="index.html" class="admin-return-link">
+                    <a href="index.html" class="admin-return-link !py-2.5">
                         <i data-lucide="arrow-left" class="w-3 h-3"></i>
-                        Return to Public View
+                        Back to Public View
                     </a>
                 </div>
             </div>
 
-            <!-- Bottom Disclaimer -->
-            <p class="text-[8px] text-slate-600 font-bold uppercase tracking-widest text-center relative z-10 opacity-40">
-                Authorized Personnel Only • IP Logged
+            <p class="text-[7px] text-slate-600 font-bold uppercase tracking-widest text-center relative z-10 opacity-40">
+                Authorized Only • IP Logged
             </p>
         </div>
     </div>

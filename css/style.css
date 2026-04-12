@@ -1948,25 +1948,26 @@ input.time-select-modern:hover::-webkit-calendar-picker-indicator {
 
 .admin-portal-box {
     position: relative;
-    background: rgba(10, 13, 20, 0.7) !important;
-    backdrop-filter: blur(25px) saturate(180%);
-    -webkit-backdrop-filter: blur(25px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.8), 
-                inset 0 1px 1px rgba(255, 255, 255, 0.05);
+    background: rgba(10, 13, 20, 0.8) !important;
+    backdrop-filter: blur(40px) saturate(200%);
+    -webkit-backdrop-filter: blur(40px) saturate(200%);
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.9), 
+                inset 0 1px 1px rgba(255, 255, 255, 0.03);
+    border-radius: 32px !important;
 }
 
 .security-icon-pulse {
     position: relative;
-    width: 80px;
-    height: 80px;
-    margin: 0 auto 24px;
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 16px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(245, 158, 11, 0.1);
-    border: 1px solid rgba(245, 158, 11, 0.2);
-    border-radius: 24px;
+    background: rgba(245, 158, 11, 0.08);
+    border: 1px solid rgba(245, 158, 11, 0.15);
+    border-radius: 20px;
 }
 
 .security-icon-pulse::after {
@@ -2007,19 +2008,20 @@ input.time-select-modern:hover::-webkit-calendar-picker-indicator {
 .admin-glass-btn {
     position: relative;
     overflow: hidden;
-    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+    background: linear-gradient(135deg, #f59e0b 0%, #ca8a04 100%) !important;
     color: black !important;
     border: none;
-    font-weight: 900 !important;
-    letter-spacing: 0.15em !important;
-    height: 56px;
-    border-radius: 18px !important;
+    font-weight: 800 !important;
+    font-size: 0.75rem !important;
+    letter-spacing: 0.1em !important;
+    height: 48px;
+    border-radius: 12px !important;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 8px;
 }
 
 .admin-glass-btn:hover {
@@ -2059,16 +2061,23 @@ input.time-select-modern:hover::-webkit-calendar-picker-indicator {
 }
 
 .admin-upload-zone {
-    border: 2px dashed rgba(255, 255, 255, 0.08) !important;
-    border-radius: 20px !important;
-    background: rgba(255, 255, 255, 0.01) !important;
+    border: 2px dashed rgba(255, 255, 255, 0.05) !important;
+    border-radius: 16px !important;
+    background: rgba(255, 255, 255, 0.02) !important;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    padding: 30px 20px !important;
+    padding: 24px 16px !important;
 }
 
 .admin-upload-zone:hover {
-    background: rgba(16, 185, 129, 0.04) !important;
-    border-color: rgba(16, 185, 129, 0.3) !important;
+    background: rgba(16, 185, 129, 0.03) !important;
+    border-color: rgba(16, 185, 129, 0.2) !important;
+}
+
+.minimal-indicator {
+    padding: 10px 14px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 14px;
 }
 
 .admin-modal-close {
