@@ -822,12 +822,17 @@
                 </div>
             </div>
 
-            <button onclick="document.getElementById('course-file-input').click()"
+            <button id="process-update-btn" onclick="document.getElementById('course-file-input').click()"
                 class="admin-glass-btn !bg-emerald-500 !text-black">
                 <i data-lucide="file-check" class="w-5 h-5"></i>
                 PROCESS UPDATE
             </button>
             
+            <button id="sync-from-cloud-btn" onclick="app.controller.handleSyncFromCloud()"
+                class="w-full py-4 rounded-xl bg-white/5 border border-white/10 text-[10px] font-black text-emerald-400 uppercase tracking-widest hover:bg-emerald-500/10 hover:border-emerald-500/20 transition-all flex items-center justify-center gap-2">
+                <i data-lucide="cloud-download" class="w-4 h-4"></i>
+                Sync from Cloud
+            </button>
             <button id="export-library-btn" onclick="app.controller.handleExportLibrary()"
                 class="hidden w-full py-3 rounded-xl bg-white/5 border border-white/10 text-[10px] font-black text-slate-500 uppercase tracking-widest hover:text-white transition-all">
                 Download JSON Backup

@@ -807,8 +807,8 @@ class RoutineController {
         const file = e.target.files[0];
         if (!file) return;
 
-        const btn = this.view.syncModal.querySelector('.prism-btn');
-        const originalText = btn.innerText;
+        const btn = document.getElementById('process-update-btn');
+        const originalText = btn.innerHTML;
         btn.disabled = true;
         btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> PROCESSING...`;
         lucide.createIcons();
@@ -832,52 +832,65 @@ class RoutineController {
                 window.analytics.trackPortalSync(coursesToSync.length);
                 this.syncWorkspace();
             } else if (file.name.endsWith('.xlsx')) {
-                const reader = new FileReader();
-                reader.onload = async (evt) => {
-                    const dataArr = new Uint8Array(evt.target.result);
-                    const wb = XLSX.read(dataArr, { type: 'array' });
-                    const wsname = wb.SheetNames[0];
-                    const ws = wb.Sheets[wsname];
-                    const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
+                // Wrap FileReader in a Promise to await it properly
+                await new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = async (evt) => {
+                        try {
+                            const dataArr = new Uint8Array(evt.target.result);
+                            const wb = XLSX.read(dataArr, { type: 'array' });
+                            const wsname = wb.SheetNames[0];
+                            const ws = wb.Sheets[wsname];
+                            const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
 
-                    // Auto-detect semester
-                    let detectedSemester = "";
-                    const headerPeek = JSON.stringify(data.slice(0, 10)).toUpperCase();
-                    const wsUpper = wsname.toUpperCase();
-                    const combinedSearch = wsUpper + " " + headerPeek;
+                            // Auto-detect semester
+                            let detectedSemester = "";
+                            const headerPeek = JSON.stringify(data.slice(0, 10)).toUpperCase();
+                            const wsUpper = wsname.toUpperCase();
+                            const combinedSearch = wsUpper + " " + headerPeek;
 
-                    if (combinedSearch.includes('SPRING') || combinedSearch.includes('SPRI')) detectedSemester = 'SPRING';
-                    else if (combinedSearch.includes('FALL') || combinedSearch.includes('FAL')) detectedSemester = 'FALL';
-                    else if (combinedSearch.includes('SUMMER') || combinedSearch.includes('SUMM')) detectedSemester = 'SUMMER';
+                            if (combinedSearch.includes('SPRING') || combinedSearch.includes('SPRI')) detectedSemester = 'SPRING';
+                            else if (combinedSearch.includes('FALL') || combinedSearch.includes('FAL')) detectedSemester = 'FALL';
+                            else if (combinedSearch.includes('SUMMER') || combinedSearch.includes('SUMM')) detectedSemester = 'SUMMER';
 
-                    const yearMatch = combinedSearch.match(/\d{4}-\d{2,4}/);
-                    if (yearMatch && detectedSemester) detectedSemester += ` ${yearMatch[0]}`;
-                    else if (yearMatch && !detectedSemester) detectedSemester = yearMatch[0];
+                            const yearMatch = combinedSearch.match(/\d{4}-\d{2,4}/);
+                            if (yearMatch && detectedSemester) detectedSemester += ` ${yearMatch[0]}`;
+                            else if (yearMatch && !detectedSemester) detectedSemester = yearMatch[0];
 
-                    const finalSemester = detectedSemester || targetSemester || 'Updated Semester';
-                    const courses = this.model.parseExcelData(data);
+                            const finalSemester = detectedSemester || targetSemester || 'Updated Semester';
+                            const courses = this.model.parseExcelData(data);
 
-                    this.model.saveCourses(courses, finalSemester);
-                    if (semesterInput) semesterInput.value = finalSemester;
-                    this.view.showToast(`${courses.length} courses loaded from ${file.name}`);
+                            this.model.saveCourses(courses, finalSemester);
+                            if (semesterInput) semesterInput.value = finalSemester;
+                            this.view.showToast(`${courses.length} courses loaded from ${file.name}`);
 
-                    // Add Cloud Sync check
-                    await this.maybeSyncToCloud(courses);
-
-                    this.syncWorkspace();
-                };
-                reader.readAsArrayBuffer(file);
+                            // Add Cloud Sync check
+                            await this.maybeSyncToCloud(courses);
+                            
+                            window.analytics.trackPortalSync(courses.length);
+                            this.syncWorkspace();
+                            resolve();
+                        } catch (err) {
+                            reject(err);
+                        }
+                    };
+                    reader.onerror = () => reject(new Error("File read error"));
+                    reader.readAsArrayBuffer(file);
+                });
             }
         } catch (err) {
             console.error(err);
             this.view.showToast("Failed to process file.", "error");
         } finally {
+            // Reset input so the same file can be selected again
+            if (e.target) e.target.value = '';
+            
             setTimeout(() => {
                 btn.disabled = false;
-                btn.innerText = originalText;
+                btn.innerHTML = originalText;
                 lucide.createIcons();
                 this.view.syncModal.classList.add('hidden');
-            }, 1500);
+            }, 1000);
         }
     }
 
@@ -906,6 +919,12 @@ class RoutineController {
                 const result = await response.json();
                 if (response.ok) {
                     this.view.showToast(result.message || "Global database updated!", "success");
+                    // Refresh metadata locally after cloud sync
+                    const metaRes = await fetch('/api/get-metadata', { cache: 'no-store' });
+                    if (metaRes.ok) {
+                        this.model.metadata = await metaRes.json();
+                        this.syncWorkspace();
+                    }
                 } else {
                     throw new Error(result.error || `Server Error ${response.status}`);
                 }
@@ -913,6 +932,36 @@ class RoutineController {
                 console.error("Cloud Sync Error:", err);
                 this.view.showToast(`Global Cloud Sync failed: ${err.message}`, "error");
             }
+        }
+    }
+
+    async handleSyncFromCloud() {
+        const btn = document.getElementById('sync-from-cloud-btn');
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> SYNCING...`;
+        lucide.createIcons();
+
+        try {
+            this.view.showToast("Fetching latest cloud data...", "info");
+            
+            // Reload everything from cloud
+            localStorage.removeItem('routine-pro-courses'); // Clear local cache to force cloud fetch
+            await this.model.loadInitialData();
+            
+            this.view.showToast("Successfully synced with cloud!", "success");
+            this.syncWorkspace();
+            
+            setTimeout(() => {
+                this.view.syncModal.classList.add('hidden');
+            }, 1000);
+        } catch (err) {
+            console.error(err);
+            this.view.showToast("Cloud sync failed.", "error");
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+            lucide.createIcons();
         }
     }
 
@@ -1170,6 +1219,9 @@ class RoutineController {
         lucide.createIcons(); // Ensure all icons are updated, including some with custom stroke if added
         this.view.totalCreditsEl.innerText = this.model.calculateCredits();
         this.view.updateSyncUI(this.model.allCourses);
+        if (this.model.metadata) {
+            this.view.renderLibraryMetadata(this.model.metadata);
+        }
     }
 
     updateFocusToggleUI() {
