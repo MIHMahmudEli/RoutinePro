@@ -34,13 +34,24 @@ class RoutineView {
         const syncDate = displayTime ? new Date(displayTime) : new Date(metadata.lastUpdate);
         const relativeTime = this.getRelativeTime(syncDate);
         
-        const sourceColor = dataSource === 'Local' ? 'text-amber-400' : 'text-emerald-400';
-        const sourceLabel = dataSource === 'Local' ? 'Local Sync' : 'Global Sync';
+        const isLocal = dataSource === 'Local';
+        const sourceColor = isLocal ? 'text-amber-400' : 'text-emerald-400';
+        const sourceLabel = isLocal ? 'Local File' : 'Cloud Database';
+        const icon = isLocal ? 'hard-drive' : 'globe';
 
-        // Add a small badge for local sync if desired
-        const timePart = (dataSource === 'Local' && !displayTime) ? '' : ` · <span class="${sourceColor} font-black">${relativeTime}</span>`;
-
-        this.metadataText.innerHTML = `${sourceLabel}: <span class="text-white">${metadata.semester}</span>${timePart}`;
+        this.metadataText.innerHTML = `
+            <div class="flex items-center gap-2 text-[10px] font-black uppercase tracking-tighter">
+                <i data-lucide="${icon}" class="w-3 h-3 ${sourceColor}"></i>
+                <span class="text-slate-500">${sourceLabel}:</span>
+                <span class="text-white">${metadata.semester}</span>
+                <span class="mx-1 text-slate-800">·</span>
+                <span class="flex items-center gap-1.5 ${sourceColor}">
+                    <span class="status-dot bg-current animate-pulse"></span>
+                    ${relativeTime}
+                </span>
+            </div>
+        `;
+        lucide.createIcons();
     }
 
     getRelativeTime(date) {

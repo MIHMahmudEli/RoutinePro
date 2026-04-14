@@ -44,11 +44,12 @@ class RoutineModel {
         } catch (e) { console.warn("Failed to load cached global data"); }
 
         // Start all fetches in parallel to reduce sequential delay
+        // metadata & courses use cache: 'no-store' to always reflect admin updates
         const fetchPromises = [
             fetch('/api/get-config').catch(() => null),
             fetch('/api/get-ramadan').catch(() => null),
-            fetch('/api/get-metadata').catch(() => null),
-            fetch('/api/get-courses').catch(() => null)
+            fetch('/api/get-metadata', { cache: 'no-store' }).catch(() => null),
+            fetch('/api/get-courses', { cache: 'no-store' }).catch(() => null)
         ];
 
         try {
@@ -109,9 +110,11 @@ class RoutineModel {
                     console.info('[RoutinePro] Global data updated by admin. Refreshing...');
                     this.allCourses = await coursesRes.json();
                     this.dataSource = 'Global';
+                    const pulledAt = new Date().toISOString();
                     localStorage.setItem('routine-pro-data-source', 'Global');
                     localStorage.setItem('routine-pro-global-courses', JSON.stringify(this.allCourses));
                     localStorage.setItem('routine-pro-global-last-update', serverUpdate);
+                    localStorage.setItem('routine-pro-global-pulled-at', pulledAt);
                     // Clear stale local course cache if it was from global
                     localStorage.removeItem('routine-pro-courses');
                 } else if (this.allCourses && this.allCourses.length > 0) {
@@ -121,8 +124,10 @@ class RoutineModel {
                     // No cache at all — first visit or cleared storage
                     this.allCourses = await coursesRes.json();
                     this.dataSource = 'Global';
+                    const pulledAt = new Date().toISOString();
                     localStorage.setItem('routine-pro-data-source', 'Global');
                     localStorage.setItem('routine-pro-global-courses', JSON.stringify(this.allCourses));
+                    localStorage.setItem('routine-pro-global-pulled-at', pulledAt);
                     if (serverUpdate) localStorage.setItem('routine-pro-global-last-update', serverUpdate);
                 } else {
                     // Last resort: bundled static file

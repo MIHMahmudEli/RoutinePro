@@ -14,8 +14,11 @@ export default async function handler(request, response) {
             return response.status(404).json({ error: 'Global courses not found. Using local fallback.' });
         }
 
-        // Redirect to the blob URL
-        return response.status(302).setHeader('Location', coursesBlob.url).send('');
+        // Use 307 Temporary Redirect and force no-store to prevent CDN/Browser caching of the redirect
+        return response.status(307)
+            .setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
+            .setHeader('Location', coursesBlob.url)
+            .send('');
     } catch (error) {
         return response.status(500).json({ error: error.message });
     }

@@ -16,7 +16,9 @@ class RoutineController {
         await this.model.loadInitialData();
         this.view.populateTimeFilters();
         this.view.updateSyncUI(this.model.allCourses);
-        this.view.renderLibraryMetadata(this.model.metadata);
+        const dataSource = this.model.dataSource;
+        const pulledAt = localStorage.getItem('routine-pro-global-pulled-at');
+        this.view.renderLibraryMetadata(this.model.metadata, dataSource, pulledAt);
         this.setupEventListeners();
         this.syncWorkspace();
 
@@ -942,9 +944,11 @@ class RoutineController {
                 if (response.ok) {
                     this.view.showToast(result.message || "Global database updated!", "success");
                     // Refresh metadata locally after cloud sync
-                    const metaRes = await fetch('/api/get-metadata', { cache: 'no-store' });
                     if (metaRes.ok) {
                         this.model.metadata = await metaRes.json();
+                        const now = new Date().toISOString();
+                        localStorage.setItem('routine-pro-global-pulled-at', now);
+                        localStorage.setItem('routine-pro-global-last-update', this.model.metadata.lastUpdate);
                         this.syncWorkspace();
                     }
                 } else {
