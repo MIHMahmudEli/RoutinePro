@@ -86,23 +86,51 @@ class RoutineModel {
             }
 
             // 4. Process Courses
+            // Strategy: Personal local uploads always take priority.
+            // For Global users, compare server metadata lastUpdate with cached version
+            // to auto-refresh when admin publishes new data.
+            const dataSource = localStorage.getItem('routine-pro-data-source') || '';
+            const isPersonalUpload = dataSource === 'Local';
             const localCourses = localStorage.getItem('routine-pro-courses');
-            if (localCourses) {
+
+            if (isPersonalUpload && localCourses) {
+                // User has a personal upload — never override it with global data
                 this.allCourses = JSON.parse(localCourses);
-                this.dataSource = localStorage.getItem('routine-pro-data-source') || 'Local';
+                this.dataSource = 'Local';
                 this.lastLocalSync = localStorage.getItem('routine-pro-last-sync');
-            } else if (coursesRes && coursesRes.ok) {
-                // If no local sync exists, use the global cloud data
-                this.allCourses = await coursesRes.json();
-                this.dataSource = 'Global';
-                localStorage.setItem('routine-pro-data-source', 'Global');
-                localStorage.setItem('routine-pro-global-courses', JSON.stringify(this.allCourses));
-            } else if (!this.allCourses || this.allCourses.length === 0) {
-                // Fallback to static local file if everything else fails
-                const staticRes = await fetch('data/courses.json');
-                if (staticRes.ok) {
-                    this.allCourses = await staticRes.json();
-                    this.dataSource = 'Default (Static)';
+            } else {
+                // For Global users: check if server has newer data than our cache
+                const cachedGlobalUpdate = localStorage.getItem('routine-pro-global-last-update');
+                const serverUpdate = this.metadata && this.metadata.lastUpdate;
+                const serverHasNewerData = serverUpdate && (!cachedGlobalUpdate || new Date(serverUpdate) > new Date(cachedGlobalUpdate));
+
+                if (serverHasNewerData && coursesRes && coursesRes.ok) {
+                    // Admin pushed new data — fetch fresh courses for this user
+                    console.info('[RoutinePro] Global data updated by admin. Refreshing...');
+                    this.allCourses = await coursesRes.json();
+                    this.dataSource = 'Global';
+                    localStorage.setItem('routine-pro-data-source', 'Global');
+                    localStorage.setItem('routine-pro-global-courses', JSON.stringify(this.allCourses));
+                    localStorage.setItem('routine-pro-global-last-update', serverUpdate);
+                    // Clear stale local course cache if it was from global
+                    localStorage.removeItem('routine-pro-courses');
+                } else if (this.allCourses && this.allCourses.length > 0) {
+                    // Cache is still fresh — use what we loaded at startup
+                    this.dataSource = dataSource || 'Global';
+                } else if (coursesRes && coursesRes.ok) {
+                    // No cache at all — first visit or cleared storage
+                    this.allCourses = await coursesRes.json();
+                    this.dataSource = 'Global';
+                    localStorage.setItem('routine-pro-data-source', 'Global');
+                    localStorage.setItem('routine-pro-global-courses', JSON.stringify(this.allCourses));
+                    if (serverUpdate) localStorage.setItem('routine-pro-global-last-update', serverUpdate);
+                } else {
+                    // Last resort: bundled static file
+                    const staticRes = await fetch('data/courses.json');
+                    if (staticRes.ok) {
+                        this.allCourses = await staticRes.json();
+                        this.dataSource = 'Default (Static)';
+                    }
                 }
             }
         } catch (err) {
