@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation | RoutinePro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #05070a;
+            --bg-surface: #0a0d14;
+            --accent-primary: #10b981;
+            --accent-secondary: #3b82f6;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-deep);
+            color: #f8fafc;
+            scroll-behavior: smooth;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+        }
+
+        .nav-link {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-left: 2px solid transparent;
+        }
+
+        .nav-link:hover {
+            border-left-color: var(--accent-primary);
+            background: rgba(16, 185, 129, 0.05);
+            padding-left: 1.5rem;
+        }
+
+        .section-anchor {
+            scroll-margin-top: 100px;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #10b981, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+    </style>
+</head>
+<body class="selection:bg-emerald-500/30">
+
+    <!-- Header -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-[#05070a]/80 backdrop-blur-xl border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center border border-emerald-500/20">
+                    <i data-lucide="book-open" class="text-emerald-400 w-5 h-5"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-black tracking-tighter uppercase whitespace-nowrap">Routine<span class="text-emerald-400">Pro</span> <span class="text-[10px] bg-white/5 px-2 py-0.5 rounded-full ml-2 text-slate-500">DOCS</span></h1>
+                </div>
+            </div>
+            <a href="index.html" class="flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-white transition-colors bg-white/5 px-4 py-2 rounded-xl border border-white/5">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> BACK TO APP
+            </a>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-6 pt-32 pb-20">
+        <div class="flex flex-col lg:flex-row gap-12">
+            
+            <!-- Sidebar Navigation -->
+            <aside class="lg:w-64 flex-shrink-0">
+                <nav class="sticky top-32 space-y-1">
+                    <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4 px-4">Fundamentals</p>
+                    <a href="#introduction" class="nav-link block px-4 py-2 text-sm font-semibold text-slate-400 hover:text-emerald-400">Introduction</a>
+                    <a href="#getting-started" class="nav-link block px-4 py-2 text-sm font-semibold text-slate-400 hover:text-emerald-400">Getting Started</a>
+                    
+                    <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mt-8 mb-4 px-4">Core Features</p>
+                    <a href="#scenario-explorer" class="nav-link block px-4 py-2 text-sm font-semibold text-slate-400 hover:text-emerald-400">Scenario Explorer</a>
+                    <a href="#focus-mode" class="nav-link block px-4 py-2 text-sm font-semibold text-slate-400 hover:text-emerald-400">Focus Mode</a>
+                    <a href="#compact-mode" class="nav-link block px-4 py-2 text-sm font-semibold text-slate-400 hover:text-emerald-400">Compact Mode</a>
+                    <a href="#ramadan-mode" class="nav-link block px-4 py-2 text-sm font-semibold text-slate-400 hover:text-emerald-400">Ramadan Mode</a>
+                    
+                    <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mt-8 mb-4 px-4">Advanced</p>
+                    <a href="#portal-sync" class="nav-link block px-4 py-2 text-sm font-semibold text-slate-400 hover:text-emerald-400">Portal Sync</a>
+                    <a href="#export-png" class="nav-link block px-4 py-2 text-sm font-semibold text-slate-400 hover:text-emerald-400">Export as PNG</a>
+                    <a href="#admin-portal" class="nav-link block px-4 py-2 text-sm font-semibold text-slate-400 hover:text-emerald-400">Admin Controls</a>
+                </nav>
+            </aside>
+
+            <!-- Content Area -->
+            <main class="flex-grow max-w-3xl space-y-24">
+
+                <!-- Introduction -->
+                <section id="introduction" class="section-anchor">
+                    <h2 class="text-4xl font-black mb-6 tracking-tight">Welcome to <span class="gradient-text">RoutinePro</span></h2>
+                    <p class="text-lg text-slate-400 leading-relaxed mb-8">
+                        RoutinePro is more than just a schedule viewer—it's an intelligent course architect. It eliminates the frustration of conflicting class times by automatically finding every possible schedule combination based on your desired courses.
+                    </p>
+                    <div class="glass-card p-8 border-l-4 border-emerald-500/50">
+                        <h4 class="text-sm font-bold text-white mb-2 flex items-center gap-2">
+                            <i data-lucide="zap" class="w-4 h-4 text-emerald-400"></i> MISSION
+                        </h4>
+                        <p class="text-sm text-slate-400 leading-relaxed">
+                            Designed for AIUBians and university students worldwide, our goal is to turn the chaos of pre-registration into a streamlined, 5-minute process with professional-grade aesthetics.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Getting Started -->
+                <section id="getting-started" class="section-anchor">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="w-12 h-12 rounded-2xl bg-sky-500/10 flex items-center justify-center border border-sky-500/20">
+                            <i data-lucide="play" class="text-sky-400 w-6 h-6"></i>
+                        </div>
+                        <h2 class="text-3xl font-black tracking-tight">Getting Started</h2>
+                    </div>
+                    <div class="space-y-8">
+                        <div class="flex gap-6">
+                            <div class="text-2xl font-black text-white/10 shrink-0">01</div>
+                            <div>
+                                <h3 class="text-xl font-bold mb-2">Search Courses</h3>
+                                <p class="text-slate-400 text-sm leading-relaxed">Start typing your course name in the search bar. We support instant suggestions for titles and course codes.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-6">
+                            <div class="text-2xl font-black text-white/10 shrink-0">02</div>
+                            <div>
+                                <h3 class="text-xl font-bold mb-2">Build Your List</h3>
+                                <p class="text-slate-400 text-sm leading-relaxed">Add courses to your queue. You can remove them or "Pin" specific sections you've already decided on.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-6">
+                            <div class="text-2xl font-black text-white/10 shrink-0">03</div>
+                            <div>
+                                <h3 class="text-xl font-bold mb-2">Generate Scenarios</h3>
+                                <p class="text-slate-400 text-sm leading-relaxed">Click "Generate Scenarios" to let our engine handle the conflicts and find valid schedules.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Scenario Explorer -->
+                <section id="scenario-explorer" class="section-anchor">
+                    <h2 class="text-3xl font-black mb-6 tracking-tight">Scenario Explorer</h2>
+                    <p class="text-slate-400 mb-8 leading-relaxed">
+                        When you have multiple sections for each course, there might be hundreds of valid combinations. The Explorer lets you flip through them like a gallery.
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="glass-card p-6">
+                            <i data-lucide="mouse-pointer-2" class="w-6 h-6 text-emerald-400 mb-4"></i>
+                            <h4 class="font-bold mb-2">Quick Navigation</h4>
+                            <p class="text-[11px] text-slate-500 leading-relaxed uppercase font-black">Use the arrows in the header to switch between valid scenarios instantly.</p>
+                        </div>
+                        <div class="glass-card p-6">
+                            <i data-lucide="filter" class="text-emerald-400 w-6 h-6 mb-4"></i>
+                            <h4 class="font-bold mb-2">Smart Sorting</h4>
+                            <p class="text-[11px] text-slate-500 leading-relaxed uppercase font-black">Sort scenarios by "Minimum Waiting" to find the most compact schedules.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Focus Mode -->
+                <section id="focus-mode" class="section-anchor">
+                    <h2 class="text-3xl font-black mb-6 tracking-tight">Focus Mode <span class="text-xs bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded-full ml-2 border border-emerald-500/20 uppercase font-black">Popular</span></h2>
+                    <p class="text-slate-400 mb-8 leading-relaxed">
+                        Standard routine grids are often cluttered with empty hours and weekends. Focus Mode intelligently crops the view to your specific needs.
+                    </p>
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-4 text-sm text-slate-400">
+                            <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 shrink-0"></i>
+                            <span>Hides empty days (e.g., if you have no classes on Saturday, the day disappears).</span>
+                        </li>
+                        <li class="flex items-start gap-4 text-sm text-slate-400">
+                            <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 shrink-0"></i>
+                            <span>Zooms into active hours (e.g., 08:00 AM to 02:00 PM) to maximize screen space.</span>
+                        </li>
+                    </ul>
+                </section>
+
+                <!-- Compact Mode -->
+                <section id="compact-mode" class="section-anchor">
+                    <h2 class="text-3xl font-black mb-6 tracking-tight">Compact Mode</h2>
+                    <p class="text-slate-400 mb-8 leading-relaxed">
+                        Perfect for high-density routines. When enabled, course titles are automatically abbreviated using their initials (e.g., "Computer Networks" → "CN").
+                    </p>
+                    <div class="glass-card p-8 bg-gradient-to-br from-emerald-500/5 to-transparent">
+                        <div class="flex items-center gap-6">
+                            <div class="text-center">
+                                <div class="text-[10px] uppercase font-black text-slate-500 mb-2">Regular</div>
+                                <div class="bg-white/5 px-4 py-2 rounded-lg border border-white/10 text-xs">Data Structures</div>
+                            </div>
+                            <i data-lucide="arrow-right" class="w-4 h-4 text-slate-700"></i>
+                            <div class="text-center">
+                                <div class="text-[10px] uppercase font-black text-slate-500 mb-2">Compact</div>
+                                <div class="bg-emerald-500/20 px-4 py-2 rounded-lg border border-emerald-500/30 text-xs font-black text-emerald-400">DS</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Ramadan Mode -->
+                <section id="ramadan-mode" class="section-anchor">
+                    <h2 class="text-3xl font-black mb-6 tracking-tight">Ramadan Mode</h2>
+                    <p class="text-slate-400 mb-8 leading-relaxed">
+                        University schedules often shift during the holy month of Ramadan. Instead of manually re-editing your times, enable Ramadan Mode to automatically shift all class blocks to the holiday schedule.
+                    </p>
+                    <div class="p-6 rounded-2xl bg-amber-500/5 border border-amber-500/10">
+                        <p class="text-xs text-amber-500/80 font-bold flex items-center gap-2 mb-2 uppercase tracking-widest">
+                            <i data-lucide="info" class="w-4 h-4"></i> How it works
+                        </p>
+                        <p class="text-xs leading-relaxed text-slate-500 font-medium">RoutinePro uses a pre-synchronized global database to map standard slots (e.g., 08:00-09:30) to their Ramadan equivalent (e.g., 08:30-09:40).</p>
+                    </div>
+                </section>
+
+                <!-- Portal Sync -->
+                <section id="portal-sync" class="section-anchor">
+                    <h2 class="text-3xl font-black mb-6 tracking-tight">Portal Sync</h2>
+                    <p class="text-slate-400 mb-8 leading-relaxed">
+                        Data is current. We support AIUB's "Offered Course Report" out of the box. Simply download the `.xlsx` or `.json` file from your portal and upload it using the Sync Manager.
+                    </p>
+                    <div class="glass-card overflow-hidden">
+                        <div class="p-6 border-b border-white/5 flex items-center justify-between">
+                            <span class="text-xs font-black tracking-widest uppercase text-slate-500">Sync Sources</span>
+                            <span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20 font-bold">LIVE</span>
+                        </div>
+                        <div class="p-6 space-y-4">
+                            <div class="flex items-center justify-between">
+                                <div class="text-sm font-bold">Global Database</div>
+                                <div class="text-[10px] text-slate-500">Provided by Admins</div>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="text-sm font-bold">Local Sync</div>
+                                <div class="text-[10px] text-slate-500">Your custom file upload</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                 <!-- PNG Export -->
+                 <section id="export-png" class="section-anchor">
+                    <h2 class="text-3xl font-black mb-6 tracking-tight">Export as PNG</h2>
+                    <p class="text-slate-400 mb-8 leading-relaxed">
+                        Share your routine with friends or save it to your phone. Our high-resolution export includes branding, your current semester, and waiting gap statistics.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <span class="text-[10px] px-3 py-1.5 bg-white/5 border border-white/10 rounded-full font-black text-slate-400 uppercase tracking-widest">Semester Overlay</span>
+                        <span class="text-[10px] px-3 py-1.5 bg-white/5 border border-white/10 rounded-full font-black text-slate-400 uppercase tracking-widest">Waiting Gap Label</span>
+                        <span class="text-[10px] px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/10 rounded-full font-black text-emerald-400 uppercase tracking-widest">High Resolution (3x)</span>
+                    </div>
+                </section>
+
+                <!-- Admin Controls -->
+                <section id="admin-portal" class="section-anchor">
+                    <h2 class="text-3xl font-black mb-6 tracking-tight">Admin & Security</h2>
+                    <p class="text-slate-400 mb-8 leading-relaxed">
+                        For maintenance and data updates, RoutinePro includes a secure Admin Portal accessible via a hidden URL parameter.
+                    </p>
+                    <div class="glass-card p-6 bg-rose-500/5 border-rose-500/10">
+                        <h4 class="text-xs font-black uppercase text-rose-500 tracking-widest mb-4">Security Notice</h4>
+                        <p class="text-xs text-slate-500 leading-relaxed font-medium capitalize">Admin access is password-protected and restricted to authorized personnel for global database synchronization across Vercel cloud nodes.</p>
+                    </div>
+                </section>
+
+                <!-- Footer -->
+                <footer class="pt-20 border-t border-white/5 text-center">
+                    <p class="text-xs font-black text-slate-600 uppercase tracking-[0.3em] mb-4">RoutinePro Docs</p>
+                    <p class="text-[10px] text-slate-700">© 2026 Mahmud Eli. All rights reserved.</p>
+                </footer>
+
+            </main>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        
+        // Active link tracking
+        const sections = document.querySelectorAll('.section-anchor');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = "";
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('text-emerald-400', 'bg-emerald-500/5', 'pl-6');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('text-emerald-400', 'bg-emerald-500/5', 'pl-6');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
