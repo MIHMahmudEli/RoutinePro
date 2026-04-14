@@ -2,65 +2,82 @@
 
 RoutinePro is a high-performance, aesthetically stunning web application designed to solve the complex puzzle of university course scheduling. Built with a focus on **Glassmorphism UI** and **Dynamic Logic**, it allows students to generate thousands of possible routine scenarios in seconds.
 
-## 📂 Project Structure
+[**Live Demo →**](https://routine-pro-fawn.vercel.app/)
 
-- **`index.html`**: The main entry point.
-- **`js/`**: Contains the MVC architecture (`Model.js`, `View.js`, `Controller.js`) and the main `app.js`.
-- **`css/`**: Contains all styling for the premium glassmorphic interface.
-- **`assets/`**: Images, icons, and other static assets.
-- **`data/`**: Default course data in JSON format.
+---
 
 ## ✨ Core Features
 
-- **🚀 Instant Generation**: Scans thousands of course combinations to find valid, conflict-free routines.
-- **📊 Dynamic XLSX/JSON Upload**: Directly upload your university's "Offered Course Report" to update the local database.
-- **🧠 Smart Semester Detection**: Automatically identifies the semester (e.g., SPRING 2024-25) from file metadata and sheet names.
-- **🎨 Prism UI System**: A premium glassmorphic interface with support for multiple themes (Emerald, Rose, Amber, etc.).
-- **🏷️ Strict Status Filtering**: Filter sections by status (Open, Reserved, Freshman, etc.) to only see seats you can actually take.
-- **📸 Export to Image**: Save your perfect routine as a high-quality PNG for quick reference.
-- **📱 Responsive by Design**: Fully optimized for Desktop, Tablet, and Mobile devices.
+### 🚀 High-Performance Generation
+*   **Instant Scenarios**: Scans thousands of course combinations to find valid, conflict-free routines using a optimized backtracking engine.
+*   **Gap Optimization**: Automatically calculates and tracks total weekly waiting time between classes.
+*   **Scenario Explorer**: Navigate through all possible valid permutations found for your selected courses.
 
-## 🛠️ Technology Stack
+### 🌓 Advanced Workflow Modes
+*   **🧩 Compact Mode**: Instantly toggle between full course titles and smart abbreviations (e.g., "Computer Networks" → "CN").
+*   **🎯 Focus Mode**: A minimalist layout that hides empty days and crops the time grid to show only your active class hours.
+*   **🌙 Ramadan Mode**: Dynamic timing engine that shifts your entire routine to match regional Ramadan schedules (e.g., AIUB timings) without manual adjustment.
+*   **🕒 24-Hour Tracking**: Supports late-night and early-morning schedules for flexible degree paths.
 
-- **Frontend**: Vanilla HTML5, JavaScript (ES6+), TailwindCSS.
-- **Design**: Premium Glassmorphism (Backdrop-filters, Sleek Gradients).
-- **Libraries**:
-  - `SheetJS (XLSX)`: Robust Excel data processing.
-  - `Lucide Icons`: Clean, consistent iconography.
-  - `html2canvas`: High-fidelity routine exports.
-  - `TailwindCSS`: Atomic utility styling.
+### 📊 Seamless Data Integration
+*   **Dynamic XLSX/JSON Sync**: Directly upload your university's "Offered Course Report" to update the local database.
+*   **🧠 Intelligent Detection**: Automatically identifies the semester (e.g., SPRING 2024-25) from file metadata and content.
+*   **☁️ Global Cloud Sync**: Admin-authenticated portal allows for global updates to course data and Ramadan mappings via Vercel Blob storage.
+
+### 📸 Premium Export
+*   **High-Resolution Branding**: Export your routine as a crisp PNG.
+*   **Metadata Overlays**: Automatically embeds Academic Session name, Weekly Gap stats, and branding for easy sharing.
+*   **Themed Exports**: The exported image maintains your selected design aesthetics.
+
+---
+
+## 🎨 Design Philosophy: Prism UI
+RoutinePro utilizes a custom design system called **Prism**, focused on:
+-   **Glassmorphism**: Heavy use of `backdrop-filter`, 1px borders, and floating surfaces.
+-   **Dynamic Theming**: Support for multiple theme sets (Emerald, Rose, Amber, Indigo, Spectrum) that change global CSS variables.
+-   **Micro-animations**: Smooth transitions, scale effects on interaction, and pop-in entrance animations.
+
+---
+
+## 🛠️ Technical Architecture
+
+### Model-View-Controller (MVC)
+*   **Model (`js/Model.js`)**: Manages the course database, persistence via `localStorage`, and the core routine generation algorithm.
+*   **View (`js/View.js`)**: Handles all DOM manipulations, rendering of the grid, sidebar, and feedback toasts.
+*   **Controller (`js/Controller.js`)**: The bridge that parses input, handles events, manages mode states, and coordinates synchronization.
+
+### Stack
+-   **Language**: Vanilla JavaScript (ES6+), HTML5, CSS3.
+-   **Styling**: TailwindCSS (Utility-first framework).
+-   **Data Processing**: [SheetJS (XLSX.js)](https://sheetjs.com/) for Excel parsing.
+-   **Graphics**: [html2canvas](https://html2canvas.hertzen.com/) for generating high-fidelity UI captures.
+-   **Icons**: [Lucide](https://lucide.dev/) for consistent vector iconography.
+
+---
 
 ## 🚀 Getting Started
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/MIHMahmudEli/RoutinePro.git
-   ```
-2. **Open `index.html`**:
-   Simply open the file in any modern browser—no server setup required!
-3. **Sync Data**:
-   - Open the **Sync Manager** (Cloud icon).
-   - Upload your `Offered Course Report.xlsx`.
-   - RoutinePro will automatically detect the semester and load all courses.
+### Installation
+1.  **Clone the repository**:
+    ```bash
+    git clone https://github.com/MIHMahmudEli/RoutinePro.git
+    ```
+2.  **Run Locally**:
+    Simply open `index.html` in any modern browser. No build steps or servers are required for the client-side experience.
 
-## 🌈 Theming Engine
-
-RoutinePro features a dynamic theming system. Change the `data-theme` attribute to switch between:
-- `emerald` (Default Green)
-- `rose` (Warm Pink)
-- `amber` (Gold)
-- `indigo` (Deep Blue)
-- `spectrum` (Multi-color unique IDs)
-
-## 🤝 Contributing
-
-Contributions are what make the open-source community an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+### Updating Data
+1.  Navigate to the **Sync Manager** (Cloud icon in header).
+2.  Select your university's Excel file.
+3.  The app will rebuild its local database and UI instantly.
 
 ---
-Built with ❤️ for students who value their time.
+
+## 🔐 Admin Controls
+Admin features are hidden by default. Access them by appending `?admin=true` to the URL. authentication is required to:
+-   Sync course data to the global cloud database.
+-   Update global Ramadan timing mappings.
+-   Monitor system metadata.
+
+---
+
+Built with ❤️ by **Mahmud Eli** for students who value their time and aesthetics.
