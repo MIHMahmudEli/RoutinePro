@@ -992,9 +992,26 @@ class RoutineController {
         const q = e.target.value.toLowerCase().trim();
         if (q.length < 2) { this.view.suggestions.classList.add('hidden'); return; }
 
-        const results = this.model.allCourses.filter(c =>
+        let matches = this.model.allCourses.filter(c =>
             c.baseTitle.toLowerCase().includes(q) || (c.code && c.code.toLowerCase().includes(q))
-        ).slice(0, 15);
+        );
+
+        // Deduplicate by Base Title to handle stale data or un-grouped sources
+        const seenTitles = new Set();
+        const results = [];
+        
+        for (const c of matches) {
+            // Aggressive title cleaning for the search view
+            const cleanTitle = c.baseTitle.replace(/\s*\[([^\]]{1,3})\]\s*$/, '').trim();
+            const key = cleanTitle.toUpperCase();
+            
+            if (!seenTitles.has(key)) {
+                seenTitles.add(key);
+                // Create a clean display copy
+                results.push({ ...c, baseTitle: cleanTitle });
+            }
+            if (results.length >= 15) break;
+        }
 
         if (results.length > 0) {
             this.view.suggestions.innerHTML = results.map(c => `
