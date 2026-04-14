@@ -521,7 +521,8 @@ class RoutineModel {
             const row = rows[i];
             if (!row || !Array.isArray(row)) continue;
             const rowStr = row.map(c => String(c || '').toUpperCase().trim());
-            if (rowStr.includes("CLASS ID") || rowStr.includes("COURSE TITLE")) {
+            // Support both AIUB standard formats
+            if (rowStr.includes("CLASS ID") || rowStr.includes("COURSE CODE") || rowStr.includes("SECTION")) {
                 headerIdx = i;
                 rowStr.forEach((cell, idx) => {
                     if (cell.includes("CLASS ID")) colMap.id = idx;
@@ -548,42 +549,53 @@ class RoutineModel {
 
         const dataRows = rows.slice(headerIdx + 1);
         const coursesMap = {};
-        let currentCourseCode = "";
+        
+        // Track context across rows
+        let lastCode = "";
+        let lastTitle = "";
+        let lastDept = "";
 
         dataRows.forEach(row => {
             const classId = String(row[colMap.id] || '').trim();
-            if (!classId || classId === "nan" || classId.toUpperCase().includes("CLASS ID")) return;
+            // Skip empty rows, header repeats, or summary rows
+            if (!classId || classId === "nan" || isNaN(classId) || classId.toUpperCase().includes("CLASS ID")) return;
 
             const rawCode = String(row[colMap.code] || '').trim();
-            if (rawCode && rawCode !== "nan") currentCourseCode = rawCode;
+            const rawTitle = String(row[colMap.title] || '').trim();
+            const rawDept = String(row[colMap.dept] || '').trim();
+
+            if (rawCode && rawCode !== "nan") lastCode = rawCode;
+            if (rawTitle && rawTitle !== "nan") lastTitle = rawTitle;
+            if (rawDept && rawDept !== "nan") lastDept = rawDept;
+
+            if (!lastTitle || lastTitle.toUpperCase().includes("CLOSED SECTION")) return;
 
             const status = String(row[colMap.status] || 'Open').trim();
             const capacity = String(row[colMap.capacity] || '0').trim();
             const count = String(row[colMap.count] || '0').trim();
-            const fullTitle = String(row[colMap.title] || '').trim();
             const sectionName = String(row[colMap.section] || '').trim();
-            const classType = String(row[colMap.type] || '').trim();
+            const classType = String(row[colMap.type] || 'Theory').trim();
             const day = this.normalizeDay(String(row[colMap.day] || ''));
-
             const startTime = String(row[colMap.start] || '').trim();
             const endTime = String(row[colMap.end] || '').trim();
             const room = String(row[colMap.room] || '').trim();
-            const dept = String(row[colMap.dept] || '').trim();
 
-            if (!fullTitle) return;
-
-            const baseTitle = fullTitle.replace(/\s*\[.*\]$/, '').trim();
-            const key = `${baseTitle}@@@${currentCourseCode}@@@${dept}`;
+            // CLEAN TITLE: Remove [CLOSED], [OPEN], etc. from anywhere in the title to ensure grouping
+            const baseTitle = lastTitle.replace(/\[.*?\]/g, '').replace(/\s+/g, ' ').trim();
+            
+            // Generate a robust key for grouping: Code + Clean Title
+            const key = `${lastCode.toUpperCase()}@@@${baseTitle.toUpperCase()}`;
 
             if (!coursesMap[key]) {
                 coursesMap[key] = {
-                    code: currentCourseCode,
+                    code: lastCode,
                     baseTitle: baseTitle,
-                    dept: dept,
+                    dept: lastDept,
                     sections: {}
                 };
             }
 
+            // Create or update section
             if (!coursesMap[key].sections[sectionName]) {
                 coursesMap[key].sections[sectionName] = {
                     id: classId,
@@ -605,7 +617,7 @@ class RoutineModel {
         });
 
         return Object.values(coursesMap).map(data => {
-            data.sections = Object.values(data.sections).sort((a, b) => a.section.localeCompare(b.section));
+            data.sections = Object.values(data.sections).sort((a, b) => a.section.localeCompare(b.section, undefined, {numeric: true}));
             return data;
         });
     }
