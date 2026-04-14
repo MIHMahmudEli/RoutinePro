@@ -164,7 +164,7 @@ class RoutineModel {
     }
 
     addCourse(course) {
-        if (!this.selectedCourses.some(sc => sc.course.baseTitle === course.baseTitle && sc.course.dept === course.dept && sc.course.code === course.code)) {
+        if (!this.selectedCourses.some(sc => sc.course.baseTitle === course.baseTitle)) {
             this.selectedCourses.unshift({ course, selectedSectionIndex: 0, isPinned: false });
             return true;
         }
@@ -583,8 +583,8 @@ class RoutineModel {
             // CLEAN TITLE: Remove [CLOSED], [OPEN], etc. from anywhere in the title to ensure grouping
             const baseTitle = lastTitle.replace(/\[.*?\]/g, '').replace(/\s+/g, ' ').trim();
             
-            // Generate a robust key for grouping: Code + Clean Title
-            const key = `${lastCode.toUpperCase()}@@@${baseTitle.toUpperCase()}`;
+            // Group solely by unique Course Title as requested
+            const key = baseTitle.toUpperCase();
 
             if (!coursesMap[key]) {
                 coursesMap[key] = {
