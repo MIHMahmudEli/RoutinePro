@@ -1000,25 +1000,19 @@ class RoutineController {
         const results = [];
         
         for (const c of matches) {
-            // Clean title for DISPLAY only
-            const displayTitle = c.baseTitle.replace(/\s*\[([^\]]{1,3})\]\s*$/, '').trim();
-            const key = displayTitle.toUpperCase();
+            const key = c.baseTitle.toUpperCase();
             
             if (!seenKeys.has(key)) {
                 seenKeys.add(key);
-                results.push({ 
-                    originalTitle: c.baseTitle, 
-                    displayTitle: displayTitle,
-                    code: c.code 
-                });
+                results.push(c);
             }
             if (results.length >= 15) break;
         }
 
         if (results.length > 0) {
             this.view.suggestions.innerHTML = results.map(c => `
-                <div class="p-4 hover:bg-emerald-500/5 cursor-pointer border-b border-white/5 group transition-all" onclick="app.controller.handleAddCourse(\`${c.originalTitle.replace(/`/g, "\\`").replace(/'/g, "\\'")}\`, \`${c.code}\`)">
-                    <div class="flex justify-between items-center text-sm font-bold group-hover:text-emerald-400 uppercase tracking-tight">${c.displayTitle}</div>
+                <div class="p-4 hover:bg-emerald-500/5 cursor-pointer border-b border-white/5 group transition-all" onclick="app.controller.handleAddCourse(\`${c.baseTitle.replace(/`/g, "\\`").replace(/'/g, "\\'")}\`, \`${c.code}\`)">
+                    <div class="flex justify-between items-center text-sm font-bold group-hover:text-emerald-400 uppercase tracking-tight">${c.baseTitle}</div>
                 </div>
             `).join('');
             this.view.suggestions.classList.remove('hidden');
