@@ -580,8 +580,8 @@ class RoutineModel {
             const endTime = String(row[colMap.end] || '').trim();
             const room = String(row[colMap.room] || '').trim();
 
-            // CLEAN TITLE: Remove [CLOSED], [OPEN], etc. from anywhere in the title to ensure grouping
-            const baseTitle = lastTitle.replace(/\[.*?\]/g, '').replace(/\s+/g, ' ').trim();
+            // Keep full title to avoid confusion, only normalizing whitespace
+            const baseTitle = lastTitle.replace(/\s+/g, ' ').trim();
             
             // Group solely by unique Course Title as requested
             const key = baseTitle.toUpperCase();
