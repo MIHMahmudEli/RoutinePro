@@ -1097,38 +1097,49 @@ class RoutineController {
                             || "SPRING 24-25";
 
                         const semEl = clonedDoc.createElement('div');
-                        semEl.style.cssText = overlayStyles + "top: 20px; right: 25px; text-align: right;";
+                        semEl.style.cssText = overlayStyles + "top: 25px; right: 30px; text-align: right;";
                         semEl.innerHTML = `
-                            <div style="font-size: 8px; font-weight: 900; color: #64748b; text-transform: uppercase; letter-spacing: 0.25em; margin-bottom: 2px;">Academic Session</div>
-                            <div style="font-size: 16px; font-weight: 900; color: #10b981; text-transform: uppercase; letter-spacing: -0.02em;">${semName}</div>
+                            <div style="font-size: 7px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 1px; opacity: 0.8;">Academic Session</div>
+                            <div style="font-size: 11px; font-weight: 900; color: #10b981; text-transform: uppercase;">${semName}</div>
                         `;
                         clonedGrid.appendChild(semEl);
 
                         // Top Left: Weekly Gap
                         const gapText = this.view.headerGapDisplay.innerText || "0m";
                         const gapEl = clonedDoc.createElement('div');
-                        gapEl.style.cssText = overlayStyles + "top: 20px; left: 25px;";
+                        gapEl.style.cssText = overlayStyles + "top: 25px; left: 30px;";
                         gapEl.innerHTML = `
-                            <div style="font-size: 8px; font-weight: 900; color: #64748b; text-transform: uppercase; letter-spacing: 0.25em; margin-bottom: 2px;">Weekly Waiting</div>
-                            <div style="font-size: 16px; font-weight: 900; color: #fff; text-transform: uppercase;">${gapText}</div>
+                            <div style="font-size: 7px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 1px; opacity: 0.8;">Weekly Waiting</div>
+                            <div style="font-size: 11px; font-weight: 900; color: #fff; text-transform: uppercase;">${gapText}</div>
                         `;
                         clonedGrid.appendChild(gapEl);
 
-                        // Bottom Right: Link
+                        // Bottom Right: Link Pill
                         const linkEl = clonedDoc.createElement('div');
-                        linkEl.style.cssText = overlayStyles + "bottom: 20px; right: 25px;";
+                        linkEl.style.cssText = overlayStyles + "bottom: 25px; right: 35px; display: flex;";
                         linkEl.innerHTML = `
-                             <div style="font-size: 10px; font-weight: 800; color: #475569; display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.25); padding: 8px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); backdrop-blur: 10px;">
-                                <span style="color: #10b981; font-weight: 900; letter-spacing: 0.05em;">ROUTINEPRO</span>
-                                <span style="width: 1px; height: 12px; background: rgba(255,255,255,0.1);"></span>
-                                <span style="opacity: 0.8;">routine-pro-fawn.vercel.app</span>
+                             <div style="
+                                display: flex; 
+                                align-items: center; 
+                                justify-content: center;
+                                gap: 10px; 
+                                background: rgba(0, 0, 0, 0.4); 
+                                padding: 8px 18px; 
+                                border-radius: 999px; 
+                                border: 1px solid rgba(255, 255, 255, 0.04); 
+                                backdrop-filter: blur(12px);
+                                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+                             ">
+                                <span style="font-size: 8px; font-weight: 900; color: #10b981; letter-spacing: 0.1em; line-height: 1;">ROUTINEPRO</span>
+                                <span style="width: 1px; height: 10px; background: rgba(255, 255, 255, 0.12);"></span>
+                                <span style="font-size: 8px; font-weight: 700; color: #94a3b8; letter-spacing: 0.02em; line-height: 1; opacity: 0.8;">routine-pro-fawn.vercel.app</span>
                              </div>
                         `;
                         clonedGrid.appendChild(linkEl);
                         
                         // Add padding to create a header/footer area in the export
-                        clonedGrid.style.paddingTop = '90px';
-                        clonedGrid.style.paddingBottom = '80px';
+                        clonedGrid.style.paddingTop = '70px';
+                        clonedGrid.style.paddingBottom = '70px';
                     }
                 }
             });
