@@ -83,7 +83,7 @@ class RoutineView {
         return `${hrs > 0 ? hrs + 'h ' : ''}${mins}m`;
     }
 
-    renderSidebar(selectedCourses, isExplorerMode, currentRoutine, onRemove, onSectionChange, onEdit, onTogglePin) {
+    renderSidebar(selectedCourses, isExplorerMode, currentRoutine, onRemove, onSectionChange, onEdit, onTogglePin, titleFormatter = (t) => t) {
         if (selectedCourses.length === 0) {
             this.selectedList.innerHTML = `<div class="text-center py-12 opacity-20 border-2 border-dashed border-white/5 rounded-2xl"><i data-lucide="command" class="w-8 h-8 mx-auto mb-2"></i><p class="text-[10px] font-bold uppercase tracking-widest">Awaiting Input</p></div>`;
             lucide.createIcons();
@@ -112,7 +112,7 @@ class RoutineView {
                         ${!isExplorerMode && isManual ? `<button class="edit-btn text-slate-600 hover:text-emerald-500 transition-colors" data-index="${i}"><i data-lucide="edit-2" class="w-3.5 h-3.5"></i></button>` : ''}
                         ${!isExplorerMode ? `<button class="remove-btn text-slate-600 hover:text-rose-500 transition-colors" data-index="${i}"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>` : ''}
                     </div>
-                    <h3 class="text-xs font-900 uppercase text-white tracking-tight pr-12">${sc.course.baseTitle}</h3>
+                    <h3 class="text-xs font-900 uppercase text-white tracking-tight pr-12">${titleFormatter(sc.course.baseTitle)}</h3>
                     ${sc.course.dept ? `<p class="text-[8px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">${sc.course.dept}</p>` : ''}
                     
                     <div class="grid grid-cols-4 gap-2 mt-4 py-2 border-y border-white/5">
@@ -154,7 +154,7 @@ class RoutineView {
         lucide.createIcons();
     }
 
-    renderRoutine(items, isExplorerMode, model) {
+    renderRoutine(items, isExplorerMode, model, titleFormatter = (t) => t) {
         const { focusMode, twentyFourHourMode, ramadanMode } = model;
         const buckets = document.querySelectorAll('.day-bucket');
         buckets.forEach(b => b.innerHTML = '');
@@ -302,7 +302,7 @@ class RoutineView {
                     : `<div class="class-info">${effective.startStr} - ${effective.endStr}</div>`;
 
                 block.innerHTML = `
-                    <div class="class-name">${title}</div>
+                    <div class="class-name">${titleFormatter(title)}</div>
                     ${timeHtml}
                     <div class="flex justify-between items-center mt-auto opacity-60">
                         <span class="class-label">SEC ${section.section}</span>

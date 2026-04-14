@@ -74,6 +74,8 @@ class RoutineController {
             ramadanToggle.classList.toggle('hidden', !this.model.ramadanFeatureEnabled);
         }
 
+        this.updateShortcutToggleUI();
+
         // Initialize Theme Sets Logic
         window.cycleThemeSet = () => {
             this.currentThemeSet = (this.currentThemeSet % 3) + 1;
@@ -324,6 +326,19 @@ class RoutineController {
                 // Track Analytics
                 window.analytics.trackFeatureToggle('24h_mode', this.model.twentyFourHourMode);
 
+                this.syncWorkspace();
+            };
+        }
+
+        // Shortcut Mode
+        const shortcutBtn = document.getElementById('shortcut-toggle');
+        if (shortcutBtn) {
+            shortcutBtn.onclick = () => {
+                this.model.shortcutMode = !this.model.shortcutMode;
+                this.updateShortcutToggleUI();
+                const status = this.model.shortcutMode ? "Enabled" : "Disabled";
+                const type = this.model.shortcutMode ? "success" : "info";
+                this.view.showToast(`Shortcut Mode ${status}`, type);
                 this.syncWorkspace();
             };
         }
@@ -1118,22 +1133,7 @@ class RoutineController {
                         const linkEl = clonedDoc.createElement('div');
                         linkEl.style.cssText = overlayStyles + "bottom: 25px; right: 35px; display: flex;";
                         linkEl.innerHTML = `
-                             <div style="
-                                display: flex; 
-                                align-items: center; 
-                                justify-content: center;
-                                gap: 10px; 
-                                background: rgba(0, 0, 0, 0.4); 
-                                padding: 8px 18px; 
-                                border-radius: 999px; 
-                                border: 1px solid rgba(255, 255, 255, 0.04); 
-                                backdrop-filter: blur(12px);
-                                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-                             ">
-                                <span style="font-size: 8px; font-weight: 900; color: #10b981; letter-spacing: 0.1em; line-height: 1;">ROUTINEPRO</span>
-                                <span style="width: 1px; height: 10px; background: rgba(255, 255, 255, 0.12);"></span>
-                                <span style="font-size: 8px; font-weight: 700; color: #94a3b8; letter-spacing: 0.02em; line-height: 1; opacity: 0.8;">routine-pro-fawn.vercel.app</span>
-                             </div>
+                                <span style="font-size: 8px; font-weight: 700; color: #94a3b8; letter-spacing: 0.02em; line-height: 1; opacity: 0.8;">https://routine-pro-fawn.vercel.app</span>
                         `;
                         clonedGrid.appendChild(linkEl);
                         
@@ -1278,9 +1278,10 @@ class RoutineController {
                 }
                 this.model.togglePin(i);
                 this.syncWorkspace();
-            }
+            },
+            (t) => this.getDisplayTitle(t)
         );
-        this.view.renderRoutine(currentItems, isExplorerMode, this.model);
+        this.view.renderRoutine(currentItems, isExplorerMode, this.model, (t) => this.getDisplayTitle(t));
         lucide.createIcons(); // Ensure all icons are updated, including some with custom stroke if added
         this.view.totalCreditsEl.innerText = this.model.calculateCredits();
         this.view.updateSyncUI(this.model.allCourses);
@@ -1324,6 +1325,32 @@ class RoutineController {
             if (icon) icon.setAttribute('data-lucide', 'moon-star');
         }
         lucide.createIcons();
+    }
+
+    updateShortcutToggleUI() {
+        const btn = document.getElementById('shortcut-toggle');
+        if (!btn) return;
+
+        if (this.model.shortcutMode) {
+            btn.setAttribute('data-active', 'true');
+        } else {
+            btn.removeAttribute('data-active');
+        }
+    }
+
+    getDisplayTitle(title) {
+        if (!this.model.shortcutMode) return title;
+        
+        // Handle abbreviations (e.g., "Computer Network" -> "CN")
+        const ignoredWords = ['and', 'of', 'to', 'for', 'in', 'with', 'a', 'the', '&'];
+        const words = title.split(/[\s-]+/).filter(word => word.length > 0);
+        
+        if (words.length === 1) return words[0].substring(0, 2).toUpperCase();
+        
+        return words
+            .filter(word => !ignoredWords.includes(word.toLowerCase()))
+            .map(word => word[0].toUpperCase())
+            .join('');
     }
 
     async handleRamadanUpload(e) {
