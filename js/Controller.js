@@ -996,27 +996,29 @@ class RoutineController {
             c.baseTitle.toLowerCase().includes(q) || (c.code && c.code.toLowerCase().includes(q))
         );
 
-        // Deduplicate by Base Title to handle stale data or un-grouped sources
-        const seenTitles = new Set();
+        const seenKeys = new Set();
         const results = [];
         
         for (const c of matches) {
-            // Aggressive title cleaning for the search view
-            const cleanTitle = c.baseTitle.replace(/\s*\[([^\]]{1,3})\]\s*$/, '').trim();
-            const key = cleanTitle.toUpperCase();
+            // Clean title for DISPLAY only
+            const displayTitle = c.baseTitle.replace(/\s*\[([^\]]{1,3})\]\s*$/, '').trim();
+            const key = displayTitle.toUpperCase();
             
-            if (!seenTitles.has(key)) {
-                seenTitles.add(key);
-                // Create a clean display copy
-                results.push({ ...c, baseTitle: cleanTitle });
+            if (!seenKeys.has(key)) {
+                seenKeys.add(key);
+                results.push({ 
+                    originalTitle: c.baseTitle, 
+                    displayTitle: displayTitle,
+                    code: c.code 
+                });
             }
             if (results.length >= 15) break;
         }
 
         if (results.length > 0) {
             this.view.suggestions.innerHTML = results.map(c => `
-                <div class="p-4 hover:bg-emerald-500/5 cursor-pointer border-b border-white/5 group transition-all" onclick="app.controller.handleAddCourse('${c.baseTitle.replace(/'/g, "\\'")}')">
-                    <div class="flex justify-between items-center text-sm font-bold group-hover:text-emerald-400 uppercase tracking-tight">${c.baseTitle}</div>
+                <div class="p-4 hover:bg-emerald-500/5 cursor-pointer border-b border-white/5 group transition-all" onclick="app.controller.handleAddCourse(\`${c.originalTitle.replace(/`/g, "\\`").replace(/'/g, "\\'")}\`, \`${c.code}\`)">
+                    <div class="flex justify-between items-center text-sm font-bold group-hover:text-emerald-400 uppercase tracking-tight">${c.displayTitle}</div>
                 </div>
             `).join('');
             this.view.suggestions.classList.remove('hidden');
@@ -1025,9 +1027,13 @@ class RoutineController {
         }
     }
 
-    handleAddCourse(title, code, dept) {
+    handleAddCourse(title, code) {
         this.model.isExplorerMode = false;
-        const course = this.model.allCourses.find(c => c.baseTitle === title);
+        // Search by both title and code to be 100% sure we find the right one
+        let course = this.model.allCourses.find(c => c.baseTitle === title && (!code || c.code === code));
+        
+        // Fallback search if code matching fails for some reason
+        if (!course) course = this.model.allCourses.find(c => c.baseTitle === title);
         if (course && this.model.addCourse(course)) {
             this.view.searchInput.value = '';
             this.view.suggestions.classList.add('hidden');
@@ -1357,19 +1363,28 @@ class RoutineController {
     getDisplayTitle(title) {
         if (!this.model.compactMode) return title;
         
-        // 1. Remove anything inside () and [] labels
-        let clean = title.replace(/\[.*?\]|\(.*?\)/g, '').trim();
+        // Rule: Ignore all bracketed parts [] and ()
+        let cleanTitle = title.replace(/\[.*?\]|\(.*?\)/g, '').trim();
         
-        // 2. Remove all non-letter characters (except spaces) for a pure abbreviation
-        clean = clean.replace(/[^a-zA-Z\s]/g, ' ');
+        // Clean leftover characters and symbols (pure letters and spaces only)
+        cleanTitle = cleanTitle.replace(/[^a-zA-Z\s]/g, ' ').replace(/\s+/g, ' ').trim();
         
-        // 3. Generate abbreviation from each word
-        const words = clean.split(/\s+/).filter(w => w.length > 0);
+        const words = cleanTitle.split(' ').filter(word => word.length > 0);
         
-        if (words.length === 0) return "?";
+        if (words.length === 0) return "C"; // Fallback
+        
+        // If single word, take first two letters as is common
         if (words.length === 1) return words[0].substring(0, 2).toUpperCase();
         
-        return words.map(w => w[0].toUpperCase()).join('');
+        // Important: Still filter common short conjunctions for cleaner abbreviations unless user says otherwise
+        const ignoredWords = ['and', 'of', 'to', 'for', 'in', 'with', 'a', 'the', '&'];
+        
+        const abbreviation = words
+            .filter(word => words.length <= 2 || !ignoredWords.includes(word.toLowerCase()))
+            .map(word => word[0].toUpperCase())
+            .join('');
+
+        return abbreviation;
     }
 
     async handleRamadanUpload(e) {
