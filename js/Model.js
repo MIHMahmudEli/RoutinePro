@@ -573,18 +573,44 @@ class RoutineModel {
             const status = String(row[colMap.status] || 'Open').trim();
             const capacity = String(row[colMap.capacity] || '0').trim();
             const count = String(row[colMap.count] || '0').trim();
-            const sectionName = String(row[colMap.section] || '').trim();
-            const classType = String(row[colMap.type] || 'Theory').trim();
-            const day = this.normalizeDay(String(row[colMap.day] || ''));
             const startTime = String(row[colMap.start] || '').trim();
             const endTime = String(row[colMap.end] || '').trim();
             const room = String(row[colMap.room] || '').trim();
+            const classType = String(row[colMap.type] || 'Theory').trim();
+            const day = this.normalizeDay(String(row[colMap.day] || ''));
 
-            // CLEAN TITLE: ONLY remove specific status tags like [CLOSED] to ensure grouping, 
-            // but PRESERVE faculty markers like [FST/FE] or other critical title info.
-            const baseTitle = lastTitle.replace(/\[\s*(CLOSED|OPEN|LIMITED|RESTRICTED)\s*\]/gi, '').replace(/\s+/g, ' ').trim();
+            // ADVANCED TITLE PARSING based on USER Rules
+            let fullTitle = lastTitle.trim();
+            let sectionName = String(row[colMap.section] || '').trim();
+            let baseTitle = fullTitle;
+
+            // Rule: Identify section from last bracket and clean baseTitle
+            // Identify patterns like [A], [B], [AA], [1], [L1], etc.
+            const lastBracketRegex = /\s*\[([^\]]+)\]\s*$/;
+            const match = fullTitle.match(lastBracketRegex);
+
+            if (match) {
+                const bracketContent = match[1].trim();
+                // Heuristic: If it's the last bracket AND (it matches the section column OR it's a short section identifier)
+                // Short identifiers like A, AA, B1, 1, 2 are common. Tags like [FST/FE] or [SOCIAL SCIENCE] are longer.
+                const isProbablySection = bracketContent.length <= 3 || 
+                                         bracketContent.toUpperCase() === sectionName.toUpperCase() ||
+                                         /^[A-Z]{1,2}\d?$/.test(bracketContent) ||
+                                         /^\d+$/.test(bracketContent);
+
+                if (isProbablySection) {
+                    baseTitle = fullTitle.replace(lastBracketRegex, '').trim();
+                    // If Excel section is missing, use the one from the bracket
+                    if (!sectionName || sectionName === "nan") {
+                        sectionName = bracketContent;
+                    }
+                }
+            }
             
-            // Group solely by unique Course Title as requested
+            // Clean up any double spaces
+            baseTitle = baseTitle.replace(/\s+/g, ' ');
+
+            // Group solely by the unique, cleaned baseTitle
             const key = baseTitle.toUpperCase();
 
             if (!coursesMap[key]) {
@@ -596,11 +622,14 @@ class RoutineModel {
                 };
             }
 
+            // Standardize section name for grouping
+            const finalSectionName = sectionName || "N/A";
+
             // Create or update section
-            if (!coursesMap[key].sections[sectionName]) {
-                coursesMap[key].sections[sectionName] = {
+            if (!coursesMap[key].sections[finalSectionName]) {
+                coursesMap[key].sections[finalSectionName] = {
                     id: classId,
-                    section: sectionName,
+                    section: finalSectionName,
                     status: status,
                     capacity: capacity,
                     count: count,
@@ -608,7 +637,7 @@ class RoutineModel {
                 };
             }
 
-            coursesMap[key].sections[sectionName].schedules.push({
+            coursesMap[key].sections[finalSectionName].schedules.push({
                 day: day,
                 start: startTime,
                 end: endTime,
