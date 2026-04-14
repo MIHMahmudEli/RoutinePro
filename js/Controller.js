@@ -1357,16 +1357,19 @@ class RoutineController {
     getDisplayTitle(title) {
         if (!this.model.compactMode) return title;
         
-        // Handle abbreviations (e.g., "Computer Network" -> "CN")
-        const ignoredWords = ['and', 'of', 'to', 'for', 'in', 'with', 'a', 'the', '&'];
-        const words = title.split(/[\s-]+/).filter(word => word.length > 0);
+        // 1. Remove anything inside () and [] labels
+        let clean = title.replace(/\[.*?\]|\(.*?\)/g, '').trim();
         
+        // 2. Remove all non-letter characters (except spaces) for a pure abbreviation
+        clean = clean.replace(/[^a-zA-Z\s]/g, ' ');
+        
+        // 3. Generate abbreviation from each word
+        const words = clean.split(/\s+/).filter(w => w.length > 0);
+        
+        if (words.length === 0) return "?";
         if (words.length === 1) return words[0].substring(0, 2).toUpperCase();
         
-        return words
-            .filter(word => !ignoredWords.includes(word.toLowerCase()))
-            .map(word => word[0].toUpperCase())
-            .join('');
+        return words.map(w => w[0].toUpperCase()).join('');
     }
 
     async handleRamadanUpload(e) {
