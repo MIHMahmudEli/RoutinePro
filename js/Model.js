@@ -32,75 +32,85 @@ class RoutineModel {
     }
 
     async loadInitialData() {
-        // Load Global Ramadan Mappings and Feature Flag
+        // Load cached global data first for instant startup
         try {
-            // Priority 1: Cloud Config
-            let configRes = await fetch('/api/get-config', { cache: 'no-store' });
-            if (configRes.ok) {
+            const cachedCourses = localStorage.getItem('routine-pro-global-courses');
+            const cachedMeta = localStorage.getItem('routine-pro-global-metadata');
+            const cachedRamadan = localStorage.getItem('routine-pro-global-ramadan');
+            
+            if (cachedCourses) this.allCourses = JSON.parse(cachedCourses);
+            if (cachedMeta) this.metadata = JSON.parse(cachedMeta);
+            if (cachedRamadan) this.globalRamadanMap = JSON.parse(cachedRamadan);
+        } catch (e) { console.warn("Failed to load cached global data"); }
+
+        // Start all fetches in parallel to reduce sequential delay
+        const fetchPromises = [
+            fetch('/api/get-config').catch(() => null),
+            fetch('/api/get-ramadan').catch(() => null),
+            fetch('/api/get-metadata').catch(() => null),
+            fetch('/api/get-courses').catch(() => null)
+        ];
+
+        try {
+            const [configRes, ramRes, metaRes, coursesRes] = await Promise.all(fetchPromises);
+
+            // 1. Process Config
+            if (configRes && configRes.ok) {
                 const configData = await configRes.json();
                 this.ramadanFeatureEnabled = configData.ramadanFeatureEnabled;
             }
 
-            // Priority 2: Cloud Global Ramadan Mappings
-            let ramRes = await fetch('/api/get-ramadan', { cache: 'no-store' });
-            
-            // Priority 3: Fallback to local file
-            if (!ramRes.ok) {
-                ramRes = await fetch('data/ramadan-mappings.json');
+            // 2. Process Ramadan Mapping
+            let ramData = null;
+            if (ramRes && ramRes.ok) {
+                ramData = await ramRes.json();
+            } else {
+                const localRamRes = await fetch('data/ramadan-mappings.json');
+                if (localRamRes.ok) ramData = await localRamRes.json();
             }
 
-            if (ramRes.ok) {
-                const ramData = await ramRes.json();
-
-                // Only use server value for flag if admin hasn't set a local override
+            if (ramData) {
+                this.globalRamadanMap = ramData.mappings || null;
+                localStorage.setItem('routine-pro-global-ramadan', JSON.stringify(this.globalRamadanMap));
+                
                 const hasLocalOverride = localStorage.getItem('routine-pro-ramadan-admin-feature') !== null;
-                if (!hasLocalOverride && !configRes.ok) {
+                if (!hasLocalOverride) {
                     this.ramadanFeatureEnabled = ramData.featureEnabled !== false;
                 }
-
-                this.globalRamadanMap = ramData.mappings || null;
             }
-        } catch (e) {
-            console.warn("Global config or ramadan map fetch failed");
-            if (localStorage.getItem('routine-pro-ramadan-admin-feature') === null && !this.ramadanFeatureEnabled) {
-                this.ramadanFeatureEnabled = false;
-            }
-        }
 
-        // Load Global Metadata
-        try {
-            const metaRes = await fetch('/api/get-metadata', { cache: 'no-store' });
-            if (metaRes.ok) {
+            // 3. Process Metadata
+            if (metaRes && metaRes.ok) {
                 this.metadata = await metaRes.json();
+                localStorage.setItem('routine-pro-global-metadata', JSON.stringify(this.metadata));
             }
-        } catch (e) {
-            console.warn("Global metadata fetch failed");
-        }
 
-        const localCourses = localStorage.getItem('routine-pro-courses');
-        if (localCourses) {
-            this.allCourses = JSON.parse(localCourses);
-            this.dataSource = localStorage.getItem('routine-pro-data-source') || 'Local';
-            this.lastLocalSync = localStorage.getItem('routine-pro-last-sync');
-        } else {
-            // Priority 1: Try Cloud/API for everyone
-            try {
-                const apiRes = await fetch('/api/get-courses', { cache: 'no-store' });
-                if (apiRes.ok) {
-                    this.allCourses = await apiRes.json();
-                    this.dataSource = 'Global';
-                    localStorage.setItem('routine-pro-data-source', 'Global');
-                } else {
-                    throw new Error("No cloud data");
+            // 4. Process Courses
+            const localCourses = localStorage.getItem('routine-pro-courses');
+            if (localCourses) {
+                this.allCourses = JSON.parse(localCourses);
+                this.dataSource = localStorage.getItem('routine-pro-data-source') || 'Local';
+                this.lastLocalSync = localStorage.getItem('routine-pro-last-sync');
+            } else if (coursesRes && coursesRes.ok) {
+                // If no local sync exists, use the global cloud data
+                this.allCourses = await coursesRes.json();
+                this.dataSource = 'Global';
+                localStorage.setItem('routine-pro-data-source', 'Global');
+                localStorage.setItem('routine-pro-global-courses', JSON.stringify(this.allCourses));
+            } else if (!this.allCourses || this.allCourses.length === 0) {
+                // Fallback to static local file if everything else fails
+                const staticRes = await fetch('data/courses.json');
+                if (staticRes.ok) {
+                    this.allCourses = await staticRes.json();
+                    this.dataSource = 'Default (Static)';
                 }
-            } catch (e) {
-                // Priority 2: Fallback to local static file
-                const res = await fetch('data/courses.json');
-                if (res.ok) {
-                    this.allCourses = await res.json();
-                    this.dataSource = 'Global (Fallback)';
-                    localStorage.setItem('routine-pro-data-source', 'Global (Fallback)');
-                }
+            }
+        } catch (err) {
+            console.error("Critical Sync Error:", err);
+            // Ensure some data is loaded if possible
+            if (!this.allCourses || this.allCourses.length === 0) {
+                const staticRes = await fetch('data/courses.json');
+                if (staticRes.ok) this.allCourses = await staticRes.json();
             }
         }
         return this.allCourses;
