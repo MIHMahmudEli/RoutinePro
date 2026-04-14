@@ -1084,6 +1084,52 @@ class RoutineController {
                         info.style.fontSize = '10px';
                         info.style.marginTop = '0px';
                     });
+
+                    // Add branding and info overlays (requested by user)
+                    const clonedGrid = clonedDoc.getElementById('routine-actual-grid');
+                    if (clonedGrid) {
+                        const overlayStyles = "position: absolute; z-index: 100; font-family: inherit; pointer-events: none;";
+                        
+                        // Top Right: Semester Name
+                        const semName = this.model.semester 
+                            || (this.model.metadata ? this.model.metadata.semester : null)
+                            || localStorage.getItem('routine-pro-semester') 
+                            || "SPRING 24-25";
+
+                        const semEl = clonedDoc.createElement('div');
+                        semEl.style.cssText = overlayStyles + "top: 20px; right: 25px; text-align: right;";
+                        semEl.innerHTML = `
+                            <div style="font-size: 8px; font-weight: 900; color: #64748b; text-transform: uppercase; letter-spacing: 0.25em; margin-bottom: 2px;">Academic Session</div>
+                            <div style="font-size: 16px; font-weight: 900; color: #10b981; text-transform: uppercase; letter-spacing: -0.02em;">${semName}</div>
+                        `;
+                        clonedGrid.appendChild(semEl);
+
+                        // Top Left: Weekly Gap
+                        const gapText = this.view.headerGapDisplay.innerText || "0m";
+                        const gapEl = clonedDoc.createElement('div');
+                        gapEl.style.cssText = overlayStyles + "top: 20px; left: 25px;";
+                        gapEl.innerHTML = `
+                            <div style="font-size: 8px; font-weight: 900; color: #64748b; text-transform: uppercase; letter-spacing: 0.25em; margin-bottom: 2px;">Weekly Waiting</div>
+                            <div style="font-size: 16px; font-weight: 900; color: #fff; text-transform: uppercase;">${gapText}</div>
+                        `;
+                        clonedGrid.appendChild(gapEl);
+
+                        // Bottom Right: Link
+                        const linkEl = clonedDoc.createElement('div');
+                        linkEl.style.cssText = overlayStyles + "bottom: 20px; right: 25px;";
+                        linkEl.innerHTML = `
+                             <div style="font-size: 10px; font-weight: 800; color: #475569; display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.25); padding: 8px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); backdrop-blur: 10px;">
+                                <span style="color: #10b981; font-weight: 900; letter-spacing: 0.05em;">ROUTINEPRO</span>
+                                <span style="width: 1px; height: 12px; background: rgba(255,255,255,0.1);"></span>
+                                <span style="opacity: 0.8;">routine-pro-fawn.vercel.app</span>
+                             </div>
+                        `;
+                        clonedGrid.appendChild(linkEl);
+                        
+                        // Add padding to create a header/footer area in the export
+                        clonedGrid.style.paddingTop = '90px';
+                        clonedGrid.style.paddingBottom = '80px';
+                    }
                 }
             });
 
