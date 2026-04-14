@@ -14,11 +14,12 @@ export default async function handler(request, response) {
             return response.status(404).json({ error: 'Global courses not found. Using local fallback.' });
         }
 
-        // Use 307 Temporary Redirect and force no-store to prevent CDN/Browser caching of the redirect
-        return response.status(307)
-            .setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
-            .setHeader('Location', coursesBlob.url)
-            .send('');
+        // Fetch the content directly and return with no-cache headers
+        const courseRes = await fetch(coursesBlob.url);
+        const data = await courseRes.json();
+
+        response.setHeader('Cache-Control', 'no-store, max-age=0, must-revalidate');
+        return response.status(200).json(data);
     } catch (error) {
         return response.status(500).json({ error: error.message });
     }

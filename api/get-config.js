@@ -13,7 +13,12 @@ export default async function handler(request, response) {
             return response.status(404).json({ error: 'Global config not found.' });
         }
 
-        return response.status(302).setHeader('Location', targetBlob.url).send('');
+        // Fetch the content directly and return with no-cache headers
+        const configRes = await fetch(targetBlob.url);
+        const data = await configRes.json();
+
+        response.setHeader('Cache-Control', 'no-store, max-age=0, must-revalidate');
+        return response.status(200).json(data);
     } catch (error) {
         return response.status(500).json({ error: error.message });
     }

@@ -13,15 +13,12 @@ export default async function handler(request, response) {
             return response.status(404).json({ error: 'Global metadata not found.' });
         }
 
-        // Fetch the content directly and proxy it to avoid 302 caching
-        const res = await fetch(targetBlob.url);
-        const data = await res.json();
-
-        return response.status(200)
-            .setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
-            .setHeader('Pragma', 'no-cache')
-            .setHeader('Expires', '0')
-            .json(data);
+        // Fetch the content directly and return with no-cache headers
+        const metaRes = await fetch(targetBlob.url);
+        const data = await metaRes.json();
+        
+        response.setHeader('Cache-Control', 'no-store, max-age=0, must-revalidate');
+        return response.status(200).json(data);
     } catch (error) {
         return response.status(500).json({ error: error.message });
     }

@@ -32,24 +32,25 @@ class RoutineModel {
     }
 
     async loadInitialData() {
-        // Load session-cached global data for instant reload within same tab
+        // Load cached global data first for instant startup
         try {
-            const cachedCourses = sessionStorage.getItem('routine-pro-global-courses');
-            const cachedMeta = sessionStorage.getItem('routine-pro-global-metadata');
-            const cachedRamadan = sessionStorage.getItem('routine-pro-global-ramadan');
+            const cachedCourses = localStorage.getItem('routine-pro-global-courses');
+            const cachedMeta = localStorage.getItem('routine-pro-global-metadata');
+            const cachedRamadan = localStorage.getItem('routine-pro-global-ramadan');
             
             if (cachedCourses) this.allCourses = JSON.parse(cachedCourses);
             if (cachedMeta) this.metadata = JSON.parse(cachedMeta);
             if (cachedRamadan) this.globalRamadanMap = JSON.parse(cachedRamadan);
-        } catch (e) { console.warn("No session cache found"); }
+        } catch (e) { console.warn("Failed to load cached global data"); }
 
         // Start all fetches in parallel to reduce sequential delay
-        // metadata & courses use cache: 'no-store' to always reflect admin updates
+        // We add a timestamp to bypass aggressive browser/Vercel caching for global updates
+        const t = Date.now();
         const fetchPromises = [
-            fetch('/api/get-config').catch(() => null),
-            fetch('/api/get-ramadan').catch(() => null),
-            fetch('/api/get-metadata', { cache: 'no-store' }).catch(() => null),
-            fetch('/api/get-courses', { cache: 'no-store' }).catch(() => null)
+            fetch(`/api/get-config?t=${t}`).catch(() => null),
+            fetch(`/api/get-ramadan?t=${t}`).catch(() => null),
+            fetch(`/api/get-metadata?t=${t}`).catch(() => null),
+            fetch(`/api/get-courses?t=${t}`).catch(() => null)
         ];
 
         try {
@@ -72,7 +73,7 @@ class RoutineModel {
 
             if (ramData) {
                 this.globalRamadanMap = ramData.mappings || null;
-                sessionStorage.setItem('routine-pro-global-ramadan', JSON.stringify(this.globalRamadanMap));
+                localStorage.setItem('routine-pro-global-ramadan', JSON.stringify(this.globalRamadanMap));
                 
                 const hasLocalOverride = localStorage.getItem('routine-pro-ramadan-admin-feature') !== null;
                 if (!hasLocalOverride) {
@@ -83,44 +84,55 @@ class RoutineModel {
             // 3. Process Metadata
             if (metaRes && metaRes.ok) {
                 this.metadata = await metaRes.json();
-                sessionStorage.setItem('routine-pro-global-metadata', JSON.stringify(this.metadata));
+                localStorage.setItem('routine-pro-global-metadata', JSON.stringify(this.metadata));
             }
 
             // 4. Process Courses
-            // Strategy: Personal local uploads always take priority (kept in localStorage).
-            // For Global users, we always refresh the session cache if server data is available.
+            // Strategy: Personal local uploads always take priority.
+            // For Global users, compare server metadata lastUpdate with cached version
+            // to auto-refresh when admin publishes new data.
             const dataSource = localStorage.getItem('routine-pro-data-source') || '';
             const isPersonalUpload = dataSource === 'Local';
             const localCourses = localStorage.getItem('routine-pro-courses');
 
             if (isPersonalUpload && localCourses) {
-                // User has a personal upload — always respect it
+                // User has a personal upload — never override it with global data
                 this.allCourses = JSON.parse(localCourses);
                 this.dataSource = 'Local';
                 this.lastLocalSync = localStorage.getItem('routine-pro-last-sync');
-            } else if (coursesRes && coursesRes.ok) {
-                // Global Mode: Always fetch fresh data on new session/visit
-                this.allCourses = await coursesRes.json();
-                this.dataSource = 'Global';
-                const pulledAt = new Date().toISOString();
-                
-                // Store in sessionStorage so it clears on browser close
-                sessionStorage.setItem('routine-pro-global-courses', JSON.stringify(this.allCourses));
-                sessionStorage.setItem('routine-pro-global-pulled-at', pulledAt);
-                localStorage.setItem('routine-pro-data-source', 'Global');
-                
-                // Remove any old localStorage global flags to force session behavior
-                localStorage.removeItem('routine-pro-global-courses');
-                localStorage.removeItem('routine-pro-global-last-update');
-            } else if (this.allCourses && this.allCourses.length > 0) {
-                // Already have data from session cache (page reload)
-                this.dataSource = 'Global';
             } else {
-                // Last resort: bundled static file
-                const staticRes = await fetch('data/courses.json');
-                if (staticRes.ok) {
-                    this.allCourses = await staticRes.json();
-                    this.dataSource = 'Default (Static)';
+                // For Global users: check if server has newer data than our cache
+                const cachedGlobalUpdate = localStorage.getItem('routine-pro-global-last-update');
+                const serverUpdate = this.metadata && this.metadata.lastUpdate;
+                const serverHasNewerData = serverUpdate && (!cachedGlobalUpdate || new Date(serverUpdate) > new Date(cachedGlobalUpdate));
+
+                if (serverHasNewerData && coursesRes && coursesRes.ok) {
+                    // Admin pushed new data — fetch fresh courses for this user
+                    console.info('[RoutinePro] Global data updated by admin. Refreshing...');
+                    this.allCourses = await coursesRes.json();
+                    this.dataSource = 'Global';
+                    localStorage.setItem('routine-pro-data-source', 'Global');
+                    localStorage.setItem('routine-pro-global-courses', JSON.stringify(this.allCourses));
+                    localStorage.setItem('routine-pro-global-last-update', serverUpdate);
+                    // Clear stale local course cache if it was from global
+                    localStorage.removeItem('routine-pro-courses');
+                } else if (this.allCourses && this.allCourses.length > 0) {
+                    // Cache is still fresh — use what we loaded at startup
+                    this.dataSource = dataSource || 'Global';
+                } else if (coursesRes && coursesRes.ok) {
+                    // No cache at all — first visit or cleared storage
+                    this.allCourses = await coursesRes.json();
+                    this.dataSource = 'Global';
+                    localStorage.setItem('routine-pro-data-source', 'Global');
+                    localStorage.setItem('routine-pro-global-courses', JSON.stringify(this.allCourses));
+                    if (serverUpdate) localStorage.setItem('routine-pro-global-last-update', serverUpdate);
+                } else {
+                    // Last resort: bundled static file
+                    const staticRes = await fetch('data/courses.json');
+                    if (staticRes.ok) {
+                        this.allCourses = await staticRes.json();
+                        this.dataSource = 'Default (Static)';
+                    }
                 }
             }
         } catch (err) {
