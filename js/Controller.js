@@ -17,7 +17,9 @@ class RoutineController {
         this.view.populateTimeFilters();
         this.view.updateSyncUI(this.model.allCourses);
         const dataSource = this.model.dataSource;
-        const pulledAt = localStorage.getItem('routine-pro-global-pulled-at');
+        const pulledAt = dataSource === 'Local' 
+            ? localStorage.getItem('routine-pro-last-sync')
+            : sessionStorage.getItem('routine-pro-global-pulled-at');
         this.view.renderLibraryMetadata(this.model.metadata, dataSource, pulledAt);
         this.setupEventListeners();
         this.syncWorkspace();
@@ -947,8 +949,8 @@ class RoutineController {
                     if (metaRes.ok) {
                         this.model.metadata = await metaRes.json();
                         const now = new Date().toISOString();
-                        localStorage.setItem('routine-pro-global-pulled-at', now);
-                        localStorage.setItem('routine-pro-global-last-update', this.model.metadata.lastUpdate);
+                        sessionStorage.setItem('routine-pro-global-pulled-at', now);
+                        sessionStorage.setItem('routine-pro-global-last-update', this.model.metadata.lastUpdate);
                         this.syncWorkspace();
                     }
                 } else {
@@ -1290,7 +1292,9 @@ class RoutineController {
         this.view.totalCreditsEl.innerText = this.model.calculateCredits();
         this.view.updateSyncUI(this.model.allCourses);
         if (this.model.metadata) {
-            const displayTime = this.model.dataSource === 'Local' ? this.model.lastLocalSync : this.model.metadata.lastUpdate;
+            const displayTime = this.model.dataSource === 'Local' 
+                ? localStorage.getItem('routine-pro-last-sync')
+                : sessionStorage.getItem('routine-pro-global-pulled-at');
             this.view.renderLibraryMetadata(this.model.metadata, this.model.dataSource, displayTime);
         }
     }
