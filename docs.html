@@ -3,480 +3,769 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Documentation | RoutinePro</title>
+    <title>RoutinePro Docs — Complete User Guide</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-deep: #05070a;
-            --bg-surface: #0a0d14;
-            --accent-primary: #10b981;
-        }
+        :root { --bg: #05070a; --surface: #0b0e17; --accent: #10b981; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: #f1f5f9; line-height: 1.6; }
 
-        * { box-sizing: border-box; }
-        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-deep); color: #f8fafc; scroll-behavior: smooth; }
+        /* Glassmorphism */
+        .glass { background: rgba(255,255,255,0.022); border: 1px solid rgba(255,255,255,0.07); backdrop-filter: blur(20px); }
+        .glass-hover { transition: all .3s ease; cursor: pointer; }
+        .glass-hover:hover { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.12); transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
 
-        .glass { background: rgba(255,255,255,0.025); backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.08); }
-        .glass-hover { transition: all 0.3s ease; }
-        .glass-hover:hover { background: rgba(255,255,255,0.045); border-color: rgba(255,255,255,0.12); transform: translateY(-2px); }
+        /* Typography */
+        .gradient-text { background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .gradient-amber { background: linear-gradient(135deg, #f59e0b, #ef4444); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .section-title { font-size: 2rem; font-weight: 900; letter-spacing: -0.03em; margin-bottom: .5rem; }
+        .section-sub { color: #64748b; font-size: .875rem; margin-bottom: 2rem; line-height: 1.7; }
 
-        .gradient-text { background: linear-gradient(135deg, #10b981, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .gradient-text-amber { background: linear-gradient(135deg, #f59e0b, #ef4444); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        /* Badges */
+        .chip { display: inline-flex; align-items: center; gap: 5px; font-size: 9px; font-weight: 800; letter-spacing: .15em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; }
+        .chip-green { background: rgba(16,185,129,.1); color: #10b981; border: 1px solid rgba(16,185,129,.2); }
+        .chip-sky { background: rgba(56,189,248,.1); color: #38bdf8; border: 1px solid rgba(56,189,248,.2); }
+        .chip-amber { background: rgba(251,191,36,.1); color: #fbbf24; border: 1px solid rgba(251,191,36,.2); }
+        .chip-rose { background: rgba(251,113,133,.1); color: #fb7185; border: 1px solid rgba(251,113,133,.2); }
+        .chip-violet { background: rgba(167,139,250,.1); color: #a78bfa; border: 1px solid rgba(167,139,250,.2); }
+        .chip-slate { background: rgba(100,116,139,.1); color: #94a3b8; border: 1px solid rgba(100,116,139,.2); }
 
-        .nav-link { border-left: 2px solid transparent; transition: all 0.25s ease; }
-        .nav-link:hover, .nav-link.active { border-left-color: #10b981; background: rgba(16,185,129,0.07); padding-left: 1.5rem; color: #10b981; }
+        /* Callouts */
+        .callout { padding: 14px 18px; border-left: 3px solid; border-radius: 0 14px 14px 0; }
+        .callout-tip  { border-color: #10b981; background: rgba(16,185,129,.06); }
+        .callout-info { border-color: #38bdf8; background: rgba(56,189,248,.06); }
+        .callout-warn { border-color: #f59e0b; background: rgba(245,158,11,.06); }
+        .callout-danger { border-color: #fb7185; background: rgba(251,113,133,.06); }
 
-        .section-anchor { scroll-margin-top: 110px; }
+        /* Sidebar nav */
+        .nav-link { display: block; padding: 7px 16px; font-size: 11px; font-weight: 600; color: #475569; border-left: 2px solid transparent; transition: all .2s ease; }
+        .nav-link:hover { color: #10b981; background: rgba(16,185,129,.06); padding-left: 20px; border-left-color: #10b981; }
+        .nav-link.active { color: #10b981; background: rgba(16,185,129,.08); border-left-color: #10b981; padding-left: 20px; }
+        .nav-group { font-size: 9px; font-weight: 900; letter-spacing: .2em; text-transform: uppercase; color: #1e293b; padding: 16px 16px 6px; }
 
-        .step-card { counter-increment: steps; }
-        .step-num { background: linear-gradient(135deg, rgba(16,185,129,0.2), rgba(59,130,246,0.2)); border: 1px solid rgba(16,185,129,0.3); }
+        /* Section scroll offset */
+        .section { scroll-margin-top: 100px; }
 
-        .badge { display: inline-flex; align-items: center; gap: 4px; font-size: 9px; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; }
-        .badge-green { background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); }
-        .badge-sky { background: rgba(56,189,248,0.1); color: #38bdf8; border: 1px solid rgba(56,189,248,0.2); }
-        .badge-amber { background: rgba(251,191,36,0.1); color: #fbbf24; border: 1px solid rgba(251,191,36,0.2); }
-        .badge-rose { background: rgba(251,113,133,0.1); color: #fb7185; border: 1px solid rgba(251,113,133,0.2); }
+        /* Keyboard keys */
+        .key { display: inline-flex; align-items: center; padding: 1px 7px; border-radius: 5px; font-size: 10px; font-family: monospace; font-weight: 700; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); border-bottom: 2px solid rgba(255,255,255,.16); color: #94a3b8; }
 
-        .callout { border-left: 3px solid; border-radius: 0 12px 12px 0; padding: 16px 20px; }
-        .callout-tip { border-color: #10b981; background: rgba(16,185,129,0.05); }
-        .callout-warning { border-color: #f59e0b; background: rgba(245,158,11,0.05); }
-        .callout-info { border-color: #38bdf8; background: rgba(56,189,248,0.05); }
-        .callout-danger { border-color: #fb7185; background: rgba(251,113,133,0.05); }
+        /* Feature icon */
+        .feat-icon { width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 
-        .mode-pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; font-size: 10px; font-weight: 800; letter-spacing: 0.05em; }
+        /* Timeline */
+        .timeline { position: relative; }
+        .timeline::before { content: ''; position: absolute; left: 19px; top: 44px; bottom: 0; width: 1px; background: linear-gradient(to bottom, rgba(16,185,129,.3), transparent); pointer-events: none; }
+        .t-dot { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 900; flex-shrink: 0; }
 
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 10px; }
+        /* Info table */
+        .info-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        .info-table th { text-align: left; padding: 8px 14px; font-size: 9px; font-weight: 900; letter-spacing: .15em; text-transform: uppercase; color: #334155; border-bottom: 1px solid rgba(255,255,255,.05); }
+        .info-table td { padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,.04); color: #94a3b8; vertical-align: top; }
+        .info-table tr:last-child td { border-bottom: none; }
+        .info-table td:first-child { color: #f1f5f9; font-weight: 700; }
 
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+        /* Animations */
+        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+        @keyframes pulse-ring { 0%,100%{box-shadow:0 0 0 0 rgba(16,185,129,.3)} 50%{box-shadow:0 0 0 8px rgba(16,185,129,0)} }
         .float { animation: float 4s ease-in-out infinite; }
+        .pulse-ring { animation: pulse-ring 2s ease-in-out infinite; }
 
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 10px rgba(16,185,129,0.15); }
-            50% { box-shadow: 0 0 25px rgba(16,185,129,0.35); }
-        }
-        .pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+        /* Pill toggle mock */
+        .toggle-mock { width: 36px; height: 20px; border-radius: 10px; display: flex; align-items: center; padding: 2px; transition: all .3s; }
+        .toggle-mock-off { background: rgba(255,255,255,.1); }
+        .toggle-mock-on  { background: #10b981; }
+        .toggle-dot { width: 16px; height: 16px; border-radius: 50%; background: white; transition: all .3s; }
+        .toggle-dot-off { transform: translateX(0); }
+        .toggle-dot-on  { transform: translateX(16px); }
 
-        .timeline-line { position: relative; }
-        .timeline-line::before { content: ''; position: absolute; left: 19px; top: 40px; bottom: 0; width: 1px; background: linear-gradient(to bottom, rgba(16,185,129,0.3), transparent); }
+        /* Status dot */
+        .status-dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
 
-        .keyboard-key {
-            display: inline-flex; align-items: center; justify-content: center;
-            padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: 700;
-            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
-            border-bottom: 2px solid rgba(255,255,255,0.15); box-shadow: 0 1px 0 rgba(0,0,0,0.5);
-            font-family: monospace; color: #94a3b8;
-        }
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.08); border-radius: 10px; }
     </style>
 </head>
-<body>
+<body class="selection:bg-emerald-500/30">
 
-<!-- ========= TOP NAV ========= -->
-<header class="fixed top-0 left-0 w-full z-50 backdrop-blur-2xl border-b border-white/5" style="background: rgba(5,7,10,0.85)">
-    <div class="max-w-7xl mx-auto px-6 h-18 flex items-center justify-between py-4">
+<!-- TOP NAV -->
+<header class="fixed top-0 left-0 right-0 z-50 border-b border-white/5" style="background:rgba(5,7,10,.9);backdrop-filter:blur(20px)">
+    <div class="max-w-7xl mx-auto px-5 flex items-center justify-between h-16">
         <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center pulse-glow">
+            <div class="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center pulse-ring">
                 <i data-lucide="book-open" class="w-4 h-4 text-emerald-400"></i>
             </div>
             <span class="text-base font-black uppercase tracking-tight">Routine<span class="text-emerald-400">Pro</span></span>
-            <span class="badge badge-sky">Docs</span>
+            <span class="chip chip-sky">Docs</span>
         </div>
-        <a href="index.html" class="flex items-center gap-2 px-4 py-2 rounded-xl glass text-xs font-bold text-slate-400 hover:text-white transition-colors">
+        <a href="index.html" class="glass flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition-colors">
             <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Back to App
         </a>
     </div>
 </header>
 
-<div class="max-w-7xl mx-auto px-4 sm:px-6 pt-28 pb-20 flex gap-10">
+<div class="max-w-7xl mx-auto flex gap-0 pt-16">
 
-    <!-- ========= SIDEBAR ========= -->
-    <aside class="hidden lg:block w-56 flex-shrink-0">
-        <nav class="sticky top-28 space-y-0.5">
-            <p class="text-[9px] font-black text-slate-600 uppercase tracking-[0.2em] px-4 pb-3 pt-2">Start Here</p>
-            <a href="#intro" class="nav-link block px-4 py-2 text-xs font-semibold text-slate-400">👋 Introduction</a>
-            <a href="#quickstart" class="nav-link block px-4 py-2 text-xs font-semibold text-slate-400">⚡ Quick Start</a>
-            <p class="text-[9px] font-black text-slate-600 uppercase tracking-[0.2em] px-4 pb-3 pt-5">Daily Use</p>
-            <a href="#search" class="nav-link block px-4 py-2 text-xs font-semibold text-slate-400">🔍 Finding Courses</a>
-            <a href="#queue" class="nav-link block px-4 py-2 text-xs font-semibold text-slate-400">📋 Building Your Queue</a>
-            <a href="#generate" class="nav-link block px-4 py-2 text-xs font-semibold text-slate-400">🚀 Generate Scenarios</a>
-            <p class="text-[9px] font-black text-slate-600 uppercase tracking-[0.2em] px-4 pb-3 pt-5">Power Features</p>
-            <a href="#focus" class="nav-link block px-4 py-2 text-xs font-semibold text-slate-400">🎯 Focus Mode</a>
-            <a href="#compact" class="nav-link block px-4 py-2 text-xs font-semibold text-slate-400">🔤 Compact Mode</a>
-            <a href="#ramadan" class="nav-link block px-4 py-2 text-xs font-semibold text-slate-400">🌙 Ramadan Mode</a>
-            <a href="#export" class="nav-link block px-4 py-2 text-xs font-semibold text-slate-400">📸 PNG Export</a>
-            <p class="text-[9px] font-black text-slate-600 uppercase tracking-[0.2em] px-4 pb-3 pt-5">Advanced</p>
-            <a href="#sync" class="nav-link block px-4 py-2 text-xs font-semibold text-slate-400">☁️ Portal Sync</a>
-            <a href="#themes" class="nav-link block px-4 py-2 text-xs font-semibold text-slate-400">🎨 Themes</a>
+    <!-- SIDEBAR -->
+    <aside class="hidden lg:flex flex-col w-60 flex-shrink-0 min-h-screen">
+        <nav class="sticky top-16 pt-6 pb-10 overflow-y-auto max-h-[calc(100vh-64px)] space-y-0.5">
+            <p class="nav-group">Start Here</p>
+            <a href="#intro" class="nav-link">👋 Introduction</a>
+            <a href="#quickstart" class="nav-link">⚡ Quick Start</a>
+            <a href="#layout" class="nav-link">🗺️ App Layout</a>
+
+            <p class="nav-group">Adding Courses</p>
+            <a href="#search" class="nav-link">🔍 Search Courses</a>
+            <a href="#queue" class="nav-link">📋 Course Queue</a>
+            <a href="#sections" class="nav-link">🔀 Switch Sections</a>
+            <a href="#pin" class="nav-link">📌 Pinning Sections</a>
+            <a href="#manual" class="nav-link">✏️ Manual Entry</a>
+
+            <p class="nav-group">Filters & Generation</p>
+            <a href="#params" class="nav-link">⚙️ Parameters</a>
+            <a href="#generate" class="nav-link">🚀 Generate Scenarios</a>
+            <a href="#explorer" class="nav-link">🧭 Scenario Explorer</a>
+
+            <p class="nav-group">View Modes</p>
+            <a href="#focus" class="nav-link">🎯 Focus Mode</a>
+            <a href="#compact" class="nav-link">🔤 Compact Mode</a>
+            <a href="#ramadan" class="nav-link">🌙 Ramadan Mode</a>
+            <a href="#clock24" class="nav-link">🕒 24-Hour Mode</a>
+            <a href="#zoom" class="nav-link">🔎 Zoom & Font</a>
+
+            <p class="nav-group">Export & Sync</p>
+            <a href="#export" class="nav-link">📸 PNG Export</a>
+            <a href="#sync" class="nav-link">☁️ Portal Sync</a>
+
+            <p class="nav-group">Customization</p>
+            <a href="#themes" class="nav-link">🎨 Themes</a>
+            <a href="#faq" class="nav-link">❓ FAQ</a>
         </nav>
     </aside>
 
-    <!-- ========= MAIN ========= -->
-    <main class="flex-grow min-w-0 space-y-28">
+    <!-- MAIN CONTENT -->
+    <main class="flex-grow min-w-0 px-6 lg:px-10 pt-10 pb-24 space-y-24">
 
-        <!-- == INTRO == -->
-        <section id="intro" class="section-anchor">
-            <div class="mb-10">
-                <div class="badge badge-green mb-6">✦ Documentation v1.0</div>
-                <h1 class="text-5xl font-black tracking-tight mb-4">Meet <span class="gradient-text">RoutinePro</span></h1>
-                <p class="text-lg text-slate-400 max-w-2xl leading-relaxed">The intelligent university schedule builder — designed for students who want zero conflicts, maximum control, and a routine that actually works for them.</p>
+        <!-- ═══════════ INTRO ═══════════ -->
+        <section id="intro" class="section">
+            <span class="chip chip-green mb-6 inline-flex">✦ Complete User Guide v1.0</span>
+            <h1 class="text-5xl font-black tracking-tight mb-4">Everything about<br><span class="gradient-text">RoutinePro</span></h1>
+            <p class="text-slate-400 text-base max-w-2xl leading-relaxed mb-10">The intelligent university schedule architect. Stop manually checking for conflicts — let the engine figure out every valid combination so you can pick the one that fits your life.</p>
+
+            <!-- Feature grid -->
+            <div class="grid sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-10">
+                <div class="glass rounded-2xl p-5 glass-hover">
+                    <div class="feat-icon bg-emerald-500/10 border border-emerald-500/20 mb-4"><i data-lucide="zap" class="w-5 h-5 text-emerald-400"></i></div>
+                    <p class="font-black text-sm mb-1">Instant Scheduling</p>
+                    <p class="text-[11px] text-slate-500 leading-relaxed">Generate thousands of conflict-free scenarios in milliseconds using an optimized backtracking engine.</p>
+                </div>
+                <div class="glass rounded-2xl p-5 glass-hover">
+                    <div class="feat-icon bg-sky-500/10 border border-sky-500/20 mb-4"><i data-lucide="layers" class="w-5 h-5 text-sky-400"></i></div>
+                    <p class="font-black text-sm mb-1">Scenario Explorer</p>
+                    <p class="text-[11px] text-slate-500 leading-relaxed">Browse every valid routine with a live ← → navigator. Sorted by minimum waiting gap automatically.</p>
+                </div>
+                <div class="glass rounded-2xl p-5 glass-hover">
+                    <div class="feat-icon bg-violet-500/10 border border-violet-500/20 mb-4"><i data-lucide="palette" class="w-5 h-5 text-violet-400"></i></div>
+                    <p class="font-black text-sm mb-1">6 Premium Themes</p>
+                    <p class="text-[11px] text-slate-500 leading-relaxed">Emerald, Rose, Amber, Indigo, Ocean, Spectrum — plus custom hex color for your personal brand.</p>
+                </div>
+                <div class="glass rounded-2xl p-5 glass-hover">
+                    <div class="feat-icon bg-amber-500/10 border border-amber-500/20 mb-4"><i data-lucide="download" class="w-5 h-5 text-amber-400"></i></div>
+                    <p class="font-black text-sm mb-1">Share as PNG</p>
+                    <p class="text-[11px] text-slate-500 leading-relaxed">Export a high-resolution (3×) branded image with semester & gap details embedded automatically.</p>
+                </div>
             </div>
 
-            <!-- Feature Pills Row -->
-            <div class="flex flex-wrap gap-3 mb-10">
-                <span class="mode-pill bg-emerald-500/10 border border-emerald-500/20 text-emerald-400"><i data-lucide="zap" class="w-3 h-3"></i> Instant Generation</span>
-                <span class="mode-pill bg-sky-500/10 border border-sky-500/20 text-sky-400"><i data-lucide="layers" class="w-3 h-3"></i> Multiple Scenarios</span>
-                <span class="mode-pill bg-violet-500/10 border border-violet-500/20 text-violet-400"><i data-lucide="palette" class="w-3 h-3"></i> Themed UI</span>
-                <span class="mode-pill bg-amber-500/10 border border-amber-500/20 text-amber-400"><i data-lucide="target" class="w-3 h-3"></i> Focus Mode</span>
-                <span class="mode-pill bg-rose-500/10 border border-rose-500/20 text-rose-400"><i data-lucide="moon" class="w-3 h-3"></i> Ramadan Mode</span>
-                <span class="mode-pill bg-slate-500/10 border border-slate-500/20 text-slate-400"><i data-lucide="download" class="w-3 h-3"></i> PNG Export</span>
-            </div>
-
-            <!-- What it solves -->
-            <div class="grid sm:grid-cols-3 gap-4">
-                <div class="glass rounded-2xl p-5">
-                    <div class="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center mb-4">
-                        <i data-lucide="x-octagon" class="w-5 h-5 text-rose-400"></i>
-                    </div>
-                    <h3 class="font-bold text-sm mb-1">The Problem</h3>
-                    <p class="text-xs text-slate-500 leading-relaxed">Manually checking section conflicts is tedious and error-prone. One mistake means sitting through a broken schedule all semester.</p>
-                </div>
-                <div class="glass rounded-2xl p-5">
-                    <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-4">
-                        <i data-lucide="cpu" class="w-5 h-5 text-emerald-400"></i>
-                    </div>
-                    <h3 class="font-bold text-sm mb-1">How We Solve It</h3>
-                    <p class="text-xs text-slate-500 leading-relaxed">Our generation engine checks every possible section combination and only shows you conflict-free results—done in milliseconds.</p>
-                </div>
-                <div class="glass rounded-2xl p-5">
-                    <div class="w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center mb-4">
-                        <i data-lucide="smile" class="w-5 h-5 text-sky-400"></i>
-                    </div>
-                    <h3 class="font-bold text-sm mb-1">The Result</h3>
-                    <p class="text-xs text-slate-500 leading-relaxed">A perfect, shareable routine in under 5 minutes — with a beautiful UI that makes course planning feel premium.</p>
+            <!-- All modes at a glance -->
+            <div class="glass rounded-2xl p-6">
+                <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4">All Modes At a Glance</p>
+                <div class="flex flex-wrap gap-3">
+                    <span class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold"><i data-lucide="maximize-2" class="w-3 h-3"></i>Focus</span>
+                    <span class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-sky-500/10 border border-sky-500/20 text-sky-400 text-xs font-bold"><i data-lucide="type" class="w-3 h-3"></i>Compact</span>
+                    <span class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-bold"><i data-lucide="moon-star" class="w-3 h-3"></i>Ramadan</span>
+                    <span class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-violet-500/10 border border-violet-500/20 text-violet-400 text-xs font-bold"><i data-lucide="clock" class="w-3 h-3"></i>24-Hour</span>
+                    <span class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-500/10 border border-slate-500/20 text-slate-400 text-xs font-bold"><i data-lucide="globe" class="w-3 h-3"></i>Portal Sync</span>
+                    <span class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-bold"><i data-lucide="edit-2" class="w-3 h-3"></i>Manual Entry</span>
                 </div>
             </div>
         </section>
 
-        <!-- == QUICKSTART == -->
-        <section id="quickstart" class="section-anchor">
-            <div class="badge badge-sky mb-5">⚡ Quick Start</div>
-            <h2 class="text-3xl font-black tracking-tight mb-3">From Zero to Routine<br><span class="gradient-text">in 3 Steps</span></h2>
-            <p class="text-slate-400 text-sm mb-10">This is all you need to know to get your first conflict-free schedule.</p>
+        <!-- ═══════════ QUICKSTART ═══════════ -->
+        <section id="quickstart" class="section">
+            <span class="chip chip-sky mb-5 inline-flex">⚡ Quick Start</span>
+            <h2 class="section-title">Your first routine<br><span class="gradient-text">in 5 minutes</span></h2>
+            <p class="section-sub">Follow these 4 steps and you'll have a perfect schedule before your coffee gets cold.</p>
 
-            <div class="space-y-4 timeline-line">
-                <div class="flex gap-5 step-card">
-                    <div class="step-num w-10 h-10 rounded-full flex items-center justify-center text-sm font-black text-emerald-400 flex-shrink-0">1</div>
+            <div class="space-y-4 timeline">
+                <!-- Step 1 -->
+                <div class="flex gap-5">
+                    <div class="t-dot bg-emerald-500/15 border border-emerald-500/30 text-emerald-400">1</div>
                     <div class="glass rounded-2xl p-6 flex-grow glass-hover">
-                        <div class="flex items-start justify-between mb-3">
-                            <h3 class="font-black text-base">Search &amp; Add Courses</h3>
-                            <span class="badge badge-green">Step 1</span>
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="font-black">Search &amp; add your courses</h3>
+                            <span class="chip chip-green">Step 1</span>
                         </div>
-                        <p class="text-sm text-slate-400 mb-4 leading-relaxed">Click the search bar at the top of the left panel. Start typing a course name or code. Results appear instantly.</p>
-                        <div class="bg-black/30 rounded-xl p-4 flex items-center gap-3 border border-white/5">
+                        <p class="text-xs text-slate-400 leading-relaxed mb-4">Use the search bar in the left panel. Type the course name or code — results appear instantly. Click any result to add it to your queue.</p>
+                        <div class="bg-black/40 border border-white/5 rounded-xl px-4 py-3 flex items-center gap-3">
                             <i data-lucide="search" class="w-4 h-4 text-slate-600 flex-shrink-0"></i>
-                            <span class="text-xs text-slate-500 italic">e.g. "Computer Networks", "CSE", "DS"…</span>
+                            <span class="text-xs text-emerald-400 font-mono">Computer Network<span class="animate-pulse">|</span></span>
                         </div>
                     </div>
                 </div>
-
-                <div class="flex gap-5 step-card">
-                    <div class="step-num w-10 h-10 rounded-full flex items-center justify-center text-sm font-black text-sky-400 flex-shrink-0">2</div>
+                <!-- Step 2 -->
+                <div class="flex gap-5">
+                    <div class="t-dot bg-sky-500/15 border border-sky-500/30 text-sky-400">2</div>
                     <div class="glass rounded-2xl p-6 flex-grow glass-hover">
-                        <div class="flex items-start justify-between mb-3">
-                            <h3 class="font-black text-base">Set Your Preferences</h3>
-                            <span class="badge badge-sky">Step 2</span>
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="font-black">Set your filters</h3>
+                            <span class="chip chip-sky">Step 2</span>
                         </div>
-                        <p class="text-sm text-slate-400 mb-4 leading-relaxed">Use the Parameters section to set your preferred time window, minimum seat count, and allowed days.</p>
-                        <div class="grid grid-cols-3 gap-3">
-                            <div class="bg-black/30 border border-white/5 rounded-xl p-3 text-center">
+                        <p class="text-xs text-slate-400 leading-relaxed mb-4">Open the <strong class="text-white">Parameters</strong> section. Choose your preferred time window (e.g., 8AM–5PM), minimum available seats, and which days are okay for classes.</p>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="bg-black/40 border border-white/5 rounded-xl p-3 text-center">
                                 <i data-lucide="clock-3" class="w-4 h-4 text-slate-500 mx-auto mb-1.5"></i>
-                                <p class="text-[10px] text-slate-500 font-bold uppercase">Time Range</p>
+                                <p class="text-[9px] text-slate-600 font-black uppercase">Time Range</p>
                             </div>
-                            <div class="bg-black/30 border border-white/5 rounded-xl p-3 text-center">
+                            <div class="bg-black/40 border border-white/5 rounded-xl p-3 text-center">
                                 <i data-lucide="users" class="w-4 h-4 text-slate-500 mx-auto mb-1.5"></i>
-                                <p class="text-[10px] text-slate-500 font-bold uppercase">Min Seats</p>
+                                <p class="text-[9px] text-slate-600 font-black uppercase">Min Seats</p>
                             </div>
-                            <div class="bg-black/30 border border-white/5 rounded-xl p-3 text-center">
+                            <div class="bg-black/40 border border-white/5 rounded-xl p-3 text-center">
                                 <i data-lucide="calendar" class="w-4 h-4 text-slate-500 mx-auto mb-1.5"></i>
-                                <p class="text-[10px] text-slate-500 font-bold uppercase">Days</p>
+                                <p class="text-[9px] text-slate-600 font-black uppercase">Allowed Days</p>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="flex gap-5 step-card">
-                    <div class="step-num w-10 h-10 rounded-full flex items-center justify-center text-sm font-black text-violet-400 flex-shrink-0">3</div>
+                <!-- Step 3 -->
+                <div class="flex gap-5">
+                    <div class="t-dot bg-violet-500/15 border border-violet-500/30 text-violet-400">3</div>
                     <div class="glass rounded-2xl p-6 flex-grow glass-hover">
-                        <div class="flex items-start justify-between mb-3">
-                            <h3 class="font-black text-base">Generate &amp; Explore!</h3>
-                            <span class="badge" style="background:rgba(139,92,246,0.1);color:#a78bfa;border:1px solid rgba(139,92,246,0.2)">Step 3</span>
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="font-black">Generate scenarios</h3>
+                            <span class="chip chip-violet">Step 3</span>
                         </div>
-                        <p class="text-sm text-slate-400 mb-4 leading-relaxed">Hit the big <strong class="text-white">"Generate Scenarios"</strong> button. Browse all valid options using the ← → explorer controls.</p>
-                        <div class="flex items-center gap-3">
-                            <div class="flex items-center gap-1">
-                                <span class="keyboard-key">←</span>
-                                <span class="keyboard-key">→</span>
+                        <p class="text-xs text-slate-400 leading-relaxed mb-4">Click the big <strong class="text-white">Generate Scenarios</strong> button. The engine tests every possible section combination for zero conflicts.</p>
+                        <div class="bg-gradient-to-r from-emerald-500/10 to-sky-500/10 border border-emerald-500/20 rounded-xl p-4 flex items-center justify-between">
+                            <span class="text-sm font-black">Found <span class="text-emerald-400">183</span> valid scenarios 🎉</span>
+                            <div class="flex gap-1.5">
+                                <span class="key">← Prev</span>
+                                <span class="key">Next →</span>
                             </div>
-                            <span class="text-xs text-slate-500">Navigate between conflict-free scenarios</span>
                         </div>
+                    </div>
+                </div>
+                <!-- Step 4 -->
+                <div class="flex gap-5">
+                    <div class="t-dot bg-amber-500/15 border border-amber-500/30 text-amber-400">4</div>
+                    <div class="glass rounded-2xl p-6 flex-grow glass-hover">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="font-black">Export &amp; share</h3>
+                            <span class="chip chip-amber">Step 4</span>
+                        </div>
+                        <p class="text-xs text-slate-400 leading-relaxed">Found the perfect schedule? Click the <strong class="text-white">📥 download icon</strong> in the header to export a high-resolution PNG and share it with your friends!</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- == SEARCH == -->
-        <section id="search" class="section-anchor">
-            <div class="badge badge-green mb-5">🔍 Finding Courses</div>
-            <h2 class="text-3xl font-black tracking-tight mb-8">The Search System</h2>
+        <!-- ═══════════ APP LAYOUT ═══════════ -->
+        <section id="layout" class="section">
+            <span class="chip chip-slate mb-5 inline-flex">🗺️ App Layout</span>
+            <h2 class="section-title">Understanding<br>the Interface</h2>
+            <p class="section-sub">RoutinePro is split into 3 main areas. Knowing where everything is will save you a lot of time.</p>
 
-            <div class="grid md:grid-cols-2 gap-6">
+            <div class="glass rounded-2xl overflow-hidden mb-6">
+                <!-- Mock layout diagram -->
+                <div class="p-5 border-b border-white/5 grid grid-cols-3 gap-2 text-[10px] font-black uppercase tracking-widest" style="height:200px">
+                    <!-- Header area -->
+                    <div class="col-span-3 bg-white/3 rounded-xl border border-white/5 flex items-center justify-center text-slate-600 gap-2" style="height:36px">
+                        <i data-lucide="layout-panel-top" class="w-3 h-3"></i> Header — Logo · Credits · Modes · Export · Sync
+                    </div>
+                    <!-- Left panel -->
+                    <div class="bg-emerald-500/5 border border-emerald-500/15 rounded-xl flex items-center justify-center text-emerald-700 gap-1.5 col-span-1">
+                        <i data-lucide="panel-left" class="w-3 h-3"></i> Left Panel<br>Search &amp; Queue
+                    </div>
+                    <!-- Right / routine grid -->
+                    <div class="bg-sky-500/5 border border-sky-500/15 rounded-xl flex items-center justify-center text-sky-700 gap-1.5 col-span-2">
+                        <i data-lucide="grid" class="w-3 h-3"></i> Routine Grid &amp; Controls
+                    </div>
+                </div>
+                <table class="info-table">
+                    <thead><tr><th>Area</th><th>What's inside</th></tr></thead>
+                    <tbody>
+                        <tr><td>📌 Header</td><td>App logo, total credit count, weekly waiting gap, all mode toggles (Focus, Compact, Ramadan, 24h), docs link, portal sync, and PNG export button.</td></tr>
+                        <tr><td>📋 Left Panel</td><td>Course search bar, your selected course queue (sidebar cards), section switcher, pin/remove controls, and the Generate button.</td></tr>
+                        <tr><td>🗓️ Routine Grid</td><td>The visual timetable. Shows class blocks on a time axis per day. The Parameters &amp; Manual Entry panels sit above it.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ═══════════ SEARCH ═══════════ -->
+        <section id="search" class="section">
+            <span class="chip chip-green mb-5 inline-flex">🔍 Search</span>
+            <h2 class="section-title">Finding Courses</h2>
+            <p class="section-sub">Start here. The search is live — no button press needed.</p>
+
+            <div class="grid md:grid-cols-2 gap-5 mb-6">
                 <div class="glass rounded-2xl p-6">
                     <div class="flex items-center gap-3 mb-4">
-                        <div class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
-                            <i data-lucide="type" class="w-4 h-4 text-emerald-400"></i>
-                        </div>
-                        <h3 class="font-bold text-sm">Search by Name</h3>
+                        <div class="feat-icon bg-emerald-500/10 border border-emerald-500/20"><i data-lucide="type" class="w-5 h-5 text-emerald-400"></i></div>
+                        <div><p class="font-black text-sm">By Course Name</p><p class="text-[10px] text-slate-600">Type any part of the title</p></div>
                     </div>
-                    <p class="text-xs text-slate-500 leading-relaxed mb-3">Type any part of the course title. The results update as you type.</p>
-                    <div class="bg-black/40 border border-white/5 rounded-xl px-4 py-3 flex items-center gap-2">
-                        <i data-lucide="search" class="w-3.5 h-3.5 text-slate-600"></i>
-                        <span class="text-xs text-emerald-400 font-mono">Data Struct<span class="animate-pulse">|</span></span>
+                    <div class="space-y-2">
+                        <div class="bg-black/40 border border-white/5 rounded-xl px-4 py-2.5 flex items-center gap-2">
+                            <i data-lucide="search" class="w-3.5 h-3.5 text-slate-700"></i>
+                            <span class="text-xs text-emerald-400 font-mono">Data Struct<span class="animate-pulse">|</span></span>
+                        </div>
+                        <div class="bg-white/3 border border-white/5 rounded-xl divide-y divide-white/5 overflow-hidden">
+                            <div class="px-4 py-2.5 flex items-center justify-between hover:bg-white/3 transition-colors">
+                                <div>
+                                    <p class="text-xs font-bold">Data Structures</p>
+                                    <p class="text-[9px] text-slate-600 uppercase font-black">CSE</p>
+                                </div>
+                                <span class="chip chip-green text-[8px]">Open</span>
+                            </div>
+                            <div class="px-4 py-2.5 flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs font-bold">Data Structures Lab</p>
+                                    <p class="text-[9px] text-slate-600 uppercase font-black">CSE</p>
+                                </div>
+                                <span class="chip chip-sky text-[8px]">Reserved</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="glass rounded-2xl p-6">
                     <div class="flex items-center gap-3 mb-4">
-                        <div class="w-8 h-8 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-center">
-                            <i data-lucide="hash" class="w-4 h-4 text-sky-400"></i>
-                        </div>
-                        <h3 class="font-bold text-sm">Search by Code</h3>
+                        <div class="feat-icon bg-sky-500/10 border border-sky-500/20"><i data-lucide="hash" class="w-5 h-5 text-sky-400"></i></div>
+                        <div><p class="font-black text-sm">By Course Code</p><p class="text-[10px] text-slate-600">Filter by dept prefix</p></div>
                     </div>
-                    <p class="text-xs text-slate-500 leading-relaxed mb-3">Use short course codes like "CSE", "EEE", or "BBA" to quickly filter by department.</p>
-                    <div class="bg-black/40 border border-white/5 rounded-xl px-4 py-3 flex items-center gap-2">
-                        <i data-lucide="search" class="w-3.5 h-3.5 text-slate-600"></i>
-                        <span class="text-xs text-sky-400 font-mono">CSE 310<span class="animate-pulse">|</span></span>
+                    <div class="space-y-2">
+                        <div class="bg-black/40 border border-white/5 rounded-xl px-4 py-2.5 flex items-center gap-2">
+                            <i data-lucide="search" class="w-3.5 h-3.5 text-slate-700"></i>
+                            <span class="text-xs text-sky-400 font-mono">EEE 102<span class="animate-pulse">|</span></span>
+                        </div>
+                        <div class="callout callout-tip">
+                            <p class="text-[11px] text-slate-400 leading-relaxed"><strong class="text-emerald-400">Try:</strong> "CSE", "EEE", "BBA", "PHY" to filter by department. Results show up to 15 matches.</p>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="callout callout-tip mt-6">
-                <div class="flex items-start gap-3">
-                    <i data-lucide="lightbulb" class="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0"></i>
-                    <div>
-                        <p class="text-xs font-black text-emerald-400 uppercase tracking-widest mb-1">Pro Tip</p>
-                        <p class="text-xs text-slate-400 leading-relaxed">You can see the <strong class="text-white">department</strong>, <strong class="text-white">enrollment count</strong>, and <strong class="text-white">section status</strong> of every result. Open sections (shown in green) are ones you can still join.</p>
+            <!-- Status legend -->
+            <div class="glass rounded-2xl overflow-hidden">
+                <div class="p-4 border-b border-white/5"><p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Section Status Guide</p></div>
+                <div class="grid grid-cols-2 md:grid-cols-5 divide-x divide-y divide-white/5">
+                    <div class="p-4 text-center">
+                        <span class="chip chip-green mb-2 inline-flex">Open</span>
+                        <p class="text-[10px] text-slate-500">Seats available, anyone can enroll</p>
+                    </div>
+                    <div class="p-4 text-center">
+                        <span class="chip chip-rose mb-2 inline-flex">Closed</span>
+                        <p class="text-[10px] text-slate-500">Section is full, no seats left</p>
+                    </div>
+                    <div class="p-4 text-center">
+                        <span class="chip chip-sky mb-2 inline-flex">Reserved</span>
+                        <p class="text-[10px] text-slate-500">Held for specific student groups</p>
+                    </div>
+                    <div class="p-4 text-center">
+                        <span class="chip chip-violet mb-2 inline-flex">Freshman</span>
+                        <p class="text-[10px] text-slate-500">Only for first-semester students</p>
+                    </div>
+                    <div class="p-4 text-center">
+                        <span class="chip chip-amber mb-2 inline-flex">Blocked</span>
+                        <p class="text-[10px] text-slate-500">Administratively restricted</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- == QUEUE == -->
-        <section id="queue" class="section-anchor">
-            <div class="badge badge-sky mb-5">📋 Course Queue</div>
-            <h2 class="text-3xl font-black tracking-tight mb-8">Building Your Queue</h2>
+        <!-- ═══════════ QUEUE ═══════════ -->
+        <section id="queue" class="section">
+            <span class="chip chip-sky mb-5 inline-flex">📋 Queue</span>
+            <h2 class="section-title">Managing the Course Queue</h2>
+            <p class="section-sub">Every course you add appears as a card in the left sidebar. Here's everything you can do with them.</p>
 
             <div class="space-y-4">
-                <div class="glass rounded-2xl p-5 flex items-start gap-5">
-                    <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center flex-shrink-0">
-                        <i data-lucide="plus-circle" class="w-5 h-5 text-emerald-400"></i>
-                    </div>
+                <div class="glass rounded-2xl p-5 flex gap-5 glass-hover">
+                    <div class="feat-icon bg-emerald-500/10 border border-emerald-500/20"><i data-lucide="plus-circle" class="w-5 h-5 text-emerald-400"></i></div>
                     <div>
-                        <h3 class="font-bold mb-1">Adding Courses</h3>
-                        <p class="text-xs text-slate-400 leading-relaxed">Click any suggestion in the search dropdown. The course is added to the top of your queue and appears in the sidebar on the left.</p>
+                        <p class="font-black mb-1">Adding a Course</p>
+                        <p class="text-xs text-slate-400 leading-relaxed">Click any result in the search dropdown. The course instantly appears at the top of your sidebar queue. You can add as many courses as you need.</p>
                     </div>
                 </div>
-                <div class="glass rounded-2xl p-5 flex items-start gap-5">
-                    <div class="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center flex-shrink-0">
-                        <i data-lucide="x-circle" class="w-5 h-5 text-rose-400"></i>
-                    </div>
+                <div class="glass rounded-2xl p-5 flex gap-5 glass-hover">
+                    <div class="feat-icon bg-rose-500/10 border border-rose-500/20"><i data-lucide="x-circle" class="w-5 h-5 text-rose-400"></i></div>
                     <div>
-                        <h3 class="font-bold mb-1">Removing Courses</h3>
-                        <p class="text-xs text-slate-400 leading-relaxed">Hover over any course card in the sidebar queue and click the <strong class="text-white">✕ remove button</strong> in the top-right of the card.</p>
+                        <p class="font-black mb-1">Removing a Course</p>
+                        <p class="text-xs text-slate-400 leading-relaxed">Hover over a course card and click the <strong class="text-white">✕</strong> icon that appears in the top-right corner. This removes it from your queue and regeneration will no longer include it.</p>
                     </div>
                 </div>
-                <div class="glass rounded-2xl p-5 flex items-start gap-5">
-                    <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center flex-shrink-0">
-                        <i data-lucide="lock" class="w-5 h-5 text-amber-400"></i>
-                    </div>
+                <div class="glass rounded-2xl p-5 flex gap-5 glass-hover">
+                    <div class="feat-icon bg-sky-500/10 border border-sky-500/20"><i data-lucide="repeat" class="w-5 h-5 text-sky-400"></i></div>
                     <div>
-                        <h3 class="font-bold mb-1">Pinning a Section</h3>
-                        <p class="text-xs text-slate-400 leading-relaxed">Already decided on a specific section? Click the <strong class="text-white">🔒 lock button</strong> to "pin" it. The generator will always use this exact section regardless of other scenarios.</p>
+                        <p class="font-black mb-1">Switching Sections</p>
+                        <p class="text-xs text-slate-400 leading-relaxed">Each card has a <strong class="text-white">section dropdown</strong> at the bottom. Use it to preview or select a specific section before generating. The grid updates live.</p>
                     </div>
                 </div>
-                <div class="glass rounded-2xl p-5 flex items-start gap-5">
-                    <div class="w-10 h-10 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center flex-shrink-0">
-                        <i data-lucide="edit-2" class="w-5 h-5 text-violet-400"></i>
-                    </div>
+                <div class="glass rounded-2xl p-5 flex gap-5 glass-hover">
+                    <div class="feat-icon bg-amber-500/10 border border-amber-500/20"><i data-lucide="lock" class="w-5 h-5 text-amber-400"></i></div>
                     <div>
-                        <h3 class="font-bold mb-1">Manual Entry Mode</h3>
-                        <p class="text-xs text-slate-400 leading-relaxed">Have a class that isn't in the database (e.g., a lab, thesis, or off-campus session)? Use <strong class="text-white">Manual Entry</strong> to add custom time blocks with any name, days, and time range.</p>
+                        <p class="font-black mb-1">Pinning a Section</p>
+                        <p class="text-xs text-slate-400 leading-relaxed">Click the <strong class="text-white">🔒 lock icon</strong> on a card to "pin" that specific section. The generator will always use this exact section — it won't test alternatives for this course.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card anatomy -->
+            <div class="glass rounded-2xl overflow-hidden mt-6">
+                <div class="p-4 border-b border-white/5"><p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Anatomy of a Course Card</p></div>
+                <div class="p-5 grid md:grid-cols-2 gap-6 items-center">
+                    <div class="glass rounded-xl p-4 border-l-4 border-emerald-500/40">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-1.5">
+                                <i data-lucide="unlock" class="w-3 h-3 text-slate-600"></i>
+                                <i data-lucide="x" class="w-3 h-3 text-slate-600"></i>
+                            </div>
+                        </div>
+                        <p class="text-xs font-black uppercase text-white">Data Structures</p>
+                        <p class="text-[8px] text-slate-600 uppercase tracking-widest mt-0.5 font-black">CSE DEPT</p>
+                        <div class="grid grid-cols-4 gap-2 mt-3 py-2 border-y border-white/5">
+                            <div class="text-center"><p class="text-[7px] text-slate-600 font-black uppercase">Sec</p><p class="text-[9px] font-bold">1</p></div>
+                            <div class="text-center"><p class="text-[7px] text-slate-600 font-black uppercase">Enr</p><p class="text-[9px] font-bold">28</p></div>
+                            <div class="text-center"><p class="text-[7px] text-slate-600 font-black uppercase">Cap</p><p class="text-[9px] font-bold">35</p></div>
+                            <div class="text-center"><p class="text-[7px] text-slate-600 font-black uppercase">Stat</p><span class="chip chip-green text-[7px]">Open</span></div>
+                        </div>
+                        <div class="mt-2 flex items-center gap-1.5 text-[9px] text-slate-600 font-black">
+                            <span class="chip chip-slate">Switch to Sec 2 ▾</span>
+                        </div>
+                    </div>
+                    <div class="space-y-3 text-xs text-slate-400">
+                        <div class="flex items-start gap-3"><i data-lucide="lock" class="w-3.5 h-3.5 text-amber-400 mt-0.5 flex-shrink-0"></i><span><strong class="text-white">🔒 Lock Icon</strong> — Pin this section so the generator always uses it</span></div>
+                        <div class="flex items-start gap-3"><i data-lucide="x" class="w-3.5 h-3.5 text-rose-400 mt-0.5 flex-shrink-0"></i><span><strong class="text-white">✕ Remove</strong> — Remove this course from your queue entirely</span></div>
+                        <div class="flex items-start gap-3"><i data-lucide="info" class="w-3.5 h-3.5 text-sky-400 mt-0.5 flex-shrink-0"></i><span><strong class="text-white">Enr / Cap</strong> — Enrolled count vs. total capacity (seats)</span></div>
+                        <div class="flex items-start gap-3"><i data-lucide="chevron-down" class="w-3.5 h-3.5 text-emerald-400 mt-0.5 flex-shrink-0"></i><span><strong class="text-white">Section Switcher</strong> — Instantly preview another section in the grid</span></div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- == GENERATE == -->
-        <section id="generate" class="section-anchor">
-            <div class="badge badge-green mb-5">🚀 Scenarios</div>
-            <h2 class="text-3xl font-black tracking-tight mb-8">Generate &amp; Navigate</h2>
+        <!-- ═══════════ SECTIONS ═══════════ -->
+        <section id="sections" class="section">
+            <span class="chip chip-sky mb-5 inline-flex">🔀 Sections</span>
+            <h2 class="section-title">Switching Sections</h2>
+            <p class="section-sub">Each course can have multiple sections with different teachers, rooms, and schedules. You're in full control.</p>
 
-            <div class="glass rounded-3xl overflow-hidden mb-8">
+            <div class="callout callout-info mb-6">
+                <div class="flex items-start gap-3">
+                    <i data-lucide="info" class="w-4 h-4 text-sky-400 mt-0.5 flex-shrink-0"></i>
+                    <div>
+                        <p class="text-xs font-black text-sky-400 uppercase tracking-widest mb-1">How Sections Work</p>
+                        <p class="text-xs text-slate-400 leading-relaxed">A course like "Data Structures" might have 8 sections (Sec 1 through 8), each with a different day/time. When you generate, the engine tries all sections to find conflict-free combos — unless you've pinned a specific one.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass rounded-2xl overflow-hidden">
+                <table class="info-table">
+                    <thead><tr><th>Action</th><th>How to do it</th><th>Effect</th></tr></thead>
+                    <tbody>
+                        <tr><td>Preview a section</td><td>Use the dropdown in the course card</td><td>The routine grid updates immediately to show that section</td></tr>
+                        <tr><td>Lock a section</td><td>Click 🔒 on the card after selecting</td><td>Generator always uses this section — no alternatives tested</td></tr>
+                        <tr><td>Let generator choose</td><td>Leave all sections unlocked (default)</td><td>Engine tests every valid section combination automatically</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ═══════════ PIN ═══════════ -->
+        <section id="pin" class="section">
+            <span class="chip chip-amber mb-5 inline-flex">📌 Pinning</span>
+            <h2 class="section-title">Pinning a Section</h2>
+            <p class="section-sub">Already confirmed you're in a specific section? Lock it in so the generator respects it.</p>
+
+            <div class="grid md:grid-cols-2 gap-5">
+                <div class="glass rounded-2xl p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="feat-icon bg-slate-500/10 border border-slate-500/20"><i data-lucide="unlock" class="w-5 h-5 text-slate-500"></i></div>
+                        <div><p class="font-black text-sm">Unpinned (Default)</p><p class="text-[10px] text-slate-600">Generator explores all sections</p></div>
+                    </div>
+                    <p class="text-xs text-slate-400 leading-relaxed">The engine will try every possible section of this course and find the ones that don't conflict with your other courses.</p>
+                </div>
+                <div class="glass rounded-2xl p-6 border-amber-500/20">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="feat-icon bg-amber-500/10 border border-amber-500/20"><i data-lucide="lock" class="w-5 h-5 text-amber-400"></i></div>
+                        <div><p class="font-black text-sm">Pinned 🔒</p><p class="text-[10px] text-amber-700">Section is fixed</p></div>
+                    </div>
+                    <p class="text-xs text-slate-400 leading-relaxed">Only scenarios that include your exact pinned section will be shown. Use this when you have a preference for a specific teacher or schedule.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════ MANUAL ENTRY ═══════════ -->
+        <section id="manual" class="section">
+            <span class="chip chip-violet mb-5 inline-flex">✏️ Manual Entry</span>
+            <h2 class="section-title">Manual Entry Mode</h2>
+            <p class="section-sub">Have a class that isn't in the database? Add it yourself — thesis defence, off-campus lab, guest lectures, anything.</p>
+
+            <div class="glass rounded-2xl p-6 mb-6">
+                <div class="flex items-center gap-4 mb-5">
+                    <div class="feat-icon bg-violet-500/10 border border-violet-500/20"><i data-lucide="edit-2" class="w-5 h-5 text-violet-400"></i></div>
+                    <div>
+                        <p class="font-black">How to use Manual Entry</p>
+                        <p class="text-xs text-slate-500 mt-0.5">Click "Manual Mode" button in the left panel</p>
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex items-center gap-4 py-2 border-b border-white/5">
+                        <div class="w-5 h-5 rounded-full bg-violet-500/20 border border-violet-500/30 flex items-center justify-center text-[9px] font-black text-violet-400 flex-shrink-0">1</div>
+                        <p class="text-xs text-slate-400">Click <strong class="text-white">"+ Manual Mode"</strong> button to switch from Search mode to Manual Entry form.</p>
+                    </div>
+                    <div class="flex items-center gap-4 py-2 border-b border-white/5">
+                        <div class="w-5 h-5 rounded-full bg-violet-500/20 border border-violet-500/30 flex items-center justify-center text-[9px] font-black text-violet-400 flex-shrink-0">2</div>
+                        <p class="text-xs text-slate-400">Fill in the <strong class="text-white">Subject Name</strong>, choose days with checkboxes, set a start &amp; end time, and optionally a room number.</p>
+                    </div>
+                    <div class="flex items-center gap-4 py-2 border-b border-white/5">
+                        <div class="w-5 h-5 rounded-full bg-violet-500/20 border border-violet-500/30 flex items-center justify-center text-[9px] font-black text-violet-400 flex-shrink-0">3</div>
+                        <p class="text-xs text-slate-400">Click <strong class="text-white">"Add to Routine"</strong>. The custom block is added to your queue and protected from conflicts just like any other course.</p>
+                    </div>
+                    <div class="flex items-center gap-4 py-2">
+                        <div class="w-5 h-5 rounded-full bg-violet-500/20 border border-violet-500/30 flex items-center justify-center text-[9px] font-black text-violet-400 flex-shrink-0">4</div>
+                        <p class="text-xs text-slate-400">You can <strong class="text-white">edit</strong> a manual course later by clicking the ✏️ pencil icon on its card, or <strong class="text-white">remove</strong> it with ✕.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="callout callout-tip">
+                <div class="flex items-start gap-3">
+                    <i data-lucide="lightbulb" class="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0"></i>
+                    <p class="text-xs text-slate-400 leading-relaxed">Press <span class="key">Enter</span> in any text field to submit quickly. The app will auto-suggest an end time (+90 minutes) when you set a start time.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════ PARAMETERS ═══════════ -->
+        <section id="params" class="section">
+            <span class="chip chip-green mb-5 inline-flex">⚙️ Parameters</span>
+            <h2 class="section-title">Filters &amp; Parameters</h2>
+            <p class="section-sub">These filters control which sections the generator is even allowed to include. Set them before generating.</p>
+
+            <div class="glass rounded-2xl overflow-hidden mb-5">
+                <div class="p-4 border-b border-white/5"><p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">All Filter Options</p></div>
+                <table class="info-table">
+                    <thead><tr><th>Filter</th><th>What it does</th><th>Example</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td>🕐 Start Time</td>
+                            <td>No class can start before this time</td>
+                            <td>08:00 AM — excludes any section before 8am</td>
+                        </tr>
+                        <tr>
+                            <td>🕔 End Time</td>
+                            <td>No class can end after this time</td>
+                            <td>05:00 PM — won't show classes after 5pm</td>
+                        </tr>
+                        <tr>
+                            <td>👥 Min Seats</td>
+                            <td>Minimum available seats required</td>
+                            <td>5 seats — hides nearly-full sections</td>
+                        </tr>
+                        <tr>
+                            <td>📅 Day Filter</td>
+                            <td>Only use sections on checked days</td>
+                            <td>Uncheck Saturday to avoid weekend classes</td>
+                        </tr>
+                        <tr>
+                            <td>🏷️ Status Filter</td>
+                            <td>Which section statuses are acceptable</td>
+                            <td>Check only "Open" to exclude Reserved/Blocked/Freshman</td>
+                        </tr>
+                        <tr>
+                            <td>📊 Sort By</td>
+                            <td>How results are ordered</td>
+                            <td>"Min Gap" puts tightest schedules first</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="callout callout-warn">
+                <div class="flex items-start gap-3">
+                    <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-400 mt-0.5 flex-shrink-0"></i>
+                    <p class="text-xs text-slate-400 leading-relaxed"><strong class="text-white">Too strict = no results.</strong> If you set very tight filters (e.g., 9AM–12PM only, Open sections only), the engine may find 0 valid scenarios. Ease up on one filter at a time until results appear.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════ GENERATE ═══════════ -->
+        <section id="generate" class="section">
+            <span class="chip chip-green mb-5 inline-flex">🚀 Generator</span>
+            <h2 class="section-title">Generate Scenarios</h2>
+            <p class="section-sub">Once you've added your courses and set your filters, click Generate. This is where the magic happens.</p>
+
+            <div class="glass rounded-3xl overflow-hidden mb-6">
                 <div class="bg-gradient-to-r from-emerald-500/10 to-sky-500/10 p-6 border-b border-white/5 flex items-center justify-between">
                     <div>
-                        <p class="text-xs font-black text-slate-500 uppercase tracking-widest mb-1">RESULT</p>
-                        <p class="text-2xl font-black">Found <span class="text-emerald-400">247</span> valid scenarios</p>
+                        <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Result</p>
+                        <p class="text-2xl font-black">Found <span class="text-emerald-400">247</span> conflict-free scenarios</p>
+                        <p class="text-xs text-slate-500 mt-1">Sorted by minimum weekly waiting time • Scenario 1/247</p>
                     </div>
                     <div class="text-5xl float">🎉</div>
                 </div>
-                <div class="p-6 flex items-center justify-between">
-                    <div class="text-xs text-slate-500"><i data-lucide="info" class="w-3 h-3 inline mr-1 text-sky-400"></i> Sorted by minimum waiting time</div>
+                <div class="p-5 flex items-center justify-between flex-wrap gap-3">
+                    <div class="flex items-center gap-2 text-xs text-slate-500">
+                        <i data-lucide="clock" class="w-3.5 h-3.5 text-emerald-400"></i>
+                        Weekly Waiting Gap: <strong class="text-white ml-1">3h 20m</strong>
+                    </div>
                     <div class="flex gap-2">
-                        <div class="keyboard-key">← Prev</div>
-                        <div class="keyword-key keyboard-key">Next →</div>
+                        <span class="key">← Prev</span>
+                        <span class="text-xs text-slate-500 self-center">Browse scenarios</span>
+                        <span class="key">Next →</span>
                     </div>
                 </div>
             </div>
 
-            <div class="callout callout-info">
+            <div class="callout callout-info mb-5">
                 <div class="flex items-start gap-3">
                     <i data-lucide="bar-chart-2" class="w-4 h-4 text-sky-400 mt-0.5 flex-shrink-0"></i>
                     <div>
-                        <p class="text-xs font-black text-sky-400 uppercase tracking-widest mb-1">How Sorting Works</p>
-                        <p class="text-xs text-slate-400 leading-relaxed">RoutinePro sorts by <strong class="text-white">total weekly waiting gap</strong> — the total free time between your classes. Scenario #1 always has the tightest, most time-efficient schedule. The further you go, the more scattered the timetable.</p>
+                        <p class="text-xs font-black text-sky-400 uppercase tracking-widest mb-1">Weekly Waiting Gap</p>
+                        <p class="text-xs text-slate-400 leading-relaxed">This is the total free time you'd have between classes each week. <strong class="text-white">Scenario #1 always has the minimum gap</strong> — the most compact, efficient schedule. Higher-numbered scenarios have more free time between classes (which might suit you better).</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- == FOCUS MODE == -->
-        <section id="focus" class="section-anchor">
-            <div class="badge badge-amber mb-5">🎯 Power Feature</div>
-            <h2 class="text-3xl font-black tracking-tight mb-3">Focus Mode</h2>
-            <p class="text-slate-400 text-sm leading-relaxed mb-8">Strip the routine grid of everything that isn't useful — empty columns, dead hours, unused days.</p>
+        <!-- ═══════════ EXPLORER ═══════════ -->
+        <section id="explorer" class="section">
+            <span class="chip chip-sky mb-5 inline-flex">🧭 Explorer</span>
+            <h2 class="section-title">Scenario Explorer</h2>
+            <p class="section-sub">Once generated, flip through every valid scenario side-by-side with instant visual feedback.</p>
 
-            <div class="grid md:grid-cols-2 gap-4 mb-8">
-                <!-- Before -->
-                <div class="glass rounded-2xl p-5">
-                    <p class="text-[10px] font-black text-rose-400 uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="x" class="w-3 h-3"></i> Focus OFF</p>
-                    <div class="space-y-1.5">
-                        <div class="flex gap-1">
-                            <div class="w-10 h-5 bg-white/3 rounded text-[8px] text-slate-600 flex items-center justify-center">Time</div>
-                            <div class="flex-1 h-5 bg-white/3 rounded text-[8px] text-slate-600 flex items-center justify-center">Sun</div>
-                            <div class="flex-1 h-5 bg-white/3 rounded text-[8px] text-slate-600 flex items-center justify-center">Mon</div>
-                            <div class="flex-1 h-5 bg-white/3 rounded text-[8px] text-slate-600 flex items-center justify-center">Tue</div>
-                            <div class="flex-1 h-5 bg-white/3 rounded text-[8px] text-slate-600 flex items-center justify-center">Wed</div>
-                            <div class="flex-1 h-5 bg-white/3 rounded text-[8px] text-slate-600 flex items-center justify-center opacity-30">Thu</div>
-                            <div class="flex-1 h-5 bg-white/3 rounded text-[8px] text-slate-600 flex items-center justify-center opacity-30">Fri</div>
-                            <div class="flex-1 h-5 bg-white/3 rounded text-[8px] text-slate-600 flex items-center justify-center opacity-30">Sat</div>
-                        </div>
-                        <div class="flex gap-1">
-                            <div class="w-10 h-4 bg-white/3 rounded text-[6px] text-slate-700 flex items-center justify-end pr-1">8 AM</div>
-                            <div class="flex-1 h-4 bg-white/3 rounded"></div>
-                            <div class="flex-1 h-4 bg-white/3 rounded"></div>
-                            <div class="flex-1 h-4 bg-white/3 rounded"></div>
-                            <div class="flex-1 h-4 bg-white/3 rounded"></div>
-                            <div class="flex-1 h-4 bg-white/0 rounded opacity-20"></div>
-                            <div class="flex-1 h-4 bg-white/0 rounded opacity-20"></div>
-                            <div class="flex-1 h-4 bg-white/0 rounded opacity-20"></div>
-                        </div>
-                        <div class="flex gap-1">
-                            <div class="w-10 h-10 bg-white/3 rounded text-[6px] text-slate-700 flex items-center justify-end pr-1">9 AM</div>
-                            <div class="flex-1 h-10 bg-emerald-500/15 rounded border border-emerald-500/20"></div>
-                            <div class="flex-1 h-10 bg-white/3 rounded"></div>
-                            <div class="flex-1 h-10 bg-sky-500/15 rounded border border-sky-500/20"></div>
-                            <div class="flex-1 h-10 bg-white/3 rounded"></div>
-                            <div class="flex-1 h-10 rounded opacity-20"></div>
-                            <div class="flex-1 h-10 rounded opacity-20"></div>
-                            <div class="flex-1 h-10 rounded opacity-20"></div>
-                        </div>
-                        <div class="flex gap-1">
-                            <div class="w-10 h-4 bg-white/3 rounded text-[6px] text-slate-700 flex items-center justify-end pr-1">...</div>
-                            <div class="flex-1 h-4 opacity-20 bg-white/3 rounded"></div>
-                            <div class="flex-1 h-4 opacity-20 bg-white/3 rounded"></div>
-                            <div class="flex-1 h-4 opacity-20 bg-white/3 rounded"></div>
-                            <div class="flex-1 h-4 opacity-20 bg-white/3 rounded"></div>
-                            <div class="flex-1 h-4 opacity-10 rounded"></div>
-                            <div class="flex-1 h-4 opacity-10 rounded"></div>
-                            <div class="flex-1 h-4 opacity-10 rounded"></div>
-                        </div>
-                    </div>
+            <div class="grid md:grid-cols-3 gap-4 mb-6">
+                <div class="glass rounded-2xl p-5 glass-hover">
+                    <div class="feat-icon bg-emerald-500/10 border border-emerald-500/20 mb-4"><i data-lucide="arrow-left-right" class="w-5 h-5 text-emerald-400"></i></div>
+                    <p class="font-black text-sm mb-1">Navigate Freely</p>
+                    <p class="text-[11px] text-slate-500 leading-relaxed">Use ← → buttons in the explorer bar to jump between scenarios. The grid redraws instantly — no page reload.</p>
                 </div>
-                <!-- After -->
-                <div class="glass rounded-2xl p-5 border-emerald-500/20">
-                    <p class="text-[10px] font-black text-emerald-400 uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="check" class="w-3 h-3"></i> Focus ON</p>
-                    <div class="space-y-1.5">
-                        <div class="flex gap-1">
-                            <div class="w-10 h-5 bg-white/3 rounded text-[8px] text-slate-600 flex items-center justify-center">Time</div>
-                            <div class="flex-1 h-5 bg-white/3 rounded text-[8px] text-slate-600 flex items-center justify-center">Sun</div>
-                            <div class="flex-1 h-5 bg-white/3 rounded text-[8px] text-slate-600 flex items-center justify-center">Mon</div>
-                            <div class="flex-1 h-5 bg-white/3 rounded text-[8px] text-slate-600 flex items-center justify-center">Tue</div>
-                            <div class="flex-1 h-5 bg-white/3 rounded text-[8px] text-slate-600 flex items-center justify-center">Wed</div>
-                        </div>
-                        <div class="flex gap-1">
-                            <div class="w-10 h-10 bg-white/3 rounded text-[6px] text-slate-700 flex items-center justify-end pr-1">9 AM</div>
-                            <div class="flex-1 h-10 bg-emerald-500/20 rounded border border-emerald-500/30 flex items-center justify-center text-[8px] text-emerald-400 font-bold">DS</div>
-                            <div class="flex-1 h-10 bg-white/3 rounded"></div>
-                            <div class="flex-1 h-10 bg-sky-500/20 rounded border border-sky-500/30 flex items-center justify-center text-[8px] text-sky-400 font-bold">CN</div>
-                            <div class="flex-1 h-10 bg-white/3 rounded"></div>
-                        </div>
-                        <div class="flex gap-1">
-                            <div class="w-10 h-10 bg-white/3 rounded text-[6px] text-slate-700 flex items-center justify-end pr-1">11 AM</div>
-                            <div class="flex-1 h-10 bg-white/3 rounded"></div>
-                            <div class="flex-1 h-10 bg-violet-500/20 rounded border border-violet-500/30 flex items-center justify-center text-[8px] text-violet-400 font-bold">OOP</div>
-                            <div class="flex-1 h-10 bg-white/3 rounded"></div>
-                            <div class="flex-1 h-10 bg-amber-500/20 rounded border border-amber-500/30 flex items-center justify-center text-[8px] text-amber-400 font-bold">DB</div>
-                        </div>
-                    </div>
+                <div class="glass rounded-2xl p-5 glass-hover">
+                    <div class="feat-icon bg-sky-500/10 border border-sky-500/20 mb-4"><i data-lucide="timer" class="w-5 h-5 text-sky-400"></i></div>
+                    <p class="font-black text-sm mb-1">Waiting Gap Display</p>
+                    <p class="text-[11px] text-slate-500 leading-relaxed">Each scenario shows its total weekly waiting gap. Use this to compare how packed or relaxed each schedule is.</p>
+                </div>
+                <div class="glass rounded-2xl p-5 glass-hover">
+                    <div class="feat-icon bg-violet-500/10 border border-violet-500/20 mb-4"><i data-lucide="shield-check" class="w-5 h-5 text-violet-400"></i></div>
+                    <p class="font-black text-sm mb-1">Lock &amp; Export</p>
+                    <p class="text-[11px] text-slate-500 leading-relaxed">Found the one? Pin sections from the Explorer, then click Export to save it as a PNG to share with friends.</p>
                 </div>
             </div>
 
             <div class="callout callout-tip">
                 <div class="flex items-start gap-3">
                     <i data-lucide="lightbulb" class="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0"></i>
-                    <p class="text-xs text-slate-400 leading-relaxed"><strong class="text-white">Focus Mode disables 24-Hour Mode</strong> to prevent layout conflicts. You can re-enable it after toggling Focus off.</p>
+                    <p class="text-xs text-slate-400 leading-relaxed">Click <strong class="text-white">"Exit Explorer"</strong> in the navigator bar to go back to manual section selection mode. This lets you make adjustments and regenerate a fresh set of scenarios.</p>
                 </div>
             </div>
         </section>
 
-        <!-- == COMPACT MODE == -->
-        <section id="compact" class="section-anchor">
-            <div class="badge badge-sky mb-5">🔤 Compact Mode</div>
-            <h2 class="text-3xl font-black tracking-tight mb-3">Compact Mode</h2>
-            <p class="text-slate-400 text-sm leading-relaxed mb-8">When you have many courses, long titles can clutter the grid. Compact Mode abbreviates them using the first letter of each word.</p>
+        <!-- ═══════════ FOCUS MODE ═══════════ -->
+        <section id="focus" class="section">
+            <span class="chip chip-amber mb-5 inline-flex">🎯 Power Feature</span>
+            <h2 class="section-title">Focus Mode</h2>
+            <p class="section-sub">Eliminate the noise. Focus Mode hides empty days and crops the time grid to only show your active class hours.</p>
+
+            <!-- Before / After visual -->
+            <div class="grid md:grid-cols-2 gap-4 mb-6">
+                <div class="glass rounded-2xl p-5">
+                    <p class="text-[10px] font-black text-rose-400 uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="x-circle" class="w-3 h-3"></i> Focus OFF — Cluttered View</p>
+                    <div class="space-y-1">
+                        <div class="flex gap-1 text-[7px]">
+                            <div class="w-8 h-5 bg-white/4 rounded flex items-center justify-center text-slate-700">Time</div>
+                            <div class="flex-1 h-5 bg-white/4 rounded flex items-center justify-center text-slate-700">Sun</div>
+                            <div class="flex-1 h-5 bg-white/4 rounded flex items-center justify-center text-slate-700">Mon</div>
+                            <div class="flex-1 h-5 bg-white/4 rounded flex items-center justify-center text-slate-700">Tue</div>
+                            <div class="flex-1 h-5 bg-white/4 rounded flex items-center justify-center text-slate-700">Wed</div>
+                            <div class="flex-1 h-5 rounded opacity-20 bg-white/4 flex items-center justify-center text-slate-700">Thu</div>
+                            <div class="flex-1 h-5 rounded opacity-20 bg-white/4 flex items-center justify-center text-slate-700">Fri</div>
+                            <div class="flex-1 h-5 rounded opacity-20 bg-white/4 flex items-center justify-center text-slate-700">Sat</div>
+                        </div>
+                        <div class="flex gap-1"><div class="w-8 h-4 bg-white/3 rounded text-slate-800 text-[6px] flex items-end justify-end pb-0.5 pr-1">8am</div><div class="flex-1 h-4 bg-white/3 rounded"></div><div class="flex-1 h-4 bg-white/3 rounded"></div><div class="flex-1 h-4 bg-white/3 rounded"></div><div class="flex-1 h-4 bg-white/3 rounded"></div><div class="flex-1 h-4 rounded opacity-10"></div><div class="flex-1 h-4 rounded opacity-10"></div><div class="flex-1 h-4 rounded opacity-10"></div></div>
+                        <div class="flex gap-1"><div class="w-8 h-8 bg-white/3 rounded text-slate-800 text-[6px] flex items-end justify-end pb-0.5 pr-1">9am</div><div class="flex-1 h-8 bg-emerald-500/15 rounded border border-emerald-500/20"></div><div class="flex-1 h-8 bg-white/3 rounded"></div><div class="flex-1 h-8 bg-sky-500/15 rounded border border-sky-500/20"></div><div class="flex-1 h-8 bg-white/3 rounded"></div><div class="flex-1 h-8 rounded opacity-10"></div><div class="flex-1 h-8 rounded opacity-10"></div><div class="flex-1 h-8 rounded opacity-10"></div></div>
+                        <div class="flex gap-1 opacity-25"><div class="w-8 h-4 bg-white/3 rounded text-[6px] text-slate-800 flex items-end justify-end pb-0.5 pr-1">...</div><div class="flex-1 h-4 bg-white/3 rounded"></div><div class="flex-1 h-4 bg-white/3 rounded"></div><div class="flex-1 h-4 bg-white/3 rounded"></div><div class="flex-1 h-4 bg-white/3 rounded"></div><div class="flex-1 h-4 rounded"></div><div class="flex-1 h-4 rounded"></div><div class="flex-1 h-4 rounded"></div></div>
+                        <p class="text-[9px] text-rose-400 mt-2">3 empty days &amp; 10+ empty hours wasted</p>
+                    </div>
+                </div>
+                <div class="glass rounded-2xl p-5 border-emerald-500/15">
+                    <p class="text-[10px] font-black text-emerald-400 uppercase tracking-widest mb-4 flex items-center gap-2"><i data-lucide="check-circle-2" class="w-3 h-3"></i> Focus ON — Clean View</p>
+                    <div class="space-y-1">
+                        <div class="flex gap-1 text-[7px]">
+                            <div class="w-8 h-5 bg-white/4 rounded flex items-center justify-center text-slate-700">Time</div>
+                            <div class="flex-1 h-5 bg-white/4 rounded flex items-center justify-center text-slate-700">Sun</div>
+                            <div class="flex-1 h-5 bg-white/4 rounded flex items-center justify-center text-slate-700">Mon</div>
+                            <div class="flex-1 h-5 bg-white/4 rounded flex items-center justify-center text-slate-700">Tue</div>
+                            <div class="flex-1 h-5 bg-white/4 rounded flex items-center justify-center text-slate-700">Wed</div>
+                        </div>
+                        <div class="flex gap-1"><div class="w-8 h-8 bg-white/3 rounded text-[6px] text-slate-800 flex items-end justify-end pb-0.5 pr-1">9am</div><div class="flex-1 h-8 bg-emerald-500/20 rounded border border-emerald-500/30 flex items-center justify-center text-[7px] text-emerald-400 font-black">DS</div><div class="flex-1 h-8 bg-white/3 rounded"></div><div class="flex-1 h-8 bg-sky-500/20 rounded border border-sky-500/30 flex items-center justify-center text-[7px] text-sky-400 font-black">CN</div><div class="flex-1 h-8 bg-white/3 rounded"></div></div>
+                        <div class="flex gap-1"><div class="w-8 h-8 bg-white/3 rounded text-[6px] text-slate-800 flex items-end justify-end pb-0.5 pr-1">11am</div><div class="flex-1 h-8 bg-white/3 rounded"></div><div class="flex-1 h-8 bg-violet-500/20 rounded border border-violet-500/30 flex items-center justify-center text-[7px] text-violet-400 font-black">OOP</div><div class="flex-1 h-8 bg-white/3 rounded"></div><div class="flex-1 h-8 bg-amber-500/20 rounded border border-amber-500/30 flex items-center justify-center text-[7px] text-amber-400 font-black">DB</div></div>
+                        <p class="text-[9px] text-emerald-400 mt-2">Only active days &amp; hours shown ✓</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-4 mb-6">
+                <div class="callout callout-tip">
+                    <div class="flex items-start gap-3">
+                        <i data-lucide="maximize-2" class="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0"></i>
+                        <div>
+                            <p class="text-xs font-black text-emerald-400 uppercase tracking-widest mb-1">Width Slider</p>
+                            <p class="text-xs text-slate-400 leading-relaxed">In Focus Mode, a <strong class="text-white">Width slider</strong> appears. Drag it to make the routine grid wider or narrower — great for displays of all sizes.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="callout callout-warn">
+                    <div class="flex items-start gap-3">
+                        <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-400 mt-0.5 flex-shrink-0"></i>
+                        <p class="text-xs text-slate-400 leading-relaxed"><strong class="text-white">Note:</strong> Focus Mode automatically disables 24-Hour Mode to prevent layout conflicts. Re-enable 24h after turning Focus off.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════ COMPACT MODE ═══════════ -->
+        <section id="compact" class="section">
+            <span class="chip chip-sky mb-5 inline-flex">🔤 Compact Mode</span>
+            <h2 class="section-title">Compact Mode</h2>
+            <p class="section-sub">Long course names can overflow class blocks in a crowded grid. Compact Mode abbreviates them to initials automatically.</p>
 
             <div class="glass rounded-2xl overflow-hidden mb-6">
-                <div class="p-4 border-b border-white/5">
+                <div class="p-4 border-b border-white/5 flex items-center justify-between">
                     <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Live Abbreviation Examples</p>
+                    <span class="chip chip-sky">Smart Filtering</span>
                 </div>
                 <div class="divide-y divide-white/5">
-                    <div class="flex items-center justify-between px-6 py-4">
+                    <div class="flex items-center justify-between px-6 py-3.5 hover:bg-white/2 transition-colors">
                         <span class="text-sm text-slate-300">Data Structures and Algorithms</span>
-                        <div class="flex items-center gap-3">
-                            <i data-lucide="arrow-right" class="w-3 h-3 text-slate-600"></i>
-                            <span class="text-sm font-black text-emerald-400">DSA</span>
-                        </div>
+                        <div class="flex items-center gap-3"><i data-lucide="arrow-right" class="w-3 h-3 text-slate-700"></i><span class="font-black text-emerald-400">DSA</span></div>
                     </div>
-                    <div class="flex items-center justify-between px-6 py-4">
+                    <div class="flex items-center justify-between px-6 py-3.5 hover:bg-white/2 transition-colors">
                         <span class="text-sm text-slate-300">Computer Networks</span>
-                        <div class="flex items-center gap-3">
-                            <i data-lucide="arrow-right" class="w-3 h-3 text-slate-600"></i>
-                            <span class="text-sm font-black text-emerald-400">CN</span>
-                        </div>
+                        <div class="flex items-center gap-3"><i data-lucide="arrow-right" class="w-3 h-3 text-slate-700"></i><span class="font-black text-emerald-400">CN</span></div>
                     </div>
-                    <div class="flex items-center justify-between px-6 py-4">
+                    <div class="flex items-center justify-between px-6 py-3.5 hover:bg-white/2 transition-colors">
                         <span class="text-sm text-slate-300">Object Oriented Programming</span>
-                        <div class="flex items-center gap-3">
-                            <i data-lucide="arrow-right" class="w-3 h-3 text-slate-600"></i>
-                            <span class="text-sm font-black text-emerald-400">OOP</span>
-                        </div>
+                        <div class="flex items-center gap-3"><i data-lucide="arrow-right" class="w-3 h-3 text-slate-700"></i><span class="font-black text-emerald-400">OOP</span></div>
                     </div>
-                    <div class="flex items-center justify-between px-6 py-4">
-                        <span class="text-sm text-slate-300">Database Management Systems</span>
-                        <div class="flex items-center gap-3">
-                            <i data-lucide="arrow-right" class="w-3 h-3 text-slate-600"></i>
-                            <span class="text-sm font-black text-emerald-400">DMS</span>
-                        </div>
+                    <div class="flex items-center justify-between px-6 py-3.5 hover:bg-white/2 transition-colors">
+                        <span class="text-sm text-slate-300">Introduction to Database Systems</span>
+                        <div class="flex items-center gap-3"><i data-lucide="arrow-right" class="w-3 h-3 text-slate-700"></i><span class="font-black text-emerald-400">IDS</span></div>
+                    </div>
+                    <div class="flex items-center justify-between px-6 py-3.5 hover:bg-white/2 transition-colors">
+                        <span class="text-sm text-slate-300">Calculus</span>
+                        <div class="flex items-center gap-3"><i data-lucide="arrow-right" class="w-3 h-3 text-slate-700"></i><span class="font-black text-emerald-400">CA</span><span class="text-[9px] text-slate-600 ml-1">(first 2 chars)</span></div>
                     </div>
                 </div>
             </div>
@@ -484,215 +773,313 @@
             <div class="callout callout-info">
                 <div class="flex items-start gap-3">
                     <i data-lucide="info" class="w-4 h-4 text-sky-400 mt-0.5 flex-shrink-0"></i>
-                    <p class="text-xs text-slate-400 leading-relaxed">Small "filler" words like <span class="keyboard-key">and</span> <span class="keyboard-key">of</span> <span class="keyboard-key">the</span> <span class="keyboard-key">for</span> are automatically skipped so your abbreviations stay meaningful.</p>
+                    <p class="text-xs text-slate-400 leading-relaxed">Stop words are automatically ignored: <span class="key">and</span> <span class="key">of</span> <span class="key">the</span> <span class="key">to</span> <span class="key">for</span> <span class="key">&amp;</span> <span class="key">a</span> <span class="key">in</span> <span class="key">with</span>. Single-word courses get their first 2 characters instead.</p>
                 </div>
             </div>
         </section>
 
-        <!-- == RAMADAN MODE == -->
-        <section id="ramadan" class="section-anchor">
-            <div class="badge badge-amber mb-5">🌙 Ramadan Mode</div>
-            <h2 class="text-3xl font-black tracking-tight mb-3">Ramadan Mode</h2>
-            <p class="text-slate-400 text-sm leading-relaxed mb-8">University schedules shift during Ramadan. Instead of manually adjusting each class, the app transforms your entire routine automatically.</p>
+        <!-- ═══════════ RAMADAN MODE ═══════════ -->
+        <section id="ramadan" class="section">
+            <span class="chip chip-amber mb-5 inline-flex">🌙 Ramadan Mode</span>
+            <h2 class="section-title">Ramadan Mode</h2>
+            <p class="section-sub">During Ramadan, universities like AIUB shift their class timings (shorter periods, earlier end). With one click, RoutinePro transforms your entire schedule automatically — no manual editing required.</p>
 
-            <div class="glass rounded-2xl overflow-hidden mb-6 border-amber-500/10">
+            <div class="glass rounded-2xl overflow-hidden mb-6">
+                <div class="p-4 border-b border-white/5"><p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">How Timings Shift</p></div>
                 <div class="flex">
-                    <!-- Regular -->
                     <div class="flex-1 p-5 border-r border-white/5">
                         <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-4">Regular Schedule</p>
                         <div class="space-y-2">
-                            <div class="bg-white/5 rounded-xl px-4 py-3 flex items-center justify-between">
-                                <span class="text-xs text-slate-400">Class 1</span>
-                                <span class="text-xs font-bold">08:00 - 09:30</span>
-                            </div>
-                            <div class="bg-white/5 rounded-xl px-4 py-3 flex items-center justify-between">
-                                <span class="text-xs text-slate-400">Class 2</span>
-                                <span class="text-xs font-bold">09:40 - 11:10</span>
-                            </div>
-                            <div class="bg-white/5 rounded-xl px-4 py-3 flex items-center justify-between">
-                                <span class="text-xs text-slate-400">Class 3</span>
-                                <span class="text-xs font-bold">11:20 - 12:50</span>
-                            </div>
+                            <div class="bg-white/5 rounded-xl px-4 py-3 flex justify-between items-center"><span class="text-xs text-slate-400">Slot 1</span><span class="text-xs font-bold">08:00 – 09:30 AM</span></div>
+                            <div class="bg-white/5 rounded-xl px-4 py-3 flex justify-between items-center"><span class="text-xs text-slate-400">Slot 2</span><span class="text-xs font-bold">09:40 – 11:10 AM</span></div>
+                            <div class="bg-white/5 rounded-xl px-4 py-3 flex justify-between items-center"><span class="text-xs text-slate-400">Slot 3</span><span class="text-xs font-bold">11:20 – 12:50 PM</span></div>
+                            <div class="bg-white/5 rounded-xl px-4 py-3 flex justify-between items-center"><span class="text-xs text-slate-400">Slot 4</span><span class="text-xs font-bold">02:00 – 03:30 PM</span></div>
                         </div>
                     </div>
-                    <!-- Ramadan -->
                     <div class="flex-1 p-5 bg-amber-500/5">
                         <p class="text-[9px] font-black text-amber-500 uppercase tracking-widest mb-4">Ramadan Schedule</p>
                         <div class="space-y-2">
-                            <div class="bg-amber-500/10 rounded-xl px-4 py-3 flex items-center justify-between border border-amber-500/15">
-                                <span class="text-xs text-amber-400/70">Class 1</span>
-                                <span class="text-xs font-bold text-amber-400">08:00 - 09:00</span>
-                            </div>
-                            <div class="bg-amber-500/10 rounded-xl px-4 py-3 flex items-center justify-between border border-amber-500/15">
-                                <span class="text-xs text-amber-400/70">Class 2</span>
-                                <span class="text-xs font-bold text-amber-400">09:10 - 10:10</span>
-                            </div>
-                            <div class="bg-amber-500/10 rounded-xl px-4 py-3 flex items-center justify-between border border-amber-500/15">
-                                <span class="text-xs text-amber-400/70">Class 3</span>
-                                <span class="text-xs font-bold text-amber-400">10:20 - 11:20</span>
-                            </div>
+                            <div class="bg-amber-500/10 border border-amber-500/15 rounded-xl px-4 py-3 flex justify-between items-center"><span class="text-xs text-amber-400/70">Slot 1</span><span class="text-xs font-bold text-amber-400">08:00 – 09:00 AM</span></div>
+                            <div class="bg-amber-500/10 border border-amber-500/15 rounded-xl px-4 py-3 flex justify-between items-center"><span class="text-xs text-amber-400/70">Slot 2</span><span class="text-xs font-bold text-amber-400">09:10 – 10:10 AM</span></div>
+                            <div class="bg-amber-500/10 border border-amber-500/15 rounded-xl px-4 py-3 flex justify-between items-center"><span class="text-xs text-amber-400/70">Slot 3</span><span class="text-xs font-bold text-amber-400">10:20 – 11:20 AM</span></div>
+                            <div class="bg-amber-500/10 border border-amber-500/15 rounded-xl px-4 py-3 flex justify-between items-center"><span class="text-xs text-amber-400/70">Slot 4</span><span class="text-xs font-bold text-amber-400">12:00 – 01:00 PM</span></div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="callout callout-warning">
+            <div class="callout callout-warn">
                 <div class="flex items-start gap-3">
                     <i data-lucide="moon-star" class="w-4 h-4 text-amber-400 mt-0.5 flex-shrink-0"></i>
-                    <p class="text-xs text-slate-400 leading-relaxed"><strong class="text-white">This feature is admin-controlled.</strong> The toggle is only visible when an administrator has enabled it for the current period. If you don't see the 🌙 button, Ramadan Mode is not currently needed.</p>
+                    <p class="text-xs text-slate-400 leading-relaxed"><strong class="text-white">Admin-Controlled:</strong> The 🌙 button only appears in the header when an administrator has enabled the feature. During non-Ramadan periods, the toggle remains hidden.</p>
                 </div>
             </div>
         </section>
 
-        <!-- == EXPORT == -->
-        <section id="export" class="section-anchor">
-            <div class="badge badge-sky mb-5">📸 Export</div>
-            <h2 class="text-3xl font-black tracking-tight mb-8">Export as PNG</h2>
+        <!-- ═══════════ 24H MODE ═══════════ -->
+        <section id="clock24" class="section">
+            <span class="chip chip-violet mb-5 inline-flex">🕒 24-Hour Mode</span>
+            <h2 class="section-title">24-Hour Mode</h2>
+            <p class="section-sub">Extends the time grid to a full 24-hour view, starting from 7AM. Perfect for late-night labs, early morning sessions, or any course with an unconventional schedule.</p>
 
-            <div class="relative glass rounded-3xl p-8 overflow-hidden mb-6">
-                <div class="absolute -right-10 -top-10 w-60 h-60 rounded-full bg-emerald-500/5 blur-3xl pointer-events-none"></div>
-                <div class="grid md:grid-cols-3 gap-6 relative">
-                    <div class="text-center">
-                        <div class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-3">
-                            <i data-lucide="maximize-2" class="w-5 h-5 text-slate-400"></i>
-                        </div>
-                        <p class="text-xs font-black mb-1">3× Resolution</p>
-                        <p class="text-[10px] text-slate-500">Crystal clear on any screen or print</p>
+            <div class="grid md:grid-cols-2 gap-5 mb-6">
+                <div class="glass rounded-2xl p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="feat-icon bg-slate-500/10 border border-slate-500/20"><i data-lucide="sun" class="w-5 h-5 text-slate-400"></i></div>
+                        <div><p class="font-black text-sm">Normal Mode Grid</p><p class="text-[10px] text-slate-600">8:00 AM — 8:00 PM</p></div>
                     </div>
-                    <div class="text-center">
-                        <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto mb-3">
-                            <i data-lucide="layout-dashboard" class="w-5 h-5 text-emerald-400"></i>
-                        </div>
-                        <p class="text-xs font-black mb-1">Metadata Overlays</p>
-                        <p class="text-[10px] text-slate-500">Semester, waiting gap and branding baked in</p>
+                    <div class="space-y-1">
+                        <div class="flex gap-2 items-center"><span class="text-[8px] w-8 text-slate-700 flex-shrink-0 text-right">8am</span><div class="flex-1 h-3 bg-white/4 rounded-full"></div></div>
+                        <div class="flex gap-2 items-center"><span class="text-[8px] w-8 text-slate-700 flex-shrink-0 text-right">12pm</span><div class="flex-1 h-3 bg-white/4 rounded-full"></div></div>
+                        <div class="flex gap-2 items-center"><span class="text-[8px] w-8 text-slate-700 flex-shrink-0 text-right">8pm</span><div class="flex-1 h-3 bg-white/4 rounded-full"></div></div>
                     </div>
-                    <div class="text-center">
-                        <div class="w-12 h-12 rounded-2xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center mx-auto mb-3">
-                            <i data-lucide="palette" class="w-5 h-5 text-sky-400"></i>
-                        </div>
-                        <p class="text-xs font-black mb-1">Themed</p>
-                        <p class="text-[10px] text-slate-500">Inherits your active Prism theme</p>
+                </div>
+                <div class="glass rounded-2xl p-6 border-violet-500/20">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="feat-icon bg-violet-500/10 border border-violet-500/20"><i data-lucide="moon" class="w-5 h-5 text-violet-400"></i></div>
+                        <div><p class="font-black text-sm">24-Hour Mode Grid</p><p class="text-[10px] text-violet-700">7:00 AM → next 7:00 AM</p></div>
+                    </div>
+                    <div class="space-y-1">
+                        <div class="flex gap-2 items-center"><span class="text-[8px] w-8 text-violet-900 flex-shrink-0 text-right">7am</span><div class="flex-1 h-3 bg-violet-500/10 rounded-full border border-violet-500/10"></div></div>
+                        <div class="flex gap-2 items-center"><span class="text-[8px] w-8 text-violet-900 flex-shrink-0 text-right">12pm</span><div class="flex-1 h-3 bg-violet-500/10 rounded-full border border-violet-500/10"></div></div>
+                        <div class="flex gap-2 items-center"><span class="text-[8px] w-8 text-violet-900 flex-shrink-0 text-right">12am</span><div class="flex-1 h-3 bg-violet-500/10 rounded-full border border-violet-500/10"></div></div>
+                        <div class="flex gap-2 items-center"><span class="text-[8px] w-8 text-violet-900 flex-shrink-0 text-right">7am+</span><div class="flex-1 h-3 bg-violet-500/10 rounded-full border border-violet-500/10"></div></div>
                     </div>
                 </div>
             </div>
+            <div class="callout callout-info">
+                <div class="flex items-start gap-3">
+                    <i data-lucide="info" class="w-4 h-4 text-sky-400 mt-0.5 flex-shrink-0"></i>
+                    <p class="text-xs text-slate-400 leading-relaxed">24-Hour Mode and Focus Mode are <strong class="text-white">mutually exclusive</strong> — enabling one will automatically disable the other.</p>
+                </div>
+            </div>
+        </section>
 
+        <!-- ═══════════ ZOOM & FONT ═══════════ -->
+        <section id="zoom" class="section">
+            <span class="chip chip-slate mb-5 inline-flex">🔎 Controls</span>
+            <h2 class="section-title">Zoom &amp; Font Size</h2>
+            <p class="section-sub">Fine-tune the visual density of your routine grid to match your screen size and preference.</p>
+
+            <div class="glass rounded-2xl overflow-hidden mb-6">
+                <table class="info-table">
+                    <thead><tr><th>Control</th><th>Where to find it</th><th>What it changes</th><th>Range</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td>🔎 Row Height (Zoom)</td>
+                            <td>Parameters section / Focus controls</td>
+                            <td>How tall each hour row is — makes the grid taller/shorter</td>
+                            <td>40px – 150px</td>
+                        </tr>
+                        <tr>
+                            <td>🔤 Font Size</td>
+                            <td>Parameters section / Focus controls</td>
+                            <td>Text size inside class blocks</td>
+                            <td>6px – 24px</td>
+                        </tr>
+                        <tr>
+                            <td>↔️ Width (Focus)</td>
+                            <td>Focus Controls section (Focus Mode only)</td>
+                            <td>How wide the grid is relative to the screen</td>
+                            <td>50% – 100%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="callout callout-tip">
+                <div class="flex items-start gap-3">
+                    <i data-lucide="lightbulb" class="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0"></i>
+                    <p class="text-xs text-slate-400 leading-relaxed">All sliders are <strong class="text-white">synced</strong> across the Parameters, Manual Entry, and Focus sections. Adjusting one updates the others automatically.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════ EXPORT ═══════════ -->
+        <section id="export" class="section">
+            <span class="chip chip-sky mb-5 inline-flex">📸 Export</span>
+            <h2 class="section-title">Export as PNG</h2>
+            <p class="section-sub">Save your perfect routine as a high-quality image and share it anywhere — WhatsApp, Discord, or your student group chat.</p>
+
+            <div class="glass rounded-3xl overflow-hidden mb-6">
+                <div class="relative p-8 bg-gradient-to-br from-emerald-500/5 via-transparent to-sky-500/5 border-b border-white/5">
+                    <div class="absolute right-8 top-6 text-4xl float">🖼️</div>
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div>
+                            <div class="feat-icon bg-white/5 border border-white/10 mb-3"><i data-lucide="image" class="w-5 h-5 text-slate-400"></i></div>
+                            <p class="font-black text-sm mb-1">3× Resolution</p>
+                            <p class="text-[11px] text-slate-500 leading-relaxed">Exported at 3× screen density — crystal-clear on any device, printable at A4.</p>
+                        </div>
+                        <div>
+                            <div class="feat-icon bg-emerald-500/10 border border-emerald-500/20 mb-3"><i data-lucide="layers" class="w-5 h-5 text-emerald-400"></i></div>
+                            <p class="font-black text-sm mb-1">Auto Overlays</p>
+                            <p class="text-[11px] text-slate-500 leading-relaxed">Semester name (top-right), Weekly Waiting Gap (top-left), and RoutinePro URL (bottom-right) are baked into the image.</p>
+                        </div>
+                        <div>
+                            <div class="feat-icon bg-violet-500/10 border border-violet-500/20 mb-3"><i data-lucide="palette" class="w-5 h-5 text-violet-400"></i></div>
+                            <p class="font-black text-sm mb-1">Themed Export</p>
+                            <p class="text-[11px] text-slate-500 leading-relaxed">The exported PNG inherits your active Prism theme colors and background for a cohesive look.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Steps -->
+                <div class="divide-y divide-white/5">
+                    <div class="flex items-center gap-4 px-6 py-3.5">
+                        <div class="w-5 h-5 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-[9px] font-black text-emerald-400 flex-shrink-0">1</div>
+                        <p class="text-xs text-slate-400">Make sure your routine is showing the scenario you want to save.</p>
+                    </div>
+                    <div class="flex items-center gap-4 px-6 py-3.5">
+                        <div class="w-5 h-5 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-[9px] font-black text-emerald-400 flex-shrink-0">2</div>
+                        <p class="text-xs text-slate-400">Click the <strong class="text-white">📥 download icon</strong> in the top-right of the header. The button will spin while rendering.</p>
+                    </div>
+                    <div class="flex items-center gap-4 px-6 py-3.5">
+                        <div class="w-5 h-5 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-[9px] font-black text-emerald-400 flex-shrink-0">3</div>
+                        <p class="text-xs text-slate-400">The file <code class="bg-white/5 px-1.5 py-0.5 rounded text-emerald-400 text-[10px]">RoutinePro_[timestamp].png</code> downloads automatically to your device.</p>
+                    </div>
+                </div>
+            </div>
             <div class="callout callout-tip">
                 <div class="flex items-start gap-3">
                     <i data-lucide="smartphone" class="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0"></i>
-                    <p class="text-xs text-slate-400 leading-relaxed"><strong class="text-white">On Mobile?</strong> If the download doesn't trigger automatically, the app will open the image in a new tab — simply <strong class="text-white">long-press the image</strong> to save it to your gallery.</p>
+                    <p class="text-xs text-slate-400 leading-relaxed"><strong class="text-white">On Mobile:</strong> If the download doesn't trigger automatically, the image opens in a new tab. <strong class="text-white">Long-press the image → Save</strong> to your gallery.</p>
                 </div>
             </div>
         </section>
 
-        <!-- == PORTAL SYNC == -->
-        <section id="sync" class="section-anchor">
-            <div class="badge badge-green mb-5">☁️ Data Sync</div>
-            <h2 class="text-3xl font-black tracking-tight mb-8">Portal Sync</h2>
+        <!-- ═══════════ PORTAL SYNC ═══════════ -->
+        <section id="sync" class="section">
+            <span class="chip chip-green mb-5 inline-flex">☁️ Portal Sync</span>
+            <h2 class="section-title">Keeping Data Current</h2>
+            <p class="section-sub">RoutinePro has two data sources: a global cloud database and your own personal upload. Here's how each works.</p>
 
-            <div class="space-y-4 mb-8">
-                <div class="glass rounded-2xl p-6 flex items-center gap-5">
-                    <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center flex-shrink-0 pulse-glow">
-                        <i data-lucide="globe" class="w-6 h-6 text-emerald-400"></i>
-                    </div>
+            <div class="space-y-4 mb-6">
+                <div class="glass rounded-2xl p-6 flex gap-5 items-start">
+                    <div class="feat-icon bg-emerald-500/10 border border-emerald-500/20 pulse-ring"><i data-lucide="globe" class="w-5 h-5 text-emerald-400"></i></div>
                     <div class="flex-grow">
                         <div class="flex items-center gap-3 mb-1">
-                            <h3 class="font-bold text-sm">Global Database</h3>
-                            <span class="badge badge-green">Live</span>
+                            <p class="font-black">Global Database</p>
+                            <span class="chip chip-green">Live</span>
                         </div>
-                        <p class="text-xs text-slate-500 leading-relaxed">Maintained by admins and updated live. Every new user gets current semester data automatically on first visit.</p>
+                        <p class="text-xs text-slate-400 leading-relaxed">Maintained by admins. Automatically loaded for every new visitor. Always contains the latest semester data. Updated via the Admin Portal.</p>
                     </div>
                 </div>
-                <div class="glass rounded-2xl p-6 flex items-center gap-5">
-                    <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center flex-shrink-0">
-                        <i data-lucide="hard-drive" class="w-6 h-6 text-amber-400"></i>
-                    </div>
+                <div class="glass rounded-2xl p-6 flex gap-5 items-start">
+                    <div class="feat-icon bg-amber-500/10 border border-amber-500/20"><i data-lucide="hard-drive" class="w-5 h-5 text-amber-400"></i></div>
                     <div class="flex-grow">
                         <div class="flex items-center gap-3 mb-1">
-                            <h3 class="font-bold text-sm">Local Sync (Your Upload)</h3>
-                            <span class="badge badge-amber">Personal</span>
+                            <p class="font-black">Your Local Upload</p>
+                            <span class="chip chip-amber">Personal</span>
                         </div>
-                        <p class="text-xs text-slate-500 leading-relaxed">Upload your own <strong class="text-amber-400">.xlsx</strong> or <strong class="text-amber-400">.json</strong> offered course report. Your data overrides the global copy and persists in your browser.</p>
+                        <p class="text-xs text-slate-400 leading-relaxed">Upload your own file from the university portal. Supports both <code class="bg-white/5 px-1 rounded text-amber-400 text-[10px]">.xlsx</code> and <code class="bg-white/5 px-1 rounded text-amber-400 text-[10px]">.json</code>. Your local upload overrides the global data and persists in your browser until you clear it.</p>
                     </div>
                 </div>
             </div>
 
-            <div class="glass rounded-2xl overflow-hidden">
-                <div class="p-4 border-b border-white/5">
-                    <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">How to Upload a File</p>
-                </div>
+            <!-- Upload steps -->
+            <div class="glass rounded-2xl overflow-hidden mb-5">
+                <div class="p-4 border-b border-white/5"><p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">How to Upload Your Own Data</p></div>
                 <div class="divide-y divide-white/5">
-                    <div class="flex items-center gap-4 px-6 py-3">
-                        <div class="w-5 h-5 rounded-full bg-sky-500/20 border border-sky-500/30 flex items-center justify-center text-[9px] font-black text-sky-400 flex-shrink-0">1</div>
-                        <p class="text-xs text-slate-400">Click the <strong class="text-white">☁️ cloud/refresh icon</strong> in the header to open Portal Sync.</p>
-                    </div>
-                    <div class="flex items-center gap-4 px-6 py-3">
-                        <div class="w-5 h-5 rounded-full bg-sky-500/20 border border-sky-500/30 flex items-center justify-center text-[9px] font-black text-sky-400 flex-shrink-0">2</div>
-                        <p class="text-xs text-slate-400">Click <strong class="text-white">Upload File</strong> and select your <code class="bg-white/5 px-1.5 py-0.5 rounded text-emerald-400 text-[10px]">.xlsx</code> file from your downloads.</p>
-                    </div>
-                    <div class="flex items-center gap-4 px-6 py-3">
-                        <div class="w-5 h-5 rounded-full bg-sky-500/20 border border-sky-500/30 flex items-center justify-center text-[9px] font-black text-sky-400 flex-shrink-0">3</div>
-                        <p class="text-xs text-slate-400">The app parses the file, detects the semester, and reloads the course list —&nbsp;done!</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- == THEMES == -->
-        <section id="themes" class="section-anchor">
-            <div class="badge badge-sky mb-5">🎨 Themes</div>
-            <h2 class="text-3xl font-black tracking-tight mb-8">The Prism Theme Engine</h2>
-
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-8">
-                <div class="glass rounded-2xl p-4 glass-hover cursor-pointer">
-                    <div class="w-8 h-8 rounded-xl bg-emerald-500 mb-3"></div>
-                    <p class="text-xs font-black">Emerald</p>
-                    <p class="text-[10px] text-slate-500 mt-0.5">Default</p>
-                </div>
-                <div class="glass rounded-2xl p-4 glass-hover cursor-pointer">
-                    <div class="w-8 h-8 rounded-xl bg-rose-500 mb-3"></div>
-                    <p class="text-xs font-black">Crimson</p>
-                    <p class="text-[10px] text-slate-500 mt-0.5">Warm & Bold</p>
-                </div>
-                <div class="glass rounded-2xl p-4 glass-hover cursor-pointer">
-                    <div class="w-8 h-8 rounded-xl bg-amber-400 mb-3"></div>
-                    <p class="text-xs font-black">Sandstone</p>
-                    <p class="text-[10px] text-slate-500 mt-0.5">Earthy Golds</p>
-                </div>
-                <div class="glass rounded-2xl p-4 glass-hover cursor-pointer">
-                    <div class="w-8 h-8 rounded-xl bg-indigo-500 mb-3"></div>
-                    <p class="text-xs font-black">Nebula</p>
-                    <p class="text-[10px] text-slate-500 mt-0.5">Deep Space</p>
-                </div>
-                <div class="glass rounded-2xl p-4 glass-hover cursor-pointer">
-                    <div class="w-8 h-8 rounded-xl bg-sky-500 mb-3"></div>
-                    <p class="text-xs font-black">Ocean</p>
-                    <p class="text-[10px] text-slate-500 mt-0.5">Fresh Blue</p>
-                </div>
-                <div class="glass rounded-2xl p-4 glass-hover cursor-pointer">
-                    <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-pink-500 via-violet-500 to-sky-500 mb-3"></div>
-                    <p class="text-xs font-black">Spectrum</p>
-                    <p class="text-[10px] text-slate-500 mt-0.5">Rainbow IDs</p>
+                    <div class="flex items-center gap-4 px-6 py-3.5"><div class="w-5 h-5 rounded-full bg-sky-500/20 border border-sky-500/30 flex items-center justify-center text-[9px] font-black text-sky-400 flex-shrink-0">1</div><p class="text-xs text-slate-400">Click the <strong class="text-white">☁️ refresh/cloud icon</strong> in the top header to open the Portal Sync panel.</p></div>
+                    <div class="flex items-center gap-4 px-6 py-3.5"><div class="w-5 h-5 rounded-full bg-sky-500/20 border border-sky-500/30 flex items-center justify-center text-[9px] font-black text-sky-400 flex-shrink-0">2</div><p class="text-xs text-slate-400">Download your <strong class="text-white">Offered Course Report</strong> from your university portal as an <code class="bg-white/5 px-1 rounded text-emerald-400 text-[10px]">.xlsx</code> file.</p></div>
+                    <div class="flex items-center gap-4 px-6 py-3.5"><div class="w-5 h-5 rounded-full bg-sky-500/20 border border-sky-500/30 flex items-center justify-center text-[9px] font-black text-sky-400 flex-shrink-0">3</div><p class="text-xs text-slate-400">Click <strong class="text-white">"Upload File"</strong> and select that file. The app parses it, auto-detects the semester name, and reloads.</p></div>
+                    <div class="flex items-center gap-4 px-6 py-3.5"><div class="w-5 h-5 rounded-full bg-sky-500/20 border border-sky-500/30 flex items-center justify-center text-[9px] font-black text-sky-400 flex-shrink-0">4</div><p class="text-xs text-slate-400">The <strong class="text-white">Last Sync</strong> timestamp updates and you'll see your course count in the sync panel header.</p></div>
                 </div>
             </div>
 
             <div class="callout callout-tip">
                 <div class="flex items-start gap-3">
-                    <i data-lucide="sparkles" class="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0"></i>
-                    <p class="text-xs text-slate-400 leading-relaxed"><strong class="text-white">Spectrum mode</strong> assigns a unique color to each course based on a golden ratio algorithm — so every class block always has a visually distinct color even as you add more.</p>
+                    <i data-lucide="refresh-cw" class="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0"></i>
+                    <p class="text-xs text-slate-400 leading-relaxed">Want to revert to the global database? Click <strong class="text-white">"Sync from Cloud"</strong> in the sync panel. This clears your local upload and fetches the latest global data.</p>
                 </div>
+            </div>
+        </section>
+
+        <!-- ═══════════ THEMES ═══════════ -->
+        <section id="themes" class="section">
+            <span class="chip chip-violet mb-5 inline-flex">🎨 Themes</span>
+            <h2 class="section-title">The Prism<br><span class="gradient-text">Theme Engine</span></h2>
+            <p class="section-sub">7 curated themes + a custom hex color picker. Themes affect the entire interface — accents, glow effects, class block colors, and exports.</p>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+                <div class="glass rounded-2xl p-4 glass-hover"><div class="w-full h-8 rounded-xl bg-emerald-500 mb-3"></div><p class="text-xs font-black">Emerald</p><p class="text-[10px] text-slate-500">Default</p></div>
+                <div class="glass rounded-2xl p-4 glass-hover"><div class="w-full h-8 rounded-xl bg-rose-500 mb-3"></div><p class="text-xs font-black">Crimson</p><p class="text-[10px] text-slate-500">Warm &amp; Bold</p></div>
+                <div class="glass rounded-2xl p-4 glass-hover"><div class="w-full h-8 rounded-xl bg-amber-400 mb-3"></div><p class="text-xs font-black">Sandstone</p><p class="text-[10px] text-slate-500">Earthy Gold</p></div>
+                <div class="glass rounded-2xl p-4 glass-hover"><div class="w-full h-8 rounded-xl bg-indigo-500 mb-3"></div><p class="text-xs font-black">Nebula</p><p class="text-[10px] text-slate-500">Deep Space</p></div>
+                <div class="glass rounded-2xl p-4 glass-hover"><div class="w-full h-8 rounded-xl bg-sky-500 mb-3"></div><p class="text-xs font-black">Ocean</p><p class="text-[10px] text-slate-500">Fresh Blue</p></div>
+                <div class="glass rounded-2xl p-4 glass-hover"><div class="w-full h-8 rounded-xl bg-gradient-to-r from-pink-500 via-violet-500 to-sky-400 mb-3"></div><p class="text-xs font-black">Spectrum</p><p class="text-[10px] text-slate-500">Rainbow IDs</p></div>
+                <div class="glass rounded-2xl p-4 glass-hover col-span-2"><div class="w-full h-8 rounded-xl bg-gradient-to-r from-pink-400 to-purple-600 mb-3 flex items-center justify-center gap-2"><i data-lucide="pipette" class="w-3.5 h-3.5 text-white/70"></i><span class="text-[10px] text-white/70 font-black">YOUR COLOR</span></div><p class="text-xs font-black">Custom</p><p class="text-[10px] text-slate-500">Pick any hex color</p></div>
+            </div>
+
+            <div class="callout callout-tip mb-4">
+                <div class="flex items-start gap-3">
+                    <i data-lucide="sparkles" class="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0"></i>
+                    <div>
+                        <p class="text-xs font-black text-emerald-400 uppercase tracking-widest mb-1">Spectrum Mode — Special</p>
+                        <p class="text-xs text-slate-400 leading-relaxed">In Spectrum mode, every course gets a <strong class="text-white">unique, visually distinct color</strong> automatically using the Golden Ratio color algorithm — so even with 8 courses, no two colors clash.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="callout callout-info">
+                <div class="flex items-start gap-3">
+                    <i data-lucide="brush" class="w-4 h-4 text-sky-400 mt-0.5 flex-shrink-0"></i>
+                    <p class="text-xs text-slate-400 leading-relaxed"><strong class="text-white">Custom Color:</strong> Select the "Custom" theme tile and use the color picker to enter any hex code. The UI updates live — your choice is saved in your browser automatically.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════ FAQ ═══════════ -->
+        <section id="faq" class="section">
+            <span class="chip chip-slate mb-5 inline-flex">❓ FAQ</span>
+            <h2 class="section-title">Frequently Asked<br>Questions</h2>
+
+            <div class="space-y-3">
+                <details class="glass rounded-2xl overflow-hidden group">
+                    <summary class="flex items-center justify-between p-5 cursor-pointer">
+                        <span class="font-bold text-sm">Why does the generator show 0 results?</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-slate-600 group-open:rotate-180 transition-transform"></i>
+                    </summary>
+                    <p class="text-xs text-slate-400 px-5 pb-5 leading-relaxed">Your filters are too strict. Try widening the time range, reducing the minimum seat count, or enabling more day checkboxes. If you still get 0 results, the combination of pinned sections physically cannot co-exist without conflicts.</p>
+                </details>
+                <details class="glass rounded-2xl overflow-hidden group">
+                    <summary class="flex items-center justify-between p-5 cursor-pointer">
+                        <span class="font-bold text-sm">My course isn't showing up in search — what do I do?</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-slate-600 group-open:rotate-180 transition-transform"></i>
+                    </summary>
+                    <p class="text-xs text-slate-400 px-5 pb-5 leading-relaxed">The global database might not have the latest semester data yet. Upload your own <code class="bg-white/5 px-1 rounded text-emerald-400">.xlsx</code> file via Portal Sync to get the most current course list from your university portal directly.</p>
+                </details>
+                <details class="glass rounded-2xl overflow-hidden group">
+                    <summary class="flex items-center justify-between p-5 cursor-pointer">
+                        <span class="font-bold text-sm">Will my courses be saved if I close the browser?</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-slate-600 group-open:rotate-180 transition-transform"></i>
+                    </summary>
+                    <p class="text-xs text-slate-400 px-5 pb-5 leading-relaxed">Course data and your local sync file are persisted in <code class="bg-white/5 px-1 rounded text-sky-400">localStorage</code>, so they survive browser restarts on the same device. However, your selected courses queue is session-based and will reset on page reload by design.</p>
+                </details>
+                <details class="glass rounded-2xl overflow-hidden group">
+                    <summary class="flex items-center justify-between p-5 cursor-pointer">
+                        <span class="font-bold text-sm">The PNG export looks different from what I see on screen</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-slate-600 group-open:rotate-180 transition-transform"></i>
+                    </summary>
+                    <p class="text-xs text-slate-400 px-5 pb-5 leading-relaxed">The export engine adds metadata overlays (semester, gap, branding) that aren't visible in the live view. This is by design. If you use Focus Mode, the export also applies the cropped layout. The colors are theme-faithful but may slightly vary due to canvas rendering.</p>
+                </details>
+                <details class="glass rounded-2xl overflow-hidden group">
+                    <summary class="flex items-center justify-between p-5 cursor-pointer">
+                        <span class="font-bold text-sm">What does the 🌙 Ramadan button not appearing mean?</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-slate-600 group-open:rotate-180 transition-transform"></i>
+                    </summary>
+                    <p class="text-xs text-slate-400 px-5 pb-5 leading-relaxed">Ramadan Mode is globally controlled by the administrator. The button is hidden outside of the Ramadan period. When enabled by the admin, it will appear automatically in the header for all users.</p>
+                </details>
             </div>
         </section>
 
         <!-- FOOTER -->
-        <footer class="pt-16 border-t border-white/5 flex flex-col items-center gap-6 text-center">
+        <footer class="pt-16 border-t border-white/5 text-center space-y-5">
             <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto">
                 <i data-lucide="heart" class="w-5 h-5 text-emerald-400"></i>
             </div>
             <div>
                 <p class="font-black text-lg gradient-text">Built for students who value their time.</p>
-                <p class="text-xs text-slate-600 mt-2">RoutinePro © 2026 · Mahmud Eli · <a href="https://routine-pro-fawn.vercel.app" class="text-emerald-700 hover:text-emerald-500 transition-colors">routine-pro-fawn.vercel.app</a></p>
+                <p class="text-xs text-slate-700 mt-2">RoutinePro © 2026 · Mohsin Ibna Hossain · <a href="https://routine-pro-fawn.vercel.app" class="text-emerald-800 hover:text-emerald-600 transition-colors">routine-pro-fawn.vercel.app</a></p>
             </div>
-            <a href="index.html" class="flex items-center gap-2 px-6 py-3 rounded-full glass text-sm font-bold text-white hover:bg-white/5 transition-colors">
+            <a href="index.html" class="inline-flex items-center gap-2 px-6 py-3 rounded-full glass text-sm font-bold text-white hover:bg-white/5 transition-colors">
                 <i data-lucide="arrow-left" class="w-4 h-4 text-emerald-400"></i> Back to RoutinePro
             </a>
         </footer>
@@ -703,26 +1090,31 @@
 <script>
     lucide.createIcons();
 
-    // Active sidebar tracking
-    const sections = document.querySelectorAll('.section-anchor');
+    // Active nav tracking via IntersectionObserver
+    const sections = document.querySelectorAll('.section');
     const navLinks = document.querySelectorAll('.nav-link');
 
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                navLinks.forEach(link => {
-                    link.classList.remove('active', 'text-emerald-400');
-                    link.classList.add('text-slate-400');
-                    if (link.getAttribute('href') === '#' + entry.target.id) {
-                        link.classList.add('active', 'text-emerald-400');
-                        link.classList.remove('text-slate-400');
-                    }
+    const io = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                navLinks.forEach(a => {
+                    a.classList.remove('active');
+                    if (a.getAttribute('href') === '#' + e.target.id) a.classList.add('active');
                 });
             }
         });
-    }, { threshold: 0.3, rootMargin: '-100px 0px -60% 0px' });
+    }, { threshold: 0.25, rootMargin: '-80px 0px -55% 0px' });
 
-    sections.forEach(s => observer.observe(s));
+    sections.forEach(s => io.observe(s));
+
+    // Smooth details accordion — close others when one opens
+    document.querySelectorAll('details').forEach(detail => {
+        detail.addEventListener('toggle', () => {
+            if (detail.open) {
+                document.querySelectorAll('details').forEach(d => { if (d !== detail) d.open = false; });
+            }
+        });
+    });
 </script>
 </body>
 </html>
