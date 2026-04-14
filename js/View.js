@@ -351,7 +351,14 @@ class RoutineView {
         const updateDisplay = document.getElementById('last-update-display');
         if (countDisplay) countDisplay.innerText = `${allCourses.length} Courses`;
         const lastSync = localStorage.getItem('routine-pro-last-sync');
-        if (updateDisplay) updateDisplay.innerText = lastSync ? `Last Sync: ${lastSync}` : 'Default (Pre-loaded)';
+        if (updateDisplay) {
+            if (lastSync) {
+                const date = new Date(lastSync);
+                updateDisplay.innerText = `Last Sync: ${this.getRelativeTime(date)}`;
+            } else {
+                updateDisplay.innerText = 'Default (Pre-loaded)';
+            }
+        }
 
         const semester = localStorage.getItem('routine-pro-semester');
         if (semester && this.semesterBadge) {
