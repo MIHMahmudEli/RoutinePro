@@ -74,7 +74,7 @@ class RoutineController {
             ramadanToggle.classList.toggle('hidden', !this.model.ramadanFeatureEnabled);
         }
 
-        this.updateShortcutToggleUI();
+        this.updateCompactToggleUI();
 
         // Initialize Theme Sets Logic
         window.cycleThemeSet = () => {
@@ -330,15 +330,15 @@ class RoutineController {
             };
         }
 
-        // Shortcut Mode
-        const shortcutBtn = document.getElementById('shortcut-toggle');
-        if (shortcutBtn) {
-            shortcutBtn.onclick = () => {
-                this.model.shortcutMode = !this.model.shortcutMode;
-                this.updateShortcutToggleUI();
-                const status = this.model.shortcutMode ? "Enabled" : "Disabled";
-                const type = this.model.shortcutMode ? "success" : "info";
-                this.view.showToast(`Shortcut Mode ${status}`, type);
+        // Compact Mode
+        const compactBtn = document.getElementById('compact-toggle');
+        if (compactBtn) {
+            compactBtn.onclick = () => {
+                this.model.compactMode = !this.model.compactMode;
+                this.updateCompactToggleUI();
+                const status = this.model.compactMode ? "Enabled" : "Disabled";
+                const type = this.model.compactMode ? "success" : "info";
+                this.view.showToast(`Compact Mode ${status}`, type);
                 this.syncWorkspace();
             };
         }
@@ -1327,11 +1327,11 @@ class RoutineController {
         lucide.createIcons();
     }
 
-    updateShortcutToggleUI() {
-        const btn = document.getElementById('shortcut-toggle');
+    updateCompactToggleUI() {
+        const btn = document.getElementById('compact-toggle');
         if (!btn) return;
 
-        if (this.model.shortcutMode) {
+        if (this.model.compactMode) {
             btn.setAttribute('data-active', 'true');
         } else {
             btn.removeAttribute('data-active');
@@ -1339,7 +1339,7 @@ class RoutineController {
     }
 
     getDisplayTitle(title) {
-        if (!this.model.shortcutMode) return title;
+        if (!this.model.compactMode) return title;
         
         // Handle abbreviations (e.g., "Computer Network" -> "CN")
         const ignoredWords = ['and', 'of', 'to', 'for', 'in', 'with', 'a', 'the', '&'];
