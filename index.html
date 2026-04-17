@@ -11,6 +11,7 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://unpkg.com/tesseract.js@5.0.3/dist/tesseract.min.js"></script>
 </head>
 
 <body class="p-4 lg:p-8 flex flex-col items-center justify-center min-h-screen overflow-x-hidden">
@@ -823,11 +824,20 @@
 
 
 
-                <div class="relative group admin-upload-zone text-center cursor-pointer" onclick="document.getElementById('course-file-input').click()">
-                    <input type="file" id="course-file-input" class="hidden" accept=".xlsx,.json">
-                    <i data-lucide="upload-cloud" class="w-8 h-8 text-slate-600 mb-2 mx-auto transition-colors group-hover:text-emerald-400"></i>
-                    <p class="text-[10px] font-bold text-slate-400 group-hover:text-white transition-colors">Select Offered Course Report</p>
-                    <p class="text-[8px] text-slate-600 font-black uppercase mt-0.5 tracking-widest">Support .xlsx, .json</p>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="relative group admin-upload-zone text-center cursor-pointer flex flex-col items-center justify-center p-4 !py-6" onclick="document.getElementById('course-file-input').click()">
+                        <input type="file" id="course-file-input" class="hidden" accept=".xlsx,.json">
+                        <i data-lucide="upload-cloud" class="w-7 h-7 text-slate-600 mb-2 group-hover:text-emerald-400"></i>
+                        <p class="text-[9px] font-bold text-slate-400 group-hover:text-white uppercase tracking-wider">Course Report</p>
+                        <p class="text-[7px] text-slate-600 font-black uppercase mt-0.5 tracking-widest">XLSX / JSON</p>
+                    </div>
+
+                    <div class="relative group admin-upload-zone text-center cursor-pointer flex flex-col items-center justify-center p-4 !py-6 border-dashed border-emerald-500/20 bg-emerald-500/5" onclick="document.getElementById('portal-image-input').click()">
+                        <input type="file" id="portal-image-input" class="hidden" accept="image/*">
+                        <i data-lucide="scan-face" class="w-7 h-7 text-emerald-500 mb-2 group-hover:text-emerald-400 animate-pulse"></i>
+                        <p class="text-[9px] font-bold text-emerald-400 group-hover:text-white uppercase tracking-wider">Image Extraction</p>
+                        <p class="text-[7px] text-emerald-500/50 font-black uppercase mt-0.5 tracking-widest">Portal Screenshot</p>
+                    </div>
                 </div>
             </div>
 

@@ -1047,20 +1047,38 @@ class RoutineController {
         }
     }
 
-    handleAddCourse(title, code) {
+    handleAddCourse(title, code, sectionName = null) {
         this.model.isExplorerMode = false;
         // Search by both title and code to be 100% sure we find the right one
         let course = this.model.allCourses.find(c => c.baseTitle === title && (!code || c.code === code));
         
         // Fallback search if code matching fails for some reason
         if (!course) course = this.model.allCourses.find(c => c.baseTitle === title);
-        if (course && this.model.addCourse(course)) {
-            this.view.searchInput.value = '';
-            this.view.suggestions.classList.add('hidden');
-            this.syncWorkspace();
-        } else {
+
+        if (course) {
+            const success = this.model.addCourse(course);
+            if (success) {
+                // If a section was identified in OC/Portal Extraction, switch to it automatically
+                if (sectionName) {
+                    const addedIdx = this.model.selectedCourses.length - 1;
+                    const sectionIdx = course.sections.findIndex(s => s.section.toUpperCase() === sectionName.toUpperCase());
+                    if (sectionIdx !== -1) {
+                        this.model.updateSectionSelection(addedIdx, sectionIdx);
+                    }
+                }
+
+                this.view.searchInput.value = '';
+                this.view.suggestions.classList.add('hidden');
+                this.syncWorkspace();
+                return true;
+            }
+        }
+
+        // Only show toast if it was a manual user action (not bulk extraction)
+        if (!sectionName) {
             this.view.showToast("Course already added or not found", "error");
         }
+        return false;
     }
 
     handleExportLibrary() {
@@ -1624,5 +1642,104 @@ class RoutineController {
             if (icon) icon.classList.remove('scale-110');
         }
         lucide.createIcons();
+        // Portal Image Sync
+        const portalImageInput = document.getElementById('portal-image-input');
+        if (portalImageInput) {
+            portalImageInput.onchange = (e) => this.handlePortalImageUpload(e);
+        }
+    }
+
+    async handlePortalImageUpload(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        this.view.showToast("Initializing OCR Engine...", "info");
+        document.getElementById('sync-modal').classList.add('hidden');
+
+        try {
+            const text = await this.processImageOCR(file);
+            const coursesFound = this.parsePortalText(text);
+
+            if (coursesFound.length === 0) {
+                this.view.showToast("No courses identified in screenshot", "error");
+                return;
+            }
+
+            let addedCount = 0;
+            coursesFound.forEach(item => {
+                const success = this.handleAddCourse(item.title, null, item.section);
+                if (success) addedCount++;
+            });
+
+            if (addedCount > 0) {
+                this.view.showToast(`Successfully extracted ${addedCount} courses from portal!`, "success");
+            } else {
+                this.view.showToast("Found courses but they might already be in queue or missing from library", "info");
+            }
+        } catch (err) {
+            console.error("OCR Error:", err);
+            this.view.showToast("Failed to process image. Try a clearer screenshot.", "error");
+        } finally {
+            e.target.value = ''; // Reset input
+        }
+    }
+
+    async processImageOCR(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = async () => {
+                try {
+                    const worker = await Tesseract.createWorker('eng');
+                    const { data: { text } } = await worker.recognize(reader.result);
+                    await worker.terminate();
+                    resolve(text);
+                } catch (err) {
+                    reject(err);
+                }
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    }
+
+    parsePortalText(text) {
+        const lines = text.split('\n');
+        const results = [];
+
+        // Patterns to look for:
+        // 1. CODE-TITLE [SECTION]  (Desktop)
+        // 2. TITLE [SECTION] on next lines (Mobile)
+        // 3. Just TITLE if pattern continues
+        
+        // Regex for Code-Title [Section] e.g. "00733-MOBILE APPLICATION DEVELOPMEN [A]"
+        const desktopPattern = /(\d+)-([A-Z\s.-]+)\s*\[([A-Z0-9]+)\]/i;
+        
+        // Regex for Title [Section] e.g. "COMPUTER ORGANIZATION AND ARCHITECTURE [K]"
+        const genericPattern = /([A-Z\s&.-]+)\s*\[([A-Z0-9]+)\]/i;
+
+        lines.forEach(line => {
+            const dMatch = line.match(desktopPattern);
+            if (dMatch) {
+                results.push({
+                    title: dMatch[2].trim(),
+                    section: dMatch[3].trim()
+                });
+                return;
+            }
+
+            const gMatch = line.match(genericPattern);
+            if (gMatch) {
+                const title = gMatch[1].trim();
+                // Avoid matching common noise like "Pre-Registration For"
+                if (title.length > 5 && !title.includes('REGISTRATION')) {
+                    results.push({
+                        title: title,
+                        section: gMatch[2].trim()
+                    });
+                }
+            }
+        });
+
+        return results;
     }
 }
