@@ -10,6 +10,7 @@ class RoutineView {
         this.conflictBadge = document.getElementById('conflict-badge');
         this.totalCreditsEl = document.getElementById('total-credits');
         this.exportBtn = document.getElementById('export-btn');
+        this.shareBtn = document.getElementById('share-btn');
         this.generateAllBtn = document.getElementById('generate-all-btn');
         this.explorerNav = document.getElementById('explorer-nav');
         this.routineCounter = document.getElementById('routine-counter');

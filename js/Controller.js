@@ -94,6 +94,15 @@ class RoutineController {
         if (['nebula', 'crimson', 'ocean'].includes(savedTheme)) this.currentThemeSet = 2;
         else if (['sandstone', 'spectrum', 'custom'].includes(savedTheme)) this.currentThemeSet = 3;
         this.updateThemeSetDisplay();
+
+        // Apply shared routine if data exists
+        if (this.model.pendingSharedItems) {
+            this.model.applySharedItems();
+            this.view.showToast("Shared routine loaded!", "success");
+            this.syncWorkspace();
+            // Clear hash to prevent reloading on every sync
+            window.location.hash = '';
+        }
     }
 
     revealAdminFeatures() {
@@ -435,6 +444,11 @@ class RoutineController {
 
         // Export
         this.view.exportBtn.onclick = () => this.handleExport();
+
+        // Share
+        if (this.view.shareBtn) {
+            this.view.shareBtn.onclick = () => this.handleShare();
+        }
 
         // Slider
         const filterSeats = document.getElementById('filter-seats');
@@ -1074,6 +1088,57 @@ class RoutineController {
         this.view.showToast(`Found ${results.length} scenarios!`);
         this.syncWorkspace();
         this.view.explorerNav.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    handleShare() {
+        if (this.model.selectedCourses.length === 0) {
+            this.view.showToast("Add some courses before sharing!", "error");
+            return;
+        }
+
+        try {
+            const shareData = this.model.getShareableData();
+            const shareUrl = `${window.location.origin}${window.location.pathname}#share=${shareData}`;
+            
+            // Try to use Web Share API
+            if (navigator.share) {
+                navigator.share({
+                    title: 'My Routine - RoutinePro',
+                    text: 'Check out my routine on RoutinePro!',
+                    url: shareUrl
+                }).catch(err => {
+                    // Fallback to clipboard
+                    this.copyToClipboard(shareUrl);
+                });
+            } else {
+                this.copyToClipboard(shareUrl);
+            }
+
+            window.analytics.trackFeatureToggle('share_routine', true);
+        } catch (e) {
+            console.error("Sharing failed", e);
+            this.view.showToast("Failed to generate share link", "error");
+        }
+    }
+
+    async copyToClipboard(text) {
+        try {
+            await navigator.clipboard.writeText(text);
+            this.view.showToast("Share link copied to clipboard!");
+        } catch (err) {
+            // Fallback for older browsers
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                this.view.showToast("Share link copied to clipboard!");
+            } catch (err) {
+                this.view.showToast("Failed to copy link", "error");
+            }
+            document.body.removeChild(textArea);
+        }
     }
 
     async handleExport() {

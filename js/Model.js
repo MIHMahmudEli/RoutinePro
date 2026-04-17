@@ -32,6 +32,15 @@ class RoutineModel {
     }
 
     async loadInitialData() {
+        // Load shared routine first if hash exists
+        const hash = window.location.hash;
+        if (hash && hash.startsWith('#share=')) {
+            const sharedData = hash.substring(7);
+            this.loadFromSharedData(sharedData);
+            // Clear hash after loading to avoid re-loading on refresh if user wants to change it
+            // window.history.replaceState(null, null, ' ');
+        }
+
         // Load cached global data first for instant startup
         try {
             const cachedCourses = localStorage.getItem('routine-pro-global-courses');
@@ -650,5 +659,92 @@ class RoutineModel {
             data.sections = Object.values(data.sections).sort((a, b) => a.section.localeCompare(b.section, undefined, {numeric: true}));
             return data;
         });
+    }
+
+    getShareableData() {
+        const data = this.selectedCourses.map(sc => {
+            if (sc.course.code === 'MANUAL') {
+                return {
+                    m: 1, // manual
+                    t: sc.course.baseTitle,
+                    s: sc.course.sections[0].section,
+                    r: sc.course.sections[0].schedules[0].room,
+                    sh: sc.course.sections[0].schedules[0].start,
+                    eh: sc.course.sections[0].schedules[0].end,
+                    d: sc.course.sections[0].schedules.map(s => s.day)
+                };
+            } else {
+                return {
+                    c: sc.course.code,
+                    s: sc.course.sections[sc.selectedSectionIndex].section,
+                    p: sc.isPinned ? 1 : 0
+                };
+            }
+        });
+
+        // Add settings
+        const settings = {
+            r: this.ramadanMode ? 1 : 0,
+            f: this.focusMode ? 1 : 0,
+            t: this.twentyFourHourMode ? 1 : 0,
+            c: this.compactMode ? 1 : 0
+        };
+
+        const payload = { items: data, config: settings };
+        return btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+    }
+
+    loadFromSharedData(base64) {
+        try {
+            const json = decodeURIComponent(escape(atob(base64)));
+            const payload = JSON.parse(json);
+            
+            if (payload && payload.items) {
+                // We'll process items AFTER allCourses is loaded
+                this.pendingSharedItems = payload.items;
+                if (payload.config) {
+                    this.ramadanMode = !!payload.config.r;
+                    this.focusMode = !!payload.config.f;
+                    this.twentyFourHourMode = !!payload.config.t;
+                    this.compactMode = !!payload.config.c;
+                }
+            }
+        } catch (e) {
+            console.error("Failed to decode shared routine:", e);
+        }
+    }
+
+    applySharedItems() {
+        if (!this.pendingSharedItems || !this.allCourses.length) return;
+
+        this.selectedCourses = [];
+        this.pendingSharedItems.forEach(item => {
+            if (item.m) {
+                // Manual Course
+                this.addManualCourse({
+                    subject: item.t,
+                    days: item.d,
+                    start: item.sh,
+                    end: item.eh,
+                    section: item.s,
+                    room: item.r
+                });
+            } else {
+                // Library Course
+                const course = this.allCourses.find(c => c.code === item.c);
+                if (course) {
+                    const sIdx = course.sections.findIndex(s => s.section === item.s);
+                    if (sIdx !== -1) {
+                        this.selectedCourses.push({
+                            course: course,
+                            selectedSectionIndex: sIdx,
+                            isPinned: !!item.p
+                        });
+                    }
+                }
+            }
+        });
+
+        this.pendingSharedItems = null;
     }
 }
