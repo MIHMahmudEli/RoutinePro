@@ -11,14 +11,14 @@ export default async function handler(request, response) {
     try {
         const { mappings, featureEnabled } = request.body;
 
-        const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+        const GITHUB_TOKEN = process.env.GITHUB_TOKEN ? process.env.GITHUB_TOKEN.trim() : null;
         if (!GITHUB_TOKEN) {
             return response.status(500).json({ error: 'Server configuration error: missing GITHUB_TOKEN' });
         }
 
         const url = `https://api.github.com/repos/MIHMahmudEli/RoutinePro/contents/data/ramadan-mappings.json`;
         const headers = {
-            'Authorization': `Bearer ${GITHUB_TOKEN}`,
+            'Authorization': `token ${GITHUB_TOKEN}`,
             'Accept': 'application/vnd.github.v3+json',
             'User-Agent': 'RoutinePro-App'
         };

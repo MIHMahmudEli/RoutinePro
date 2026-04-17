@@ -15,7 +15,7 @@ export default async function handler(request, response) {
             return response.status(400).json({ error: 'Data must be a course array' });
         }
 
-        const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+        const GITHUB_TOKEN = process.env.GITHUB_TOKEN ? process.env.GITHUB_TOKEN.trim() : null;
         if (!GITHUB_TOKEN) {
             return response.status(500).json({ error: 'Server configuration error: missing GITHUB_TOKEN' });
         }
@@ -27,7 +27,7 @@ export default async function handler(request, response) {
         const updateGithubFile = async (path, contentStr, message) => {
             const url = `https://api.github.com/repos/${REPO}/contents/${path}`;
             const headers = {
-                'Authorization': `Bearer ${GITHUB_TOKEN}`,
+                'Authorization': `token ${GITHUB_TOKEN}`,
                 'Accept': 'application/vnd.github.v3+json',
                 'User-Agent': 'RoutinePro-App'
             };
