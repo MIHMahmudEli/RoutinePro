@@ -687,6 +687,8 @@ class RoutineModel {
 
                 return {
                     c: sc.course.code,
+                    t: sc.course.baseTitle,
+                    d: sc.course.dept,
                     s: sectionName,
                     p: sc.isPinned ? 1 : 0
                 };
@@ -743,8 +745,12 @@ class RoutineModel {
                     room: item.r
                 });
             } else {
-                // Library Course
-                const course = this.allCourses.find(c => c.code === item.c);
+                // Library Course - Try matching by code + title + dept for maximum reliability
+                const course = this.allCourses.find(c => {
+                    if (item.c && c.code === item.c && item.c !== "" && item.c !== "N/A") return true;
+                    return c.baseTitle === item.t && c.dept === item.d;
+                });
+
                 if (course) {
                     const sIdx = course.sections.findIndex(s => s.section === item.s);
                     if (sIdx !== -1) {
