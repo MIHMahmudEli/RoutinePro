@@ -590,14 +590,7 @@ class RoutineController {
             portalImageInput.onchange = (e) => this.handlePortalImageUpload(e);
         }
 
-        const groqKeyInput = document.getElementById('groq-api-key-input');
-        if (groqKeyInput) {
-            groqKeyInput.value = localStorage.getItem('routine-pro-groq-key') || '';
-            groqKeyInput.onchange = (e) => {
-                localStorage.setItem('routine-pro-groq-key', e.target.value.trim());
-                this.view.showToast("AI Key Saved!", "success");
-            };
-        }
+
 
         // Manual Entry
         if (this.view.manualAddBtn) {
@@ -1705,18 +1698,11 @@ class RoutineController {
         const file = e.target.files[0];
         if (!file) return;
 
-        const apiKey = localStorage.getItem('routine-pro-groq-key');
-        if (!apiKey) {
-            this.view.showToast("Please enter your Groq API Key first", "error");
-            document.getElementById('sync-modal').classList.remove('hidden');
-            return;
-        }
-
         this.view.showToast("Analyzing Image with AI...", "info");
         document.getElementById('sync-modal').classList.add('hidden');
 
         try {
-            const coursesFound = await this.processImageWithAI(file, apiKey);
+            const coursesFound = await this.processImageWithAI(file);
 
             if (!coursesFound || coursesFound.length === 0) {
                 this.view.showToast("No courses identified in screenshot", "error");
@@ -1743,58 +1729,26 @@ class RoutineController {
         }
     }
 
-    async processImageWithAI(file, apiKey) {
+    async processImageWithAI(file) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.onload = async () => {
                 try {
                     const base64Image = reader.result.split(',')[1];
 
-                    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                    const response = await fetch('/api/extract', {
                         method: 'POST',
-                        headers: {
-                            'Authorization': `Bearer ${apiKey}`,
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            model: "meta-llama/llama-4-scout-17b-16e-instruct",
-                            messages: [
-                                {
-                                    role: "user",
-                                    content: [
-                                        {
-                                            type: "text",
-                                            text: "EXTRACT REGISTERED COURSES FROM IMAGE.\n\nCRITICAL INSTRUCTIONS:\n1. ONLY extract information that is visually present. DO NOT use general knowledge.\n2. If no courses are found, return [].\n\nStructure per course:\n- title: The full course name (Uppercase). Note: If the text is '00733-MOBILE APPLICATION DEVELOPMENT [A]', the title is 'MOBILE APPLICATION DEVELOPMENT'.\n- section: The character inside the square brackets (e.g., A, B, I).\n\nReturn ONLY a JSON array of objects: [{\"title\": \"...\", \"section\": \"...\"}]. No preamble or extra text."
-                                        },
-                                        {
-                                            type: "image_url",
-                                            image_url: {
-                                                url: `data:image/jpeg;base64,${base64Image}`
-                                            }
-                                        }
-                                    ]
-                                }
-                            ],
-                            temperature: 0.1,
-                            max_tokens: 1024
-                        })
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ image: base64Image })
                     });
 
                     if (!response.ok) {
                         const errBody = await response.json();
-                        throw new Error(errBody.error?.message || "Groq API Error");
+                        throw new Error(errBody.error || "Extraction Service Error");
                     }
 
                     const result = await response.json();
-                    const content = result.choices[0].message.content;
-                    
-                    // Extract JSON from potential markdown blocks
-                    const jsonMatch = content.match(/\[.*\]/s);
-                    if (jsonMatch) {
-                        resolve(JSON.parse(jsonMatch[0]));
-                    } else {
-                        throw new Error("Invalid AI response format");
-                    }
+                    resolve(result);
                 } catch (err) {
                     reject(err);
                 }
