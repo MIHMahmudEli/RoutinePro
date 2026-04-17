@@ -584,6 +584,21 @@ class RoutineController {
             fileInput.onchange = (e) => this.handleFileUpload(e);
         }
 
+        // Portal Image Sync
+        const portalImageInput = document.getElementById('portal-image-input');
+        if (portalImageInput) {
+            portalImageInput.onchange = (e) => this.handlePortalImageUpload(e);
+        }
+
+        const groqKeyInput = document.getElementById('groq-api-key-input');
+        if (groqKeyInput) {
+            groqKeyInput.value = localStorage.getItem('routine-pro-groq-key') || '';
+            groqKeyInput.onchange = (e) => {
+                localStorage.setItem('routine-pro-groq-key', e.target.value.trim());
+                this.view.showToast("AI Key Saved!", "success");
+            };
+        }
+
         // Manual Entry
         if (this.view.manualAddBtn) {
             this.view.manualAddBtn.onclick = () => this.handleAddManual();
@@ -1642,104 +1657,108 @@ class RoutineController {
             if (icon) icon.classList.remove('scale-110');
         }
         lucide.createIcons();
-        // Portal Image Sync
-        const portalImageInput = document.getElementById('portal-image-input');
-        if (portalImageInput) {
-            portalImageInput.onchange = (e) => this.handlePortalImageUpload(e);
-        }
     }
 
     async handlePortalImageUpload(e) {
         const file = e.target.files[0];
         if (!file) return;
 
-        this.view.showToast("Initializing OCR Engine...", "info");
+        const apiKey = localStorage.getItem('routine-pro-groq-key');
+        if (!apiKey) {
+            this.view.showToast("Please enter your Groq API Key first", "error");
+            document.getElementById('sync-modal').classList.remove('hidden');
+            return;
+        }
+
+        this.view.showToast("Analyzing Image with AI...", "info");
         document.getElementById('sync-modal').classList.add('hidden');
 
         try {
-            const text = await this.processImageOCR(file);
-            const coursesFound = this.parsePortalText(text);
+            const coursesFound = await this.processImageWithAI(file, apiKey);
 
-            if (coursesFound.length === 0) {
+            if (!coursesFound || coursesFound.length === 0) {
                 this.view.showToast("No courses identified in screenshot", "error");
                 return;
             }
 
             let addedCount = 0;
             coursesFound.forEach(item => {
+                // The AI returns { title: "...", section: "..." }
                 const success = this.handleAddCourse(item.title, null, item.section);
                 if (success) addedCount++;
             });
 
             if (addedCount > 0) {
-                this.view.showToast(`Successfully extracted ${addedCount} courses from portal!`, "success");
+                this.view.showToast(`AI extracted ${addedCount} courses from portal!`, "success");
             } else {
-                this.view.showToast("Found courses but they might already be in queue or missing from library", "info");
+                this.view.showToast("AI found courses but they are already in queue or missing from library", "info");
             }
         } catch (err) {
-            console.error("OCR Error:", err);
-            this.view.showToast("Failed to process image. Try a clearer screenshot.", "error");
+            console.error("AI Sync Error:", err);
+            this.view.showToast(`Extraction failed: ${err.message}`, "error");
         } finally {
             e.target.value = ''; // Reset input
         }
     }
 
-    async processImageOCR(file) {
+    async processImageWithAI(file, apiKey) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.onload = async () => {
                 try {
-                    const worker = await Tesseract.createWorker('eng');
-                    const { data: { text } } = await worker.recognize(reader.result);
-                    await worker.terminate();
-                    resolve(text);
+                    const base64Image = reader.result.split(',')[1];
+
+                    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${apiKey}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            model: "llama-3.2-11b-vision-preview",
+                            messages: [
+                                {
+                                    role: "user",
+                                    content: [
+                                        {
+                                            type: "text",
+                                            text: "Extract all registered courses and their section names from this AIUB portal screenshot. Return ONLY a valid JSON array of objects with keys 'title' (Uppercase Title) and 'section' (Uppercase section like A, B, K1). Example: [{\"title\": \"MOBILE APPLICATION DEVELOPMENT\", \"section\": \"A\"}]. No preamble or extra text."
+                                        },
+                                        {
+                                            type: "image_url",
+                                            image_url: {
+                                                url: `data:image/jpeg;base64,${base64Image}`
+                                            }
+                                        }
+                                    ]
+                                }
+                            ],
+                            temperature: 0.1,
+                            max_tokens: 1024
+                        })
+                    });
+
+                    if (!response.ok) {
+                        const errBody = await response.json();
+                        throw new Error(errBody.error?.message || "Groq API Error");
+                    }
+
+                    const result = await response.json();
+                    const content = result.choices[0].message.content;
+                    
+                    // Extract JSON from potential markdown blocks
+                    const jsonMatch = content.match(/\[.*\]/s);
+                    if (jsonMatch) {
+                        resolve(JSON.parse(jsonMatch[0]));
+                    } else {
+                        throw new Error("Invalid AI response format");
+                    }
                 } catch (err) {
                     reject(err);
                 }
             };
-            reader.onerror = reject;
+            reader.onerror = () => reject(new Error("File read error"));
             reader.readAsDataURL(file);
         });
-    }
-
-    parsePortalText(text) {
-        const lines = text.split('\n');
-        const results = [];
-
-        // Patterns to look for:
-        // 1. CODE-TITLE [SECTION]  (Desktop)
-        // 2. TITLE [SECTION] on next lines (Mobile)
-        // 3. Just TITLE if pattern continues
-        
-        // Regex for Code-Title [Section] e.g. "00733-MOBILE APPLICATION DEVELOPMEN [A]"
-        const desktopPattern = /(\d+)-([A-Z\s.-]+)\s*\[([A-Z0-9]+)\]/i;
-        
-        // Regex for Title [Section] e.g. "COMPUTER ORGANIZATION AND ARCHITECTURE [K]"
-        const genericPattern = /([A-Z\s&.-]+)\s*\[([A-Z0-9]+)\]/i;
-
-        lines.forEach(line => {
-            const dMatch = line.match(desktopPattern);
-            if (dMatch) {
-                results.push({
-                    title: dMatch[2].trim(),
-                    section: dMatch[3].trim()
-                });
-                return;
-            }
-
-            const gMatch = line.match(genericPattern);
-            if (gMatch) {
-                const title = gMatch[1].trim();
-                // Avoid matching common noise like "Pre-Registration For"
-                if (title.length > 5 && !title.includes('REGISTRATION')) {
-                    results.push({
-                        title: title,
-                        section: gMatch[2].trim()
-                    });
-                }
-            }
-        });
-
-        return results;
     }
 }
