@@ -52,7 +52,38 @@ export default async function handler(request, response) {
             throw new Error(err.message);
         }
 
-        return response.status(200).json({ success: true, message: `Successfully synced global Ramadan mappings to GitHub` });
+        // 2. Update metadata.json to include slot info
+        try {
+            const metaUrl = `https://api.github.com/repos/MIHMahmudEli/RoutinePro/contents/data/metadata.json`;
+            let metaSha;
+            let metaData = { lastUpdate: new Date().toISOString(), courseCount: 0, semester: "Unknown" };
+
+            const metaGet = await fetch(`${metaUrl}?ref=main`, { headers });
+            if (metaGet.ok) {
+                const metaBody = await metaGet.json();
+                metaSha = metaBody.sha;
+                const existingContent = JSON.parse(Buffer.from(metaBody.content, 'base64').toString('utf-8'));
+                metaData = { ...metaData, ...existingContent };
+            }
+
+            metaData.ramadanSlots = Object.keys(mappings || {}).length;
+            metaData.lastUpdate = new Date().toISOString();
+
+            await fetch(metaUrl, {
+                method: 'PUT',
+                headers: { ...headers, 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    message: `Admin: Update metadata with ${metaData.ramadanSlots} ramadan slots`,
+                    content: Buffer.from(JSON.stringify(metaData, null, 2), 'utf-8').toString('base64'),
+                    sha: metaSha,
+                    branch: 'main'
+                })
+            });
+        } catch (mErr) {
+            console.warn("Failed to update metadata.json with slot info:", mErr);
+        }
+
+        return response.status(200).json({ success: true, message: `Successfully synced global Ramadan mappings and updated metadata` });
     } catch (error) {
         console.error('Update ramadan error:', error);
         return response.status(500).json({ error: error.message });

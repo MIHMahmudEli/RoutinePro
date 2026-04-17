@@ -61,11 +61,24 @@ export default async function handler(request, response) {
         // 1. Update courses.json
         await updateGithubFile('data/courses.json', JSON.stringify(data, null, 2), `Update global courses (${data.length} items)`);
         
-        // 2. Update metadata.json
+        // 2. Update metadata.json (preserve ramadanSlots if exists)
+        let ramadanSlots = undefined;
+        try {
+            const metaUrl = `https://api.github.com/repos/${REPO}/contents/data/metadata.json`;
+            const headers = { 'Authorization': `token ${GITHUB_TOKEN}`, 'Accept': 'application/vnd.github.v3+json', 'User-Agent': 'RoutinePro-App' };
+            const metaRes = await fetch(`${metaUrl}?ref=${BRANCH}`, { headers });
+            if (metaRes.ok) {
+                const metaBody = await metaRes.json();
+                const existing = JSON.parse(Buffer.from(metaBody.content, 'base64').toString('utf-8'));
+                if (existing.ramadanSlots) ramadanSlots = existing.ramadanSlots;
+            }
+        } catch (e) {}
+
         await updateGithubFile('data/metadata.json', JSON.stringify({
             lastUpdate: new Date().toISOString(),
             courseCount: data.length,
-            semester: semester || "Updated Semester"
+            semester: semester || "Updated Semester",
+            ramadanSlots: ramadanSlots
         }, null, 2), `Update courses metadata`);
 
         return response.status(200).json({ 
