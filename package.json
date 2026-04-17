@@ -4,8 +4,8 @@
   "description": "Routine Generator App",
   "type": "module",
   "scripts": {
-    "build": "tailwindcss -i ./public/css/input.css -o ./public/css/output.css",
-    "dev": "tailwindcss -i ./public/css/input.css -o ./public/css/output.css --watch"
+    "build": "npx tailwindcss -i ./public/css/input.css -o ./public/css/output.css",
+    "dev": "npx tailwindcss -i ./public/css/input.css -o ./public/css/output.css --watch"
   },
   "dependencies": {
     "@vercel/blob": "^0.23.0"
