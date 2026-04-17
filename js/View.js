@@ -155,8 +155,9 @@ class RoutineView {
         lucide.createIcons();
     }
 
-    renderRoutine(items, isExplorerMode, model, titleFormatter = (t) => t, targetDoc = document) {
-        const { focusMode, twentyFourHourMode, ramadanMode } = model;
+    renderRoutine(items, isExplorerMode, model, titleFormatter = (t) => t, targetDoc = document, forceFocusMode = false) {
+        const focusMode = forceFocusMode || model.focusMode;
+        const { twentyFourHourMode, ramadanMode } = model;
         const buckets = targetDoc.querySelectorAll('.day-bucket');
         buckets.forEach(b => b.innerHTML = '');
         let globalConflict = false;

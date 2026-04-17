@@ -1175,8 +1175,7 @@ class RoutineController {
                     // Force Focus Mode for the export
                     const { isExplorerMode, currentRoutineIndex, possibleRoutines, selectedCourses } = this.model;
                     const currentItems = isExplorerMode ? possibleRoutines[currentRoutineIndex] : selectedCourses;
-                    const exportModel = { ...this.model, focusMode: true };
-                    this.view.renderRoutine(currentItems, isExplorerMode, exportModel, (t) => this.getDisplayTitle(t), clonedDoc);
+                    this.view.renderRoutine(currentItems, isExplorerMode, this.model, (t) => this.getDisplayTitle(t), clonedDoc, true);
 
                     // Fix the -4px/-6px alignment shift in the exported image
                     const labels = clonedDoc.querySelectorAll('.time-label');
@@ -1275,12 +1274,11 @@ class RoutineController {
                 link.href = dataUrl;
                 link.click();
             }
+            this.view.showToast("Routine Image Exported Successfully!");
         } catch (err) {
             this.view.showToast("Export failed. Try a desktop", "error");
             console.error(err);
         } finally {
-            this.view.showToast("Routine Image Exported Successfully!");
-
             // Track Analytics
             window.analytics.trackExport('image');
 
