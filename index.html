@@ -721,17 +721,21 @@
                         </button>
                     </div>
 
-                    <button id="exit-explorer"
-                        class="w-full sm:w-auto text-[10px] font-black text-rose-500 uppercase tracking-widest bg-rose-500/10 border border-rose-500/20 px-6 py-3.5 sm:px-4 sm:py-2 rounded-xl hover:bg-rose-500 hover:text-white transition-all active:scale-95">
-                        Exit View
-                    </button>
+                    <div class="flex items-center gap-2 w-full sm:w-auto">
+                        <!-- Share Button -->
+                        <button id="share-btn"
+                            class="flex-1 sm:flex-none flex items-center justify-center gap-2 text-[10px] font-black text-emerald-400 uppercase tracking-widest bg-emerald-500/10 border border-emerald-500/20 px-4 py-2.5 rounded-xl hover:bg-emerald-500 hover:text-black transition-all active:scale-95">
+                            <i data-lucide="share-2" class="w-3.5 h-3.5"></i>
+                            Share
+                        </button>
 
-                    <!-- Add Share Button here -->
-                    <button id="share-btn"
-                        class="w-full sm:w-auto flex items-center justify-center gap-2 text-[10px] font-black text-emerald-400 uppercase tracking-widest bg-emerald-500/10 border border-emerald-500/20 px-6 py-3.5 sm:px-4 sm:py-2 rounded-xl hover:bg-emerald-500 hover:text-black transition-all active:scale-95">
-                        <i data-lucide="share-2" class="w-3.5 h-3.5"></i>
-                        Share Routine
-                    </button>
+                        <!-- Exit View Button -->
+                        <button id="exit-explorer"
+                            class="flex-1 sm:flex-none flex items-center justify-center gap-2 text-[10px] font-black text-rose-500 uppercase tracking-widest bg-rose-500/10 border border-rose-500/20 px-4 py-2.5 rounded-xl hover:bg-rose-500 hover:text-white transition-all active:scale-95">
+                            <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+                            Exit
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Canvas -->
