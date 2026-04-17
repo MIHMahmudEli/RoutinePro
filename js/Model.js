@@ -17,6 +17,7 @@ class RoutineModel {
         this.ramadanFeatureEnabled = localStorage.getItem('routine-pro-ramadan-admin-feature') === 'true';
         this.globalRamadanMap = null;
         this.customRamadanMap = this.loadRamadanMappings();
+        this.wasExplorer = false;
     }
 
     loadRamadanMappings() {
@@ -697,7 +698,8 @@ class RoutineModel {
             r: this.ramadanMode ? 1 : 0,
             f: this.focusMode ? 1 : 0,
             t: this.twentyFourHourMode ? 1 : 0,
-            c: this.compactMode ? 1 : 0
+            c: this.compactMode ? 1 : 0,
+            e: this.isExplorerMode ? 1 : 0
         };
 
         const payload = { items: data, config: settings };
@@ -717,6 +719,7 @@ class RoutineModel {
                     this.focusMode = !!payload.config.f;
                     this.twentyFourHourMode = !!payload.config.t;
                     this.compactMode = !!payload.config.c;
+                    this.wasExplorer = !!payload.config.e;
                 }
             }
         } catch (e) {

@@ -98,7 +98,19 @@ class RoutineController {
         // Apply shared routine if data exists
         if (this.model.pendingSharedItems) {
             this.model.applySharedItems();
-            this.view.showToast("Shared routine loaded!", "success");
+            
+            if (this.model.wasExplorer) {
+                this.model.isExplorerMode = true;
+                // Create a single-scenario routine list from the shared selection
+                this.model.possibleRoutines = [this.model.selectedCourses.map(sc => ({
+                    courseTitle: sc.course.baseTitle,
+                    dept: sc.course.dept,
+                    section: sc.course.sections[sc.selectedSectionIndex]
+                }))];
+                this.model.currentRoutineIndex = 0;
+            }
+
+            this.view.showToast("Shared scenario loaded!", "success");
             this.syncWorkspace();
             // Clear hash to prevent reloading on every sync
             window.location.hash = '';
