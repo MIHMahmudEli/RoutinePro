@@ -94,9 +94,11 @@ class RoutineView {
         this.selectedList.innerHTML = selectedCourses.map((sc, i) => {
             const section = isExplorerMode
                 ? currentRoutine.find(item => item.courseTitle === sc.course.baseTitle && item.dept === sc.course.dept).section
-                : sc.course.sections[sc.selectedSectionIndex];
+                : sc.course.sections[sc.selectedSectionIndex] || sc.course.sections[0];
 
-            const statusClass = `tag-${section.status.toLowerCase()}`;
+            if (!section) return ''; // Skip if data is corrupted
+
+            const statusClass = `tag-${(section.status || 'unknown').toLowerCase()}`;
             const hue = this.getCourseHue(sc.course.baseTitle + (sc.course.dept || ''));
             const accentStyle = document.body.getAttribute('data-theme') === 'spectrum'
                 ? `style="border-left: 4px solid hsla(${hue}, 70%, 60%, 0.8)"`

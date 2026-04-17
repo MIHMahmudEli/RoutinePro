@@ -1094,9 +1094,9 @@ class RoutineController {
         if (targetCourse) {
             const success = this.model.addCourse(targetCourse);
             if (success) {
+                // Since model.addCourse uses unshift, the new course is at index 0
                 if (targetSectionIdx !== -1) {
-                    const addedIdx = this.model.selectedCourses.length - 1;
-                    this.model.updateSectionSelection(addedIdx, targetSectionIdx);
+                    this.model.updateSectionSelection(0, targetSectionIdx);
                 }
 
                 this.view.searchInput.value = '';
