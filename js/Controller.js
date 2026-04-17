@@ -1102,9 +1102,10 @@ class RoutineController {
                 isNew = true;
             }
 
-            // Always update to the section identifying by AI/User
+            // Always update to the section identifying by AI/User and PIN IT
             if (targetSectionIdx !== -1) {
                 this.model.updateSectionSelection(activeIdx, targetSectionIdx);
+                this.model.selectedCourses[activeIdx].isPinned = true; // High priority: keep registered section
             }
 
             if (isNew) {
