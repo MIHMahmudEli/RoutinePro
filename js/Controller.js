@@ -1652,7 +1652,7 @@ class RoutineController {
                         'Content-Type': 'application/json',
                         'Authorization': password
                     },
-                    body: JSON.stringify(data)
+                    body: JSON.stringify({ mappings: data, featureEnabled: true })
                 });
 
                 const result = await response.json();

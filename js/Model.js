@@ -85,8 +85,9 @@ class RoutineModel {
                 this.globalRamadanMap = ramData.mappings || null;
                 localStorage.setItem('routine-pro-global-ramadan', JSON.stringify(this.globalRamadanMap));
                 
+                // Only use mapping featureEnabled if config.json didn't already set it
                 const hasLocalOverride = localStorage.getItem('routine-pro-ramadan-admin-feature') !== null;
-                if (!hasLocalOverride) {
+                if (!hasLocalOverride && (this.ramadanFeatureEnabled === undefined || this.ramadanFeatureEnabled === null)) {
                     this.ramadanFeatureEnabled = ramData.featureEnabled !== false;
                 }
             }

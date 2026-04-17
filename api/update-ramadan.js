@@ -31,7 +31,10 @@ export default async function handler(request, response) {
             sha = getBody.sha;
         }
 
-        const payload = { mappings, featureEnabled };
+        const payload = { 
+            mappings, 
+            featureEnabled: featureEnabled === undefined ? true : featureEnabled 
+        };
 
         const putRes = await fetch(url, {
             method: 'PUT',
