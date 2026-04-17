@@ -31,9 +31,6 @@
                         <div class="flex items-center gap-2">
                             <h1 class="text-lg font-900 tracking-tighter">ROUTINE<span
                                     class="text-emerald-400 italic">PRO</span></h1>
-                            <span id="semester-badge"
-                                class="px-1.5 py-0.5 rounded pl-2.5 text-[8px] font-black text-emerald-400 uppercase tracking-widest hidden bg-emerald-500/10 border border-emerald-500/20">SPRING
-                                24-25</span>
                         </div>
                     </div>
                 </div>
@@ -124,42 +121,56 @@
                 </div>
 
                 <!-- Part 4: Buttons (Line 4 on Mobile) -->
-                <div class="w-full md:w-auto flex items-center justify-center gap-2 py-0 md:py-0">
-                    <!-- AI Routine Maker Button -->
+                <div class="w-full md:w-auto flex flex-wrap items-center justify-center gap-2 py-2 md:py-0">
+                    
+                    <!-- AI Routine Maker Button (Primary) -->
                     <button onclick="document.getElementById('ai-modal').classList.remove('hidden')"
-                        class="prism-btn group !w-auto !px-4 !h-9 !rounded-xl !bg-[var(--accent-primary)] !text-black border-none hover:brightness-110 flex items-center justify-center gap-2 transition-all active:scale-95 shadow-[0_0_20px_rgba(16,185,129,0.3)]"
+                        class="prism-btn group !w-auto !px-4 !h-9 !rounded-xl !bg-[var(--accent-primary)] !text-black border-none hover:brightness-110 flex items-center justify-center gap-2 transition-all active:scale-95 shadow-[0_0_20px_rgba(16,185,129,0.3)] order-first md:order-none"
                         title="AI Routine Maker">
                         <i data-lucide="scan-face" class="w-4 h-4"></i>
                         <span class="text-[10px] font-900 uppercase tracking-tighter">AI Routine Maker</span>
                     </button>
-                    <a href="/docs"
-                        class="prism-btn group !w-9 !h-9 !p-0 !min-w-0 !rounded-xl !bg-white/10 !text-white border border-white/20 hover:!bg-white/20 flex items-center justify-center transition-all active:scale-90"
-                        title="Documentation"><i data-lucide="book-open" class="w-4 h-4"></i></a>
-                    <button id="focus-toggle"
-                        class="prism-btn group !w-9 !h-9 !p-0 !min-w-0 !rounded-xl !bg-white/10 !text-white border border-white/20 hover:!bg-white/20 flex items-center justify-center transition-all active:scale-90"
-                        title="Focus Mode"><i data-lucide="maximize-2" class="w-4 h-4" id="focus-icon"></i></button>
-                    <button id="twenty-four-toggle"
-                        class="prism-btn group !w-9 !h-9 !p-0 !min-w-0 !rounded-xl !bg-white/10 !text-white border border-white/20 hover:!bg-white/20 flex items-center justify-center transition-all active:scale-90"
-                        title="24-Hour Mode"><i data-lucide="clock" class="w-4 h-4" id="twenty-four-icon"></i></button>
-                    <button id="ramadan-toggle"
-                        class="prism-btn group !w-9 !h-9 !p-0 !min-w-0 !rounded-xl !bg-white/10 !text-white border border-white/20 hover:!bg-white/20 flex items-center justify-center transition-all active:scale-90"
-                        title="Ramadan Mode"><i data-lucide="moon-star" class="w-4 h-4" id="ramadan-icon"></i></button>
-                    <button id="compact-toggle"
-                        class="prism-btn group !w-9 !h-9 !p-0 !min-w-0 !rounded-xl !bg-white/10 !text-white border border-white/20 hover:!bg-white/20 flex items-center justify-center transition-all active:scale-90"
-                        title="Compact Mode"><i data-lucide="type" class="w-4 h-4" id="compact-icon"></i></button>
 
-                    <!-- Library Sync Button -->
-                    <button onclick="document.getElementById('sync-modal').classList.remove('hidden')"
-                        class="prism-btn group !w-9 !h-9 !p-0 !min-w-0 !rounded-xl !bg-white/10 !text-white border border-white/20 hover:!bg-white/20 flex items-center justify-center transition-all"
-                        title="Sync Library"><i data-lucide="refresh-cw"
-                            class="w-4 h-4 group-hover:rotate-180 transition-transform duration-500"></i></button>
-                    <button id="ramadan-sync-btn"
-                        onclick="document.getElementById('ramadan-sync-modal').classList.remove('hidden')"
-                        class="hidden prism-btn group !w-9 !h-9 !p-0 !min-w-0 !rounded-xl !bg-amber-500/20 !text-amber-400 border border-amber-500/30 hover:!bg-amber-500/30 flex items-center justify-center transition-all"
-                        title="Ramadan Sync"><i data-lucide="cloud-lightning" class="w-4 h-4"></i></button>
+                    <div class="h-5 w-px bg-white/10 hidden xl:block mx-1"></div>
+
+                    <!-- View Toggles (Grouped) -->
+                    <div class="flex items-center gap-0.5 bg-black/40 p-1 rounded-xl border border-white/5 shadow-inner">
+                        <button id="focus-toggle"
+                            class="group w-8 h-8 rounded-lg bg-transparent text-slate-400 border-none hover:bg-white/10 hover:text-white flex items-center justify-center transition-all active:scale-90 relative overflow-hidden"
+                            title="Focus Mode"><i data-lucide="maximize-2" class="w-3.5 h-3.5" id="focus-icon"></i></button>
+                        <button id="twenty-four-toggle"
+                            class="group w-8 h-8 rounded-lg bg-transparent text-slate-400 border-none hover:bg-white/10 hover:text-white flex items-center justify-center transition-all active:scale-90 relative overflow-hidden"
+                            title="24-Hour Mode"><i data-lucide="clock" class="w-3.5 h-3.5" id="twenty-four-icon"></i></button>
+                        <button id="ramadan-toggle"
+                            class="group w-8 h-8 rounded-lg bg-transparent text-slate-400 border-none hover:bg-amber-500/20 hover:text-amber-400 flex items-center justify-center transition-all active:scale-90 relative overflow-hidden"
+                            title="Ramadan Mode"><i data-lucide="moon-star" class="w-3.5 h-3.5" id="ramadan-icon"></i></button>
+                        <button id="compact-toggle"
+                            class="group w-8 h-8 rounded-lg bg-transparent text-slate-400 border-none hover:bg-white/10 hover:text-white flex items-center justify-center transition-all active:scale-90 relative overflow-hidden"
+                            title="Compact Mode"><i data-lucide="type" class="w-3.5 h-3.5" id="compact-icon"></i></button>
+                    </div>
+
+                    <div class="h-5 w-px bg-white/10 hidden lg:block mx-1"></div>
+
+                    <!-- Admin/Sync & Secondary Actions -->
+                    <div class="flex items-center gap-1.5">
+                        <button onclick="document.getElementById('sync-modal').classList.remove('hidden')"
+                            class="group w-9 h-9 rounded-xl bg-white/5 text-slate-300 border border-white/10 hover:bg-white/15 hover:text-white flex items-center justify-center transition-all active:scale-95"
+                            title="Sync Library"><i data-lucide="refresh-cw" class="w-4 h-4 group-hover:rotate-180 transition-transform duration-500"></i></button>
+                        
+                        <button id="ramadan-sync-btn"
+                            onclick="document.getElementById('ramadan-sync-modal').classList.remove('hidden')"
+                            class="hidden group w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30 hover:bg-amber-500/30 flex items-center justify-center transition-all active:scale-95"
+                            title="Ramadan Sync"><i data-lucide="cloud-lightning" class="w-4 h-4"></i></button>
+
+                        <a href="/docs"
+                            class="group w-9 h-9 rounded-xl bg-white/5 text-slate-300 border border-white/10 hover:bg-white/15 hover:text-white flex items-center justify-center transition-all active:scale-95"
+                            title="Documentation"><i data-lucide="book-open" class="w-4 h-4"></i></a>
+                    </div>
+                    
+                    <!-- Export Box -->
                     <button id="export-btn"
-                        class="prism-btn !w-9 !h-9 !p-0 !min-w-0 !rounded-xl !bg-white/10 !text-white border border-white/10 hover:!bg-white/20 hover:!border-white/30 flex items-center justify-center transition-all"
-                        title="Export PNG"><i data-lucide="download" class="w-4 h-4"></i></button>
+                        class="group w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 hover:border-emerald-500/40 flex items-center justify-center transition-all shadow-lg active:scale-95 ml-1"
+                        title="Export Routine (PNG)"><i data-lucide="download" class="w-4 h-4"></i></button>
                 </div>
             </div>
         </header>
