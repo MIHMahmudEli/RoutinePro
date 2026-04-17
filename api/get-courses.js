@@ -11,7 +11,8 @@ export default async function handler(request, response) {
         const coursesBlob = blobs.find(b => b.pathname === 'courses.json');
 
         if (!coursesBlob) {
-            return response.status(404).json({ error: 'Global courses not found. Using local fallback.' });
+            response.setHeader('Cache-Control', 'no-store, max-age=0, must-revalidate');
+            return response.status(200).json([]);
         }
 
         // Fetch the content directly and return with no-cache headers

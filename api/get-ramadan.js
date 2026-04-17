@@ -10,7 +10,9 @@ export default async function handler(request, response) {
         const targetBlob = blobs.find(b => b.pathname === 'ramadan-mappings.json');
 
         if (!targetBlob) {
-            return response.status(404).json({ error: 'Global ramadan mappings not found.' });
+            // Return a safe default instead of 404 to avoid scary console errors
+            response.setHeader('Cache-Control', 'no-store, max-age=0, must-revalidate');
+            return response.status(200).json({ featureEnabled: false, mappings: {} });
         }
 
         // Fetch the content directly and return with no-cache headers

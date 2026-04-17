@@ -10,7 +10,8 @@ export default async function handler(request, response) {
         const targetBlob = blobs.find(b => b.pathname === 'metadata.json');
 
         if (!targetBlob) {
-            return response.status(404).json({ error: 'Global metadata not found.' });
+            response.setHeader('Cache-Control', 'no-store, max-age=0, must-revalidate');
+            return response.status(200).json({});
         }
 
         // Fetch the content directly and return with no-cache headers
