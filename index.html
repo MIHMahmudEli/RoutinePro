@@ -121,56 +121,58 @@
                 </div>
 
                 <!-- Part 4: Buttons (Line 4 on Mobile) -->
-                <div class="w-full md:w-auto flex flex-wrap items-center justify-center gap-2 py-2 md:py-0">
+                <div class="w-full md:w-auto flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 sm:gap-2 py-2 md:py-0 mt-2 md:mt-0">
                     
                     <!-- AI Routine Maker Button (Primary) -->
                     <button onclick="document.getElementById('ai-modal').classList.remove('hidden')"
-                        class="prism-btn group !w-auto !px-4 !h-9 !rounded-xl !bg-[var(--accent-primary)] !text-black border-none hover:brightness-110 flex items-center justify-center gap-2 transition-all active:scale-95 shadow-[0_0_20px_rgba(16,185,129,0.3)] order-first md:order-none"
+                        class="prism-btn group w-full sm:w-auto !px-5 sm:!px-4 !h-11 sm:!h-9 !rounded-xl !bg-[var(--accent-primary)] !text-black border-none hover:brightness-110 flex items-center justify-center gap-2.5 sm:gap-2 transition-all active:scale-95 shadow-[0_0_20px_rgba(16,185,129,0.3)] mb-1 sm:mb-0"
                         title="AI Routine Maker">
-                        <i data-lucide="scan-face" class="w-4 h-4"></i>
-                        <span class="text-[10px] font-900 uppercase tracking-tighter">AI Routine Maker</span>
+                        <i data-lucide="scan-face" class="w-4.5 h-4.5 sm:w-4 sm:h-4"></i>
+                        <span class="text-xs sm:text-[10px] font-900 uppercase tracking-wider sm:tracking-tighter">AI Routine Maker</span>
                     </button>
 
-                    <div class="h-5 w-px bg-white/10 hidden xl:block mx-1"></div>
+                    <div class="h-5 w-px bg-white/10 hidden xl:block mx-0.5"></div>
 
-                    <!-- View Toggles (Grouped) -->
-                    <div class="flex items-center gap-0.5 bg-black/40 p-1 rounded-xl border border-white/5 shadow-inner">
-                        <button id="focus-toggle"
-                            class="group w-8 h-8 rounded-lg bg-transparent text-slate-400 border-none hover:bg-white/10 hover:text-white flex items-center justify-center transition-all active:scale-90 relative overflow-hidden"
-                            title="Focus Mode"><i data-lucide="maximize-2" class="w-3.5 h-3.5" id="focus-icon"></i></button>
-                        <button id="twenty-four-toggle"
-                            class="group w-8 h-8 rounded-lg bg-transparent text-slate-400 border-none hover:bg-white/10 hover:text-white flex items-center justify-center transition-all active:scale-90 relative overflow-hidden"
-                            title="24-Hour Mode"><i data-lucide="clock" class="w-3.5 h-3.5" id="twenty-four-icon"></i></button>
-                        <button id="ramadan-toggle"
-                            class="group w-8 h-8 rounded-lg bg-transparent text-slate-400 border-none hover:bg-amber-500/20 hover:text-amber-400 flex items-center justify-center transition-all active:scale-90 relative overflow-hidden"
-                            title="Ramadan Mode"><i data-lucide="moon-star" class="w-3.5 h-3.5" id="ramadan-icon"></i></button>
-                        <button id="compact-toggle"
-                            class="group w-8 h-8 rounded-lg bg-transparent text-slate-400 border-none hover:bg-white/10 hover:text-white flex items-center justify-center transition-all active:scale-90 relative overflow-hidden"
-                            title="Compact Mode"><i data-lucide="type" class="w-3.5 h-3.5" id="compact-icon"></i></button>
+                    <div class="flex flex-wrap items-center justify-center gap-2">
+                        <!-- View Toggles (Grouped) -->
+                        <div class="flex items-center gap-0.5 bg-black/40 p-1 rounded-xl border border-white/5 shadow-inner">
+                            <button id="focus-toggle"
+                                class="group w-9 h-9 sm:w-8 sm:h-8 rounded-lg bg-transparent text-slate-400 border-none hover:bg-white/10 hover:text-white flex items-center justify-center transition-all active:scale-90 relative overflow-hidden"
+                                title="Focus Mode"><i data-lucide="maximize-2" class="w-4 h-4 sm:w-3.5 sm:h-3.5" id="focus-icon"></i></button>
+                            <button id="twenty-four-toggle"
+                                class="group w-9 h-9 sm:w-8 sm:h-8 rounded-lg bg-transparent text-slate-400 border-none hover:bg-white/10 hover:text-white flex items-center justify-center transition-all active:scale-90 relative overflow-hidden"
+                                title="24-Hour Mode"><i data-lucide="clock" class="w-4 h-4 sm:w-3.5 sm:h-3.5" id="twenty-four-icon"></i></button>
+                            <button id="ramadan-toggle"
+                                class="group w-9 h-9 sm:w-8 sm:h-8 rounded-lg bg-transparent text-slate-400 border-none hover:bg-amber-500/20 hover:text-amber-400 flex items-center justify-center transition-all active:scale-90 relative overflow-hidden"
+                                title="Ramadan Mode"><i data-lucide="moon-star" class="w-4 h-4 sm:w-3.5 sm:h-3.5" id="ramadan-icon"></i></button>
+                            <button id="compact-toggle"
+                                class="group w-9 h-9 sm:w-8 sm:h-8 rounded-lg bg-transparent text-slate-400 border-none hover:bg-white/10 hover:text-white flex items-center justify-center transition-all active:scale-90 relative overflow-hidden"
+                                title="Compact Mode"><i data-lucide="type" class="w-4 h-4 sm:w-3.5 sm:h-3.5" id="compact-icon"></i></button>
+                        </div>
+
+                        <div class="h-5 w-px bg-white/10 hidden lg:block mx-0.5"></div>
+
+                        <!-- Admin/Sync & Secondary Actions -->
+                        <div class="flex items-center gap-1.5">
+                            <button onclick="document.getElementById('sync-modal').classList.remove('hidden')"
+                                class="group w-10 h-10 sm:w-9 sm:h-9 rounded-xl bg-white/5 text-slate-300 border border-white/10 hover:bg-white/15 hover:text-white flex items-center justify-center transition-all active:scale-95"
+                                title="Sync Library"><i data-lucide="refresh-cw" class="w-4.5 h-4.5 sm:w-4 sm:h-4 group-hover:rotate-180 transition-transform duration-500"></i></button>
+                            
+                            <button id="ramadan-sync-btn"
+                                onclick="document.getElementById('ramadan-sync-modal').classList.remove('hidden')"
+                                class="hidden group w-10 h-10 sm:w-9 sm:h-9 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30 hover:bg-amber-500/30 flex items-center justify-center transition-all active:scale-95"
+                                title="Ramadan Sync"><i data-lucide="cloud-lightning" class="w-4.5 h-4.5 sm:w-4 sm:h-4"></i></button>
+
+                            <a href="/docs"
+                                class="group w-10 h-10 sm:w-9 sm:h-9 rounded-xl bg-white/5 text-slate-300 border border-white/10 hover:bg-white/15 hover:text-white flex items-center justify-center transition-all active:scale-95"
+                                title="Documentation"><i data-lucide="book-open" class="w-4.5 h-4.5 sm:w-4 sm:h-4"></i></a>
+                            
+                            <!-- Export Box Moved into this flex group to prevent orphans -->
+                            <button id="export-btn"
+                                class="group w-10 h-10 sm:w-9 sm:h-9 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 hover:border-emerald-500/40 flex items-center justify-center transition-all shadow-lg active:scale-95 ml-0.5"
+                                title="Export Routine (PNG)"><i data-lucide="download" class="w-4.5 h-4.5 sm:w-4 sm:h-4"></i></button>
+                        </div>
                     </div>
-
-                    <div class="h-5 w-px bg-white/10 hidden lg:block mx-1"></div>
-
-                    <!-- Admin/Sync & Secondary Actions -->
-                    <div class="flex items-center gap-1.5">
-                        <button onclick="document.getElementById('sync-modal').classList.remove('hidden')"
-                            class="group w-9 h-9 rounded-xl bg-white/5 text-slate-300 border border-white/10 hover:bg-white/15 hover:text-white flex items-center justify-center transition-all active:scale-95"
-                            title="Sync Library"><i data-lucide="refresh-cw" class="w-4 h-4 group-hover:rotate-180 transition-transform duration-500"></i></button>
-                        
-                        <button id="ramadan-sync-btn"
-                            onclick="document.getElementById('ramadan-sync-modal').classList.remove('hidden')"
-                            class="hidden group w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30 hover:bg-amber-500/30 flex items-center justify-center transition-all active:scale-95"
-                            title="Ramadan Sync"><i data-lucide="cloud-lightning" class="w-4 h-4"></i></button>
-
-                        <a href="/docs"
-                            class="group w-9 h-9 rounded-xl bg-white/5 text-slate-300 border border-white/10 hover:bg-white/15 hover:text-white flex items-center justify-center transition-all active:scale-95"
-                            title="Documentation"><i data-lucide="book-open" class="w-4 h-4"></i></a>
-                    </div>
-                    
-                    <!-- Export Box -->
-                    <button id="export-btn"
-                        class="group w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 hover:border-emerald-500/40 flex items-center justify-center transition-all shadow-lg active:scale-95 ml-1"
-                        title="Export Routine (PNG)"><i data-lucide="download" class="w-4 h-4"></i></button>
                 </div>
             </div>
         </header>
