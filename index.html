@@ -125,6 +125,13 @@
 
                 <!-- Part 4: Buttons (Line 4 on Mobile) -->
                 <div class="w-full md:w-auto flex items-center justify-center gap-2 py-0 md:py-0">
+                    <!-- AI Routine Maker Button -->
+                    <button onclick="document.getElementById('ai-modal').classList.remove('hidden')"
+                        class="prism-btn group !w-auto !px-4 !h-9 !rounded-xl !bg-[var(--accent-primary)] !text-black border-none hover:brightness-110 flex items-center justify-center gap-2 transition-all active:scale-95 shadow-[0_0_20px_rgba(16,185,129,0.3)]"
+                        title="AI Routine Maker">
+                        <i data-lucide="scan-face" class="w-4 h-4"></i>
+                        <span class="text-[10px] font-900 uppercase tracking-tighter">AI Routine Maker</span>
+                    </button>
                     <a href="/docs"
                         class="prism-btn group !w-9 !h-9 !p-0 !min-w-0 !rounded-xl !bg-white/10 !text-white border border-white/20 hover:!bg-white/20 flex items-center justify-center transition-all active:scale-90"
                         title="Documentation"><i data-lucide="book-open" class="w-4 h-4"></i></a>
@@ -140,13 +147,6 @@
                     <button id="compact-toggle"
                         class="prism-btn group !w-9 !h-9 !p-0 !min-w-0 !rounded-xl !bg-white/10 !text-white border border-white/20 hover:!bg-white/20 flex items-center justify-center transition-all active:scale-90"
                         title="Compact Mode"><i data-lucide="type" class="w-4 h-4" id="compact-icon"></i></button>
-                    <!-- AI Routine Maker Button -->
-                    <button onclick="document.getElementById('ai-modal').classList.remove('hidden')"
-                        class="prism-btn group !w-auto !px-4 !h-9 !rounded-xl !bg-[var(--accent-primary)] !text-black border-none hover:brightness-110 flex items-center justify-center gap-2 transition-all active:scale-95 shadow-[0_0_20px_rgba(16,185,129,0.3)]"
-                        title="AI Routine Maker">
-                        <i data-lucide="scan-face" class="w-4 h-4"></i>
-                        <span class="text-[10px] font-900 uppercase tracking-tighter">AI Routine Maker</span>
-                    </button>
 
                     <!-- Library Sync Button -->
                     <button onclick="document.getElementById('sync-modal').classList.remove('hidden')"
