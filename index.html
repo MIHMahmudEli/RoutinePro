@@ -140,9 +140,18 @@
                     <button id="compact-toggle"
                         class="prism-btn group !w-9 !h-9 !p-0 !min-w-0 !rounded-xl !bg-white/10 !text-white border border-white/20 hover:!bg-white/20 flex items-center justify-center transition-all active:scale-90"
                         title="Compact Mode"><i data-lucide="type" class="w-4 h-4" id="compact-icon"></i></button>
+                    <!-- AI Routine Maker Button -->
+                    <button onclick="document.getElementById('ai-modal').classList.remove('hidden')"
+                        class="prism-btn group !w-auto !px-4 !h-9 !rounded-xl !bg-[var(--accent-primary)] !text-black border-none hover:brightness-110 flex items-center justify-center gap-2 transition-all active:scale-95 shadow-[0_0_20px_rgba(16,185,129,0.3)]"
+                        title="AI Routine Maker">
+                        <i data-lucide="scan-face" class="w-4 h-4"></i>
+                        <span class="text-[10px] font-900 uppercase tracking-tighter">AI Routine Maker</span>
+                    </button>
+
+                    <!-- Library Sync Button -->
                     <button onclick="document.getElementById('sync-modal').classList.remove('hidden')"
                         class="prism-btn group !w-9 !h-9 !p-0 !min-w-0 !rounded-xl !bg-white/10 !text-white border border-white/20 hover:!bg-white/20 flex items-center justify-center transition-all"
-                        title="Portal Sync"><i data-lucide="refresh-cw"
+                        title="Sync Library"><i data-lucide="refresh-cw"
                             class="w-4 h-4 group-hover:rotate-180 transition-transform duration-500"></i></button>
                     <button id="ramadan-sync-btn"
                         onclick="document.getElementById('ramadan-sync-modal').classList.remove('hidden')"
@@ -788,7 +797,7 @@
         </div>
     </div>
 
-    <!-- Dynamic Sync Modal -->
+    <!-- Library Sync Modal -->
     <div id="sync-modal"
         class="hidden fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-3xl overflow-y-auto">
         <div class="admin-portal-box max-w-sm w-full p-6 space-y-5 animate-pop">
@@ -821,24 +830,11 @@
                     </div>
                 </div>
 
-
-
-
-
-                <div class="grid grid-cols-2 gap-3">
-                    <div class="relative group admin-upload-zone text-center cursor-pointer flex flex-col items-center justify-center p-4 !py-6" onclick="document.getElementById('course-file-input').click()">
-                        <input type="file" id="course-file-input" class="hidden" accept=".xlsx,.json">
-                        <i data-lucide="upload-cloud" class="w-7 h-7 text-slate-600 mb-2 group-hover:text-emerald-400"></i>
-                        <p class="text-[9px] font-bold text-slate-400 group-hover:text-white uppercase tracking-wider">Course Report</p>
-                        <p class="text-[7px] text-slate-600 font-black uppercase mt-0.5 tracking-widest">XLSX / JSON</p>
-                    </div>
-
-                    <div class="relative group admin-upload-zone text-center cursor-pointer flex flex-col items-center justify-center p-4 !py-6 border-dashed border-emerald-500/20 bg-emerald-500/5" onclick="document.getElementById('portal-image-input').click()">
-                        <input type="file" id="portal-image-input" class="hidden" accept="image/*">
-                        <i data-lucide="scan-face" class="w-7 h-7 text-emerald-500 mb-2 group-hover:text-emerald-400 animate-pulse"></i>
-                        <p class="text-[9px] font-bold text-emerald-400 group-hover:text-white uppercase tracking-wider">Image Extraction</p>
-                        <p class="text-[7px] text-emerald-500/50 font-black uppercase mt-0.5 tracking-widest">Portal Screenshot</p>
-                    </div>
+                <div class="relative group admin-upload-zone text-center cursor-pointer flex flex-col items-center justify-center p-4 !py-8" onclick="document.getElementById('course-file-input').click()">
+                    <input type="file" id="course-file-input" class="hidden" accept=".xlsx,.json">
+                    <i data-lucide="upload-cloud" class="w-8 h-8 text-slate-600 mb-2 group-hover:text-emerald-400"></i>
+                    <p class="text-[10px] font-bold text-slate-400 group-hover:text-white uppercase tracking-wider">Upload Course Report</p>
+                    <p class="text-[8px] text-slate-600 font-black uppercase mt-0.5 tracking-widest">XLSX / JSON</p>
                 </div>
             </div>
 
@@ -859,6 +855,56 @@
                     class="hidden w-full py-2.5 rounded-xl text-[8px] font-black text-slate-600 uppercase tracking-widest hover:text-slate-400 transition-all">
                     Download JSON Backup
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Routine Maker Modal -->
+    <div id="ai-modal"
+        class="hidden fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-3xl overflow-y-auto">
+        <div class="admin-portal-box max-w-sm w-full p-6 space-y-5 animate-pop border-emerald-500/30">
+            <button onclick="document.getElementById('ai-modal').classList.add('hidden')" class="admin-modal-close">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-[var(--accent-primary)]/10 flex items-center justify-center border border-[var(--accent-primary)]/20">
+                    <i data-lucide="scan-face" class="w-5 h-5 text-[var(--accent-primary)]"></i>
+                </div>
+                <div>
+                    <h2 class="text-lg font-900 tracking-tighter uppercase">AI Routine Maker</h2>
+                    <p class="text-[9px] text-slate-500 font-bold uppercase tracking-widest opacity-60">Generate routine from Screenshot</p>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <div class="bg-emerald-500/5 border border-emerald-500/10 rounded-2xl p-4 space-y-3">
+                    <div class="flex items-center gap-2 text-emerald-400">
+                        <i data-lucide="info" class="w-4 h-4"></i>
+                        <span class="text-[10px] font-black uppercase tracking-widest">How to use AI Sync</span>
+                    </div>
+                    <div class="grid grid-cols-1 gap-2">
+                        <div class="flex items-start gap-3">
+                            <span class="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 text-[8px] flex items-center justify-center font-black shrink-0 mt-1">1</span>
+                            <p class="text-[9px] text-slate-400 leading-relaxed font-bold">Go to your <a href="https://portal.aiub.edu" target="_blank" class="text-emerald-400 underline underline-offset-2">AIUB Portal</a> and navigate to <span class="text-white">Registration</span>.</p>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 text-[8px] flex items-center justify-center font-black shrink-0 mt-1">2</span>
+                            <p class="text-[9px] text-slate-400 leading-relaxed font-bold">Take a <span class="text-white">Screenshot</span> of your "Registered Courses" list.</p>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 text-[8px] flex items-center justify-center font-black shrink-0 mt-1">3</span>
+                            <p class="text-[9px] text-slate-400 leading-relaxed font-bold">Upload that image below. The app will build your routine instantly!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative group admin-upload-zone text-center cursor-pointer flex flex-col items-center justify-center p-4 !py-10 border-dashed border-emerald-500/20 bg-emerald-500/5" onclick="document.getElementById('portal-image-input').click()">
+                    <input type="file" id="portal-image-input" class="hidden" accept="image/*">
+                    <i data-lucide="image-plus" class="w-10 h-10 text-emerald-500 mb-3 group-hover:text-emerald-400 animate-pulse"></i>
+                    <p class="text-[11px] font-bold text-emerald-400 group-hover:text-white uppercase tracking-wider">Click to Upload Screenshot</p>
+                    <p class="text-[8px] text-emerald-500/50 font-black uppercase mt-1 tracking-widest">Your routine will appear instantly</p>
+                </div>
             </div>
         </div>
     </div>
