@@ -28,8 +28,24 @@ export default async function handler(req, res) {
             role: "user",
             content: [
               {
-                type: "text",
-                text: "EXTRACT REGISTERED COURSES FROM IMAGE.\n\nCRITICAL INSTRUCTIONS:\n1. ONLY extract information that is visually present. DO NOT use general knowledge.\n2. If no courses are found, return [].\n\nStructure per course:\n- title: The full course name (Uppercase). Note: If the text is '00733-MOBILE APPLICATION DEVELOPMENT [A]', the title is 'MOBILE APPLICATION DEVELOPMENT'.\n- section: The character inside the square brackets (e.g., A, B, I).\n\nReturn ONLY a JSON array of objects: [{\"title\": \"...\", \"section\": \"...\"}]. No preamble or extra text."
+              type: "text",
+              text: `EXTRACT REGISTERED COURSES FROM IMAGE.
+
+              CRITICAL INSTRUCTIONS:
+              1. ONLY extract courses that are actively registered.
+              2. COMPLETELY IGNORE any course that has "Dropped" or "Dropped(100%)" written anywhere near it. Do not extract dropped courses at all.
+              3. ONLY extract information that is visually present. DO NOT use general knowledge.
+              4. If no active registered courses are found, return [].
+
+              Structure per course:
+              - title: The full course name in UPPERCASE. 
+                Example: If the text is '00733-MOBILE APPLICATION DEVELOPMENT [A]', the title should be 'MOBILE APPLICATION DEVELOPMENT'.
+              - section: The single character inside the square brackets (e.g., A, B, C, K, etc.).
+
+              Return ONLY a clean JSON array of objects in this exact format:
+              [{"title": "...", "section": "..."}]
+
+              Do not include any dropped courses, preamble, explanation, or extra text.`
               },
               {
                 type: "image_url",
