@@ -1083,11 +1083,22 @@ class RoutineController {
 
         // 2. SECOND PRIORITY: Title + Section Matching
         if (!targetCourse) {
-            targetCourse = this.model.allCourses.find(c => c.baseTitle === title && (!code || c.code === code));
-            if (!targetCourse) targetCourse = this.model.allCourses.find(c => c.baseTitle === title);
+            const cleanTitle = String(title).trim().toUpperCase();
+            
+            // Try exact match first (case-insensitive)
+            targetCourse = this.model.allCourses.find(c => c.baseTitle.trim().toUpperCase() === cleanTitle);
+            
+            // Try startsWith/Includes fallback (fuzzy)
+            if (!targetCourse) {
+                targetCourse = this.model.allCourses.find(c => 
+                    c.baseTitle.toUpperCase().includes(cleanTitle) || 
+                    cleanTitle.includes(c.baseTitle.toUpperCase())
+                );
+            }
             
             if (targetCourse && sectionName) {
-                targetSectionIdx = targetCourse.sections.findIndex(s => s.section.toUpperCase() === sectionName.toUpperCase());
+                const sName = String(sectionName).trim().toUpperCase();
+                targetSectionIdx = targetCourse.sections.findIndex(s => s.section.toUpperCase() === sName);
             }
         }
 
