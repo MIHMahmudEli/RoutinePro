@@ -1227,13 +1227,14 @@ class RoutineController {
                         `;
                         clonedGrid.appendChild(gapEl);
 
-                        // Bottom Right: Link Pill
-                        const linkEl = clonedDoc.createElement('div');
-                        linkEl.style.cssText = overlayStyles + "bottom: 25px; right: 35px; display: flex;";
-                        linkEl.innerHTML = `
-                                <span style="font-size: 8px; font-weight: 700; color: #94a3b8; letter-spacing: 0.02em; line-height: 1; opacity: 0.8;">https://routine-pro-fawn.vercel.app</span>
+                        // Bottom Right: Branding
+                        const brandEl = clonedDoc.createElement('div');
+                        brandEl.style.cssText = overlayStyles + "bottom: 25px; right: 30px; text-align: right;";
+                        brandEl.innerHTML = `
+                            <div style="font-size: 7px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 2px; opacity: 0.8;">Generated via RoutinePro</div>
+                            <div style="font-size: 10px; font-weight: 500; color: #475569; letter-spacing: 0.02em; opacity: 0.6;">https://routine-pro-fawn.vercel.app</div>
                         `;
-                        clonedGrid.appendChild(linkEl);
+                        clonedGrid.appendChild(brandEl);
                         
                         // Add padding to create a header/footer area in the export
                         clonedGrid.style.paddingTop = '70px';
