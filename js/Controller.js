@@ -1092,17 +1092,30 @@ class RoutineController {
         }
 
         if (targetCourse) {
-            const success = this.model.addCourse(targetCourse);
-            if (success) {
-                // Since model.addCourse uses unshift, the new course is at index 0
-                if (targetSectionIdx !== -1) {
-                    this.model.updateSectionSelection(0, targetSectionIdx);
-                }
+            let activeIdx = this.model.selectedCourses.findIndex(sc => sc.course.baseTitle === targetCourse.baseTitle);
+            let isNew = false;
 
+            if (activeIdx === -1) {
+                // Course is new, add it
+                this.model.addCourse(targetCourse);
+                activeIdx = 0; // New courses are unshifted to index 0
+                isNew = true;
+            }
+
+            // Always update to the section identifying by AI/User
+            if (targetSectionIdx !== -1) {
+                this.model.updateSectionSelection(activeIdx, targetSectionIdx);
+            }
+
+            if (isNew) {
                 this.view.searchInput.value = '';
                 this.view.suggestions.classList.add('hidden');
                 this.syncWorkspace();
                 return true;
+            } else {
+                // If it wasn't new, we still sync to reflect the section change
+                this.syncWorkspace();
+                return true; 
             }
         }
 
