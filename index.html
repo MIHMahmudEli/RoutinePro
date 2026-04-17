@@ -120,69 +120,70 @@
                     </div>
                 </div>
 
-                <!-- Part 4: Buttons (Line 4 on Mobile) -->
-                <div class="w-full md:w-auto flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 sm:gap-2 py-2 md:py-0 mt-2 md:mt-0">
+                <!-- Part 4: Buttons -->
+                <div class="w-full flex flex-col items-center justify-center gap-3 py-2 mt-2 border-t border-white/5 md:border-none md:mt-0 md:py-0 md:w-auto md:flex-row md:gap-2">
                     
-                    <!-- AI Routine Maker Button (Primary) -->
+                    <!-- AI Routine Maker Button -->
                     <button onclick="document.getElementById('ai-modal').classList.remove('hidden')"
-                        class="prism-btn group w-full sm:w-auto !px-5 sm:!px-4 !h-11 sm:!h-9 !rounded-xl !bg-[var(--accent-primary)] !text-black border-none hover:brightness-110 flex items-center justify-center gap-2.5 sm:gap-2 transition-all active:scale-95 shadow-[0_0_20px_rgba(16,185,129,0.3)] mb-1 sm:mb-0"
+                        class="prism-btn group w-full md:w-auto px-4 h-11 md:h-9 rounded-xl bg-[var(--accent-primary)] text-black border-none hover:brightness-110 flex items-center justify-center gap-2 transition-all active:scale-95 shadow-[0_0_20px_rgba(16,185,129,0.3)]"
                         title="AI Routine Maker">
-                        <i data-lucide="scan-face" class="w-4.5 h-4.5 sm:w-4 sm:h-4"></i>
-                        <span class="text-xs sm:text-[10px] font-900 uppercase tracking-wider sm:tracking-tighter">AI Routine Maker</span>
+                        <i data-lucide="scan-face" class="w-5 h-5 md:w-4 md:h-4"></i>
+                        <span class="text-[11px] md:text-[10px] font-900 uppercase tracking-widest md:tracking-tighter">AI Routine Maker</span>
                     </button>
 
-                    <div class="h-5 w-px bg-white/10 hidden xl:block mx-0.5"></div>
+                    <div class="h-5 w-px bg-white/10 hidden md:block mx-0.5"></div>
 
-                    <div class="flex flex-wrap items-center justify-center gap-2">
-                        <!-- View Toggles (Grouped) -->
-                        <div class="flex items-center gap-0.5 bg-black/40 p-1 rounded-xl border border-white/5 shadow-inner">
+                    <!-- Secondary Toolbars Container (Always a single row on mobile, scrollable if incredibly narrow) -->
+                    <div class="w-full flex-nowrap overflow-x-auto md:overflow-visible flex items-center justify-center md:justify-start gap-2 pb-1 md:pb-0 scrollbar-hide">
+                        
+                        <!-- View Toggles -->
+                        <div class="flex-shrink-0 flex items-center gap-0.5 bg-black/40 p-1 rounded-xl border border-white/5 shadow-inner">
                             <button id="focus-toggle"
-                                class="group w-9 h-9 sm:w-8 sm:h-8 rounded-lg bg-transparent text-slate-400 border-none hover:bg-white/10 hover:text-white flex items-center justify-center transition-all duration-200 active:scale-90 relative data-[active=true]:bg-[var(--accent-primary)]/20 data-[active=true]:text-[var(--accent-primary)] data-[active=true]:ring-2 data-[active=true]:ring-[var(--accent-primary)]/40 data-[active=true]:hover:bg-[var(--accent-primary)]/30 data-[active=true]:hover:text-[var(--accent-primary)]"
+                                class="group w-10 h-10 md:w-8 md:h-8 rounded-lg bg-transparent text-slate-400 border-none hover:bg-white/10 hover:text-white flex items-center justify-center transition-all duration-200 active:scale-90 relative data-[active=true]:bg-[var(--accent-primary)]/20 data-[active=true]:text-[var(--accent-primary)] data-[active=true]:ring-2 data-[active=true]:ring-[var(--accent-primary)]/40 data-[active=true]:hover:bg-[var(--accent-primary)]/30 data-[active=true]:hover:text-[var(--accent-primary)]"
                                 title="Focus Mode: OFF">
-                                <i data-lucide="maximize-2" class="w-4 h-4 sm:w-3.5 sm:h-3.5 transition-transform duration-300" id="focus-icon"></i>
+                                <i data-lucide="maximize-2" class="w-4.5 h-4.5 md:w-3.5 md:h-3.5 transition-transform duration-300" id="focus-icon"></i>
                                 <span class="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[var(--accent-primary)] shadow-[0_0_8px_var(--accent-primary)] hidden group-data-[active=true]:block animate-pulse"></span>
                             </button>
                             <button id="twenty-four-toggle"
-                                class="group w-9 h-9 sm:w-8 sm:h-8 rounded-lg bg-transparent text-slate-400 border-none hover:bg-white/10 hover:text-white flex items-center justify-center transition-all duration-200 active:scale-90 relative data-[active=true]:bg-[var(--accent-primary)]/20 data-[active=true]:text-[var(--accent-primary)] data-[active=true]:ring-2 data-[active=true]:ring-[var(--accent-primary)]/40 data-[active=true]:hover:bg-[var(--accent-primary)]/30 data-[active=true]:hover:text-[var(--accent-primary)]"
+                                class="group w-10 h-10 md:w-8 md:h-8 rounded-lg bg-transparent text-slate-400 border-none hover:bg-white/10 hover:text-white flex items-center justify-center transition-all duration-200 active:scale-90 relative data-[active=true]:bg-[var(--accent-primary)]/20 data-[active=true]:text-[var(--accent-primary)] data-[active=true]:ring-2 data-[active=true]:ring-[var(--accent-primary)]/40 data-[active=true]:hover:bg-[var(--accent-primary)]/30 data-[active=true]:hover:text-[var(--accent-primary)]"
                                 title="24-Hour Mode: OFF">
-                                <i data-lucide="clock" class="w-4 h-4 sm:w-3.5 sm:h-3.5 transition-transform duration-300" id="twenty-four-icon"></i>
+                                <i data-lucide="clock" class="w-4.5 h-4.5 md:w-3.5 md:h-3.5 transition-transform duration-300" id="twenty-four-icon"></i>
                                 <span class="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[var(--accent-primary)] shadow-[0_0_8px_var(--accent-primary)] hidden group-data-[active=true]:block animate-pulse"></span>
                             </button>
                             <button id="ramadan-toggle"
-                                class="group w-9 h-9 sm:w-8 sm:h-8 rounded-lg bg-transparent text-slate-400 border-none hover:bg-amber-500/10 hover:text-amber-400 flex items-center justify-center transition-all duration-200 active:scale-90 relative data-[active=true]:bg-amber-500/20 data-[active=true]:text-amber-400 data-[active=true]:ring-2 data-[active=true]:ring-amber-500/40 data-[active=true]:hover:bg-amber-500/30 data-[active=true]:hover:text-amber-300"
+                                class="group w-10 h-10 md:w-8 md:h-8 rounded-lg bg-transparent text-slate-400 border-none hover:bg-amber-500/10 hover:text-amber-400 flex items-center justify-center transition-all duration-200 active:scale-90 relative data-[active=true]:bg-amber-500/20 data-[active=true]:text-amber-400 data-[active=true]:ring-2 data-[active=true]:ring-amber-500/40 data-[active=true]:hover:bg-amber-500/30 data-[active=true]:hover:text-amber-300"
                                 title="Ramadan Mode: OFF">
-                                <i data-lucide="moon-star" class="w-4 h-4 sm:w-3.5 sm:h-3.5 transition-transform duration-300" id="ramadan-icon"></i>
+                                <i data-lucide="moon-star" class="w-4.5 h-4.5 md:w-3.5 md:h-3.5 transition-transform duration-300" id="ramadan-icon"></i>
                                 <span class="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,1)] hidden group-data-[active=true]:block animate-pulse"></span>
                             </button>
                             <button id="compact-toggle"
-                                class="group w-9 h-9 sm:w-8 sm:h-8 rounded-lg bg-transparent text-slate-400 border-none hover:bg-white/10 hover:text-white flex items-center justify-center transition-all duration-200 active:scale-90 relative data-[active=true]:bg-[var(--accent-primary)]/20 data-[active=true]:text-[var(--accent-primary)] data-[active=true]:ring-2 data-[active=true]:ring-[var(--accent-primary)]/40 data-[active=true]:hover:bg-[var(--accent-primary)]/30 data-[active=true]:hover:text-[var(--accent-primary)]"
+                                class="group w-10 h-10 md:w-8 md:h-8 rounded-lg bg-transparent text-slate-400 border-none hover:bg-white/10 hover:text-white flex items-center justify-center transition-all duration-200 active:scale-90 relative data-[active=true]:bg-[var(--accent-primary)]/20 data-[active=true]:text-[var(--accent-primary)] data-[active=true]:ring-2 data-[active=true]:ring-[var(--accent-primary)]/40 data-[active=true]:hover:bg-[var(--accent-primary)]/30 data-[active=true]:hover:text-[var(--accent-primary)]"
                                 title="Compact Mode: OFF">
-                                <i data-lucide="type" class="w-4 h-4 sm:w-3.5 sm:h-3.5 transition-transform duration-300" id="compact-icon"></i>
+                                <i data-lucide="type" class="w-4.5 h-4.5 md:w-3.5 md:h-3.5 transition-transform duration-300" id="compact-icon"></i>
                                 <span class="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[var(--accent-primary)] shadow-[0_0_8px_var(--accent-primary)] hidden group-data-[active=true]:block animate-pulse"></span>
                             </button>
                         </div>
 
-                        <div class="h-5 w-px bg-white/10 hidden lg:block mx-0.5"></div>
+                        <div class="flex-shrink-0 h-8 w-px bg-white/10 mx-0.5"></div>
 
-                        <!-- Admin/Sync & Secondary Actions -->
-                        <div class="flex items-center gap-1.5 bg-black/40 p-1 rounded-xl border border-white/5 shadow-inner">
+                        <!-- Admin/Sync Actions -->
+                        <div class="flex-shrink-0 flex items-center gap-1 bg-black/40 p-1 rounded-xl border border-white/5 shadow-inner">
                             <button onclick="document.getElementById('sync-modal').classList.remove('hidden')"
-                                class="group w-10 h-10 sm:w-9 sm:h-9 rounded-xl bg-white/5 text-slate-300 border border-white/10 hover:bg-white/15 hover:text-white flex items-center justify-center transition-all active:scale-95"
-                                title="Sync Library"><i data-lucide="refresh-cw" class="w-4.5 h-4.5 sm:w-4 sm:h-4 group-hover:rotate-180 transition-transform duration-500"></i></button>
+                                class="group w-10 h-10 md:w-9 md:h-9 rounded-xl bg-white/5 text-slate-300 border border-white/10 hover:bg-white/15 hover:text-white flex items-center justify-center transition-all active:scale-95"
+                                title="Sync Library"><i data-lucide="refresh-cw" class="w-4.5 h-4.5 md:w-4 md:h-4 group-hover:rotate-180 transition-transform duration-500"></i></button>
                             
                             <button id="ramadan-sync-btn"
                                 onclick="document.getElementById('ramadan-sync-modal').classList.remove('hidden')"
-                                class="hidden group w-10 h-10 sm:w-9 sm:h-9 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30 hover:bg-amber-500/30 flex items-center justify-center transition-all active:scale-95"
-                                title="Ramadan Sync"><i data-lucide="cloud-lightning" class="w-4.5 h-4.5 sm:w-4 sm:h-4"></i></button>
+                                class="hidden group w-10 h-10 md:w-9 md:h-9 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30 hover:bg-amber-500/30 flex items-center justify-center transition-all active:scale-95"
+                                title="Ramadan Sync"><i data-lucide="cloud-lightning" class="w-4.5 h-4.5 md:w-4 md:h-4"></i></button>
 
                             <a href="/docs"
-                                class="group w-10 h-10 sm:w-9 sm:h-9 rounded-xl bg-white/5 text-slate-300 border border-white/10 hover:bg-white/15 hover:text-white flex items-center justify-center transition-all active:scale-95"
-                                title="Documentation"><i data-lucide="book-open" class="w-4.5 h-4.5 sm:w-4 sm:h-4"></i></a>
+                                class="group w-10 h-10 md:w-9 md:h-9 rounded-xl bg-white/5 text-slate-300 border border-white/10 hover:bg-white/15 hover:text-white flex items-center justify-center transition-all active:scale-95"
+                                title="Documentation"><i data-lucide="book-open" class="w-4.5 h-4.5 md:w-4 md:h-4"></i></a>
                             
-                            <!-- Export Box Moved into this flex group to prevent orphans -->
                             <button id="export-btn"
-                                class="group w-10 h-10 sm:w-9 sm:h-9 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 hover:border-emerald-500/40 flex items-center justify-center transition-all shadow-lg active:scale-95 ml-0.5"
-                                title="Export Routine (PNG)"><i data-lucide="download" class="w-4.5 h-4.5 sm:w-4 sm:h-4"></i></button>
+                                class="group w-10 h-10 md:w-9 md:h-9 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 hover:border-emerald-500/40 flex items-center justify-center transition-all shadow-lg active:scale-95"
+                                title="Export Routine (PNG)"><i data-lucide="download" class="w-4.5 h-4.5 md:w-4 md:h-4"></i></button>
                         </div>
                     </div>
                 </div>
