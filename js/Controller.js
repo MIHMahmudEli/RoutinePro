@@ -1172,6 +1172,12 @@ class RoutineController {
                 allowTaint: true,
                 logging: false,
                 onclone: (clonedDoc) => {
+                    // Force Focus Mode for the export
+                    const { isExplorerMode, currentRoutineIndex, possibleRoutines, selectedCourses } = this.model;
+                    const currentItems = isExplorerMode ? possibleRoutines[currentRoutineIndex] : selectedCourses;
+                    const exportModel = { ...this.model, focusMode: true };
+                    this.view.renderRoutine(currentItems, isExplorerMode, exportModel, (t) => this.getDisplayTitle(t), clonedDoc);
+
                     // Fix the -4px/-6px alignment shift in the exported image
                     const labels = clonedDoc.querySelectorAll('.time-label');
                     labels.forEach(l => {

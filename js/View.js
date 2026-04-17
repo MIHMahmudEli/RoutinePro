@@ -155,9 +155,9 @@ class RoutineView {
         lucide.createIcons();
     }
 
-    renderRoutine(items, isExplorerMode, model, titleFormatter = (t) => t) {
+    renderRoutine(items, isExplorerMode, model, titleFormatter = (t) => t, targetDoc = document) {
         const { focusMode, twentyFourHourMode, ramadanMode } = model;
-        const buckets = document.querySelectorAll('.day-bucket');
+        const buckets = targetDoc.querySelectorAll('.day-bucket');
         buckets.forEach(b => b.innerHTML = '');
         let globalConflict = false;
         const dayData = {};
@@ -203,8 +203,8 @@ class RoutineView {
         let visibleDayCount = 0;
 
         dayList.forEach(day => {
-            const bucket = document.querySelector(`.day-bucket[data-day="${day}"]`);
-            const header = document.querySelector(`.day-label[data-day-header="${day}"]`);
+            const bucket = targetDoc.querySelector(`.day-bucket[data-day="${day}"]`);
+            const header = targetDoc.querySelector(`.day-label[data-day-header="${day}"]`);
             const isVisible = !focusMode || activeDays.has(day);
 
             if (bucket) bucket.style.display = isVisible ? 'block' : 'none';
@@ -214,14 +214,14 @@ class RoutineView {
 
         // Update Grid Columns
         const gridTemplate = `80px repeat(${visibleDayCount}, 1fr)`;
-        const headerRow = document.getElementById('routine-header-row');
-        const classContainer = document.getElementById('class-container');
+        const headerRow = targetDoc.getElementById('routine-header-row');
+        const classContainer = targetDoc.getElementById('class-container');
         if (headerRow) headerRow.style.gridTemplateColumns = gridTemplate;
         if (classContainer) classContainer.style.gridTemplateColumns = `repeat(${visibleDayCount}, 1fr)`;
 
         // Handle dynamic time rail and guide lines
-        const timeRail = document.getElementById('time-rail');
-        const guideLinesContainer = document.getElementById('guide-lines');
+        const timeRail = targetDoc.getElementById('time-rail');
+        const guideLinesContainer = targetDoc.getElementById('guide-lines');
         const rowHeight = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--row-height')) || 70;
 
         if (timeRail && guideLinesContainer) {
@@ -253,7 +253,7 @@ class RoutineView {
             }
 
             // Adjust Container Height
-            const gridWrapper = document.querySelector('.relative.mt-4');
+            const gridWrapper = targetDoc.querySelector('.relative.mt-4');
             if (gridWrapper) gridWrapper.style.height = `${visibleRowCount * rowHeight}px`;
         }
 
@@ -310,7 +310,7 @@ class RoutineView {
                         <span class="class-label">RM ${sch.room}</span>
                     </div>
                 `;
-                const b = document.querySelector(`.day-bucket[data-day="${sch.day}"]`);
+                const b = targetDoc.querySelector(`.day-bucket[data-day="${sch.day}"]`);
                 if (b && b.style.display !== 'none') {
                     b.appendChild(block);
                     dayData[sch.day].push({ start, end });
