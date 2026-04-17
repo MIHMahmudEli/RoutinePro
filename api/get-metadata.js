@@ -1,21 +1,17 @@
-import { list } from '@vercel/blob';
-
 export default async function handler(request, response) {
     if (request.method !== 'GET') {
         return response.status(405).json({ error: 'Method not allowed' });
     }
 
     try {
-        const { blobs } = await list({ prefix: 'metadata.json' });
-        const targetBlob = blobs.find(b => b.pathname === 'metadata.json');
-
-        if (!targetBlob) {
+        const url = `https://raw.githubusercontent.com/MIHMahmudEli/RoutinePro/main/data/metadata.json?t=${Date.now()}`;
+        const metaRes = await fetch(url);
+        
+        if (!metaRes.ok) {
             response.setHeader('Cache-Control', 'no-store, max-age=0, must-revalidate');
             return response.status(200).json({});
         }
 
-        // Fetch the content directly and return with no-cache headers
-        const metaRes = await fetch(targetBlob.url);
         const data = await metaRes.json();
         
         response.setHeader('Cache-Control', 'no-store, max-age=0, must-revalidate');

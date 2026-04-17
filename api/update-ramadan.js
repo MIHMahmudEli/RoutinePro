@@ -1,5 +1,3 @@
-import { put } from '@vercel/blob';
-
 export default async function handler(request, response) {
     if (request.method !== 'POST') {
         return response.status(405).json({ error: 'Method not allowed' });
@@ -11,21 +9,49 @@ export default async function handler(request, response) {
     }
 
     try {
-        const data = request.body;
-        
-        // Upload Ramadan Mappings to Blob
-        const blob = await put('ramadan-mappings.json', JSON.stringify(data), {
-            access: 'public',
-            contentType: 'application/json',
-            addRandomSuffix: false,
+        const { mappings, featureEnabled } = request.body;
+
+        const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+        if (!GITHUB_TOKEN) {
+            return response.status(500).json({ error: 'Server configuration error: missing GITHUB_TOKEN' });
+        }
+
+        const url = `https://api.github.com/repos/MIHMahmudEli/RoutinePro/contents/data/ramadan-mappings.json`;
+        const headers = {
+            'Authorization': `Bearer ${GITHUB_TOKEN}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'User-Agent': 'RoutinePro-App'
+        };
+
+        // Get existing file SHA
+        let sha;
+        const getRes = await fetch(`${url}?ref=main`, { headers });
+        if (getRes.ok) {
+            const getBody = await getRes.json();
+            sha = getBody.sha;
+        }
+
+        const payload = { mappings, featureEnabled };
+
+        const putRes = await fetch(url, {
+            method: 'PUT',
+            headers: { ...headers, 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                message: `Admin: Sync Ramadan Mappings (${Object.keys(mappings || {}).length} sections)`,
+                content: Buffer.from(JSON.stringify(payload, null, 2), 'utf-8').toString('base64'),
+                sha: sha,
+                branch: 'main'
+            })
         });
 
-        return response.status(200).json({ 
-            success: true, 
-            url: blob.url,
-            message: "Global Ramadan Mappings updated successfully!"
-        });
+        if (!putRes.ok) {
+            const err = await putRes.json();
+            throw new Error(err.message);
+        }
+
+        return response.status(200).json({ success: true, message: `Successfully synced global Ramadan mappings to GitHub` });
     } catch (error) {
+        console.error('Update ramadan error:', error);
         return response.status(500).json({ error: error.message });
     }
 }

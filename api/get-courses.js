@@ -1,22 +1,17 @@
-import { list } from '@vercel/blob';
-
 export default async function handler(request, response) {
     if (request.method !== 'GET') {
         return response.status(405).json({ error: 'Method not allowed' });
     }
 
     try {
-        // Find the courses.json blob
-        const { blobs } = await list({ prefix: 'courses.json' });
-        const coursesBlob = blobs.find(b => b.pathname === 'courses.json');
-
-        if (!coursesBlob) {
+        const url = `https://raw.githubusercontent.com/MIHMahmudEli/RoutinePro/main/data/courses.json?t=${Date.now()}`;
+        const courseRes = await fetch(url);
+        
+        if (!courseRes.ok) {
             response.setHeader('Cache-Control', 'no-store, max-age=0, must-revalidate');
             return response.status(200).json([]);
         }
 
-        // Fetch the content directly and return with no-cache headers
-        const courseRes = await fetch(coursesBlob.url);
         const data = await courseRes.json();
 
         response.setHeader('Cache-Control', 'no-store, max-age=0, must-revalidate');
