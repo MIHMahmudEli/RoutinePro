@@ -1070,8 +1070,9 @@ class RoutineController {
 
         // 1. HIGHEST PRIORITY: Exact Class ID Matching (Unique across all courses/sections)
         if (classId) {
+            const cleanId = String(classId).trim().padStart(5, '0');
             for (const c of this.model.allCourses) {
-                const sIdx = c.sections.findIndex(s => s.id === String(classId).trim());
+                const sIdx = c.sections.findIndex(s => String(s.id).trim().padStart(5, '0') === cleanId);
                 if (sIdx !== -1) {
                     targetCourse = c;
                     targetSectionIdx = sIdx;
@@ -1738,7 +1739,7 @@ class RoutineController {
                                     content: [
                                         {
                                             type: "text",
-                                            text: "Extract all registered courses from this AIUB portal screenshot. For each course, find:\n1. 'classId': The 5-digit unique ID (e.g. 00733) usually found above or next to the title.\n2. 'title': The course name (Uppercase).\n3. 'section': The section letter/name usually found in brackets e.g. [A].\nReturn ONLY a valid JSON array of objects with these keys. No extra text."
+                                            text: "Perform OCR on this AIUB portal screenshot. Extract all courses in the 'Registered' list.\n\nStructure per course:\n- Class ID: 5-digit number (e.g., 00733, 01410).\n- Title: The course name (Uppercase). Note: If the ID and Title are joined by a hyphen (00733-TITLE), remove the ID and hyphen from the title.\n- Section: The letter in square brackets [A].\n\nReturn ONLY a JSON array of objects: [{\"classId\": \"...\", \"title\": \"...\", \"section\": \"...\"}]. No extra text or explanations."
                                         },
                                         {
                                             type: "image_url",
