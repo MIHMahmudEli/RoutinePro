@@ -662,6 +662,8 @@ class RoutineModel {
     }
 
     getShareableData() {
+        const currentRoutine = this.isExplorerMode ? this.possibleRoutines[this.currentRoutineIndex] : null;
+
         const data = this.selectedCourses.map(sc => {
             if (sc.course.code === 'MANUAL') {
                 return {
@@ -674,9 +676,17 @@ class RoutineModel {
                     d: sc.course.sections[0].schedules.map(s => s.day)
                 };
             } else {
+                let sectionName = sc.course.sections[sc.selectedSectionIndex].section;
+                
+                // If in Explorer Mode, use the section from the current scenario
+                if (currentRoutine) {
+                    const item = currentRoutine.find(it => it.courseTitle === sc.course.baseTitle);
+                    if (item) sectionName = item.section.section;
+                }
+
                 return {
                     c: sc.course.code,
-                    s: sc.course.sections[sc.selectedSectionIndex].section,
+                    s: sectionName,
                     p: sc.isPinned ? 1 : 0
                 };
             }
