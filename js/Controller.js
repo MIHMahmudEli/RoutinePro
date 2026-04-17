@@ -17,6 +17,9 @@ class RoutineController {
         this.view.populateTimeFilters();
         this.view.updateSyncUI(this.model.allCourses);
         this.view.renderLibraryMetadata(this.model.metadata);
+        if (this.model.metadata && this.model.metadata.ramadanSlots) {
+            this.view.updateRamadanStatus(this.model.metadata.ramadanSlots);
+        }
         this.setupEventListeners();
         this.syncWorkspace();
 
@@ -1619,6 +1622,7 @@ class RoutineController {
 
             this.model.saveRamadanMappings(mappings);
             this.view.showToast(`Successfully synced ${Object.keys(mappings).length} timing slots!`);
+            this.view.updateRamadanStatus(Object.keys(mappings).length);
 
             // Add Cloud Sync check for Ramadan
             await this.maybeSyncRamadanToCloud(mappings);
@@ -1664,6 +1668,16 @@ class RoutineController {
             } catch (err) {
                 console.error("Ramadan Cloud Sync Error:", err);
                 this.view.showToast(`Ramadan Cloud Sync failed: ${err.message}`, "error");
+            }
+        }
+    }
+
+    handleOpenRamadanSync() {
+        const modal = document.getElementById('ramadan-sync-modal');
+        if (modal) {
+            modal.classList.remove('hidden');
+            if (this.model.metadata && this.model.metadata.ramadanSlots) {
+                this.view.updateRamadanStatus(this.model.metadata.ramadanSlots);
             }
         }
     }

@@ -373,6 +373,11 @@ class RoutineView {
         }
     }
 
+    updateRamadanStatus(count) {
+        const el = document.getElementById('ramadan-slot-count');
+        if (el) el.innerText = `${count || 0} Slots`;
+    }
+
     shuffleHues() {
         this.hueSeed = Math.random();
         this.hueMap.clear();
