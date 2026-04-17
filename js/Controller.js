@@ -1062,24 +1062,40 @@ class RoutineController {
         }
     }
 
-    handleAddCourse(title, code, sectionName = null) {
+    handleAddCourse(title, code, sectionName = null, classId = null) {
         this.model.isExplorerMode = false;
-        // Search by both title and code to be 100% sure we find the right one
-        let course = this.model.allCourses.find(c => c.baseTitle === title && (!code || c.code === code));
         
-        // Fallback search if code matching fails for some reason
-        if (!course) course = this.model.allCourses.find(c => c.baseTitle === title);
+        let targetCourse = null;
+        let targetSectionIdx = -1;
 
-        if (course) {
-            const success = this.model.addCourse(course);
+        // 1. HIGHEST PRIORITY: Exact Class ID Matching (Unique across all courses/sections)
+        if (classId) {
+            for (const c of this.model.allCourses) {
+                const sIdx = c.sections.findIndex(s => s.id === String(classId).trim());
+                if (sIdx !== -1) {
+                    targetCourse = c;
+                    targetSectionIdx = sIdx;
+                    break;
+                }
+            }
+        }
+
+        // 2. SECOND PRIORITY: Title + Section Matching
+        if (!targetCourse) {
+            targetCourse = this.model.allCourses.find(c => c.baseTitle === title && (!code || c.code === code));
+            if (!targetCourse) targetCourse = this.model.allCourses.find(c => c.baseTitle === title);
+            
+            if (targetCourse && sectionName) {
+                targetSectionIdx = targetCourse.sections.findIndex(s => s.section.toUpperCase() === sectionName.toUpperCase());
+            }
+        }
+
+        if (targetCourse) {
+            const success = this.model.addCourse(targetCourse);
             if (success) {
-                // If a section was identified in OC/Portal Extraction, switch to it automatically
-                if (sectionName) {
+                if (targetSectionIdx !== -1) {
                     const addedIdx = this.model.selectedCourses.length - 1;
-                    const sectionIdx = course.sections.findIndex(s => s.section.toUpperCase() === sectionName.toUpperCase());
-                    if (sectionIdx !== -1) {
-                        this.model.updateSectionSelection(addedIdx, sectionIdx);
-                    }
+                    this.model.updateSectionSelection(addedIdx, targetSectionIdx);
                 }
 
                 this.view.searchInput.value = '';
@@ -1090,7 +1106,7 @@ class RoutineController {
         }
 
         // Only show toast if it was a manual user action (not bulk extraction)
-        if (!sectionName) {
+        if (!sectionName && !classId) {
             this.view.showToast("Course already added or not found", "error");
         }
         return false;
@@ -1683,8 +1699,8 @@ class RoutineController {
 
             let addedCount = 0;
             coursesFound.forEach(item => {
-                // The AI returns { title: "...", section: "..." }
-                const success = this.handleAddCourse(item.title, null, item.section);
+                // The AI returns { title: "...", section: "...", classId: "..." }
+                const success = this.handleAddCourse(item.title, null, item.section, item.classId);
                 if (success) addedCount++;
             });
 
@@ -1722,7 +1738,7 @@ class RoutineController {
                                     content: [
                                         {
                                             type: "text",
-                                            text: "Extract all registered courses and their section names from this AIUB portal screenshot. Return ONLY a valid JSON array of objects with keys 'title' (Uppercase Title) and 'section' (Uppercase section like A, B, K1). Example: [{\"title\": \"MOBILE APPLICATION DEVELOPMENT\", \"section\": \"A\"}]. No preamble or extra text."
+                                            text: "Extract all registered courses from this AIUB portal screenshot. For each course, find:\n1. 'classId': The 5-digit unique ID (e.g. 00733) usually found above or next to the title.\n2. 'title': The course name (Uppercase).\n3. 'section': The section letter/name usually found in brackets e.g. [A].\nReturn ONLY a valid JSON array of objects with these keys. No extra text."
                                         },
                                         {
                                             type: "image_url",
