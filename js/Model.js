@@ -258,7 +258,7 @@ class RoutineModel {
             for (const sec of sectionsToTry) {
                 if (!sec) continue; // Safety check
                 if (parseInt(sec.count) > maxC && maxC < 100) continue;
-                if (!allowedStatuses.includes(sec.status.toLowerCase().trim())) continue;
+                if (!allowedStatuses.includes((sec.status || 'unknown').toLowerCase().trim())) continue;
 
                 let validTime = true;
                 for (const s of sec.schedules) {
