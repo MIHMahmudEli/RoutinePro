@@ -137,23 +137,35 @@
                         <!-- View Toggles (Grouped) -->
                         <div class="flex items-center gap-0.5 bg-black/40 p-1 rounded-xl border border-white/5 shadow-inner">
                             <button id="focus-toggle"
-                                class="group w-9 h-9 sm:w-8 sm:h-8 rounded-lg bg-transparent text-slate-400 border-none hover:bg-white/10 hover:text-white flex items-center justify-center transition-all active:scale-90 relative overflow-hidden"
-                                title="Focus Mode"><i data-lucide="maximize-2" class="w-4 h-4 sm:w-3.5 sm:h-3.5" id="focus-icon"></i></button>
+                                class="group w-9 h-9 sm:w-8 sm:h-8 rounded-lg bg-transparent text-slate-400 border-none hover:bg-white/10 hover:text-white flex items-center justify-center transition-all duration-200 active:scale-90 relative data-[active=true]:bg-[var(--accent-primary)]/20 data-[active=true]:text-[var(--accent-primary)] data-[active=true]:ring-2 data-[active=true]:ring-[var(--accent-primary)]/40 data-[active=true]:hover:bg-[var(--accent-primary)]/30 data-[active=true]:hover:text-[var(--accent-primary)]"
+                                title="Focus Mode: OFF">
+                                <i data-lucide="maximize-2" class="w-4 h-4 sm:w-3.5 sm:h-3.5 transition-transform duration-300" id="focus-icon"></i>
+                                <span class="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[var(--accent-primary)] shadow-[0_0_8px_var(--accent-primary)] hidden group-data-[active=true]:block animate-pulse"></span>
+                            </button>
                             <button id="twenty-four-toggle"
-                                class="group w-9 h-9 sm:w-8 sm:h-8 rounded-lg bg-transparent text-slate-400 border-none hover:bg-white/10 hover:text-white flex items-center justify-center transition-all active:scale-90 relative overflow-hidden"
-                                title="24-Hour Mode"><i data-lucide="clock" class="w-4 h-4 sm:w-3.5 sm:h-3.5" id="twenty-four-icon"></i></button>
+                                class="group w-9 h-9 sm:w-8 sm:h-8 rounded-lg bg-transparent text-slate-400 border-none hover:bg-white/10 hover:text-white flex items-center justify-center transition-all duration-200 active:scale-90 relative data-[active=true]:bg-[var(--accent-primary)]/20 data-[active=true]:text-[var(--accent-primary)] data-[active=true]:ring-2 data-[active=true]:ring-[var(--accent-primary)]/40 data-[active=true]:hover:bg-[var(--accent-primary)]/30 data-[active=true]:hover:text-[var(--accent-primary)]"
+                                title="24-Hour Mode: OFF">
+                                <i data-lucide="clock" class="w-4 h-4 sm:w-3.5 sm:h-3.5 transition-transform duration-300" id="twenty-four-icon"></i>
+                                <span class="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[var(--accent-primary)] shadow-[0_0_8px_var(--accent-primary)] hidden group-data-[active=true]:block animate-pulse"></span>
+                            </button>
                             <button id="ramadan-toggle"
-                                class="group w-9 h-9 sm:w-8 sm:h-8 rounded-lg bg-transparent text-slate-400 border-none hover:bg-amber-500/20 hover:text-amber-400 flex items-center justify-center transition-all active:scale-90 relative overflow-hidden"
-                                title="Ramadan Mode"><i data-lucide="moon-star" class="w-4 h-4 sm:w-3.5 sm:h-3.5" id="ramadan-icon"></i></button>
+                                class="group w-9 h-9 sm:w-8 sm:h-8 rounded-lg bg-transparent text-slate-400 border-none hover:bg-amber-500/10 hover:text-amber-400 flex items-center justify-center transition-all duration-200 active:scale-90 relative data-[active=true]:bg-amber-500/20 data-[active=true]:text-amber-400 data-[active=true]:ring-2 data-[active=true]:ring-amber-500/40 data-[active=true]:hover:bg-amber-500/30 data-[active=true]:hover:text-amber-300"
+                                title="Ramadan Mode: OFF">
+                                <i data-lucide="moon-star" class="w-4 h-4 sm:w-3.5 sm:h-3.5 transition-transform duration-300" id="ramadan-icon"></i>
+                                <span class="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,1)] hidden group-data-[active=true]:block animate-pulse"></span>
+                            </button>
                             <button id="compact-toggle"
-                                class="group w-9 h-9 sm:w-8 sm:h-8 rounded-lg bg-transparent text-slate-400 border-none hover:bg-white/10 hover:text-white flex items-center justify-center transition-all active:scale-90 relative overflow-hidden"
-                                title="Compact Mode"><i data-lucide="type" class="w-4 h-4 sm:w-3.5 sm:h-3.5" id="compact-icon"></i></button>
+                                class="group w-9 h-9 sm:w-8 sm:h-8 rounded-lg bg-transparent text-slate-400 border-none hover:bg-white/10 hover:text-white flex items-center justify-center transition-all duration-200 active:scale-90 relative data-[active=true]:bg-[var(--accent-primary)]/20 data-[active=true]:text-[var(--accent-primary)] data-[active=true]:ring-2 data-[active=true]:ring-[var(--accent-primary)]/40 data-[active=true]:hover:bg-[var(--accent-primary)]/30 data-[active=true]:hover:text-[var(--accent-primary)]"
+                                title="Compact Mode: OFF">
+                                <i data-lucide="type" class="w-4 h-4 sm:w-3.5 sm:h-3.5 transition-transform duration-300" id="compact-icon"></i>
+                                <span class="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[var(--accent-primary)] shadow-[0_0_8px_var(--accent-primary)] hidden group-data-[active=true]:block animate-pulse"></span>
+                            </button>
                         </div>
 
                         <div class="h-5 w-px bg-white/10 hidden lg:block mx-0.5"></div>
 
                         <!-- Admin/Sync & Secondary Actions -->
-                        <div class="flex items-center gap-1.5">
+                        <div class="flex items-center gap-1.5 bg-black/40 p-1 rounded-xl border border-white/5 shadow-inner">
                             <button onclick="document.getElementById('sync-modal').classList.remove('hidden')"
                                 class="group w-10 h-10 sm:w-9 sm:h-9 rounded-xl bg-white/5 text-slate-300 border border-white/10 hover:bg-white/15 hover:text-white flex items-center justify-center transition-all active:scale-95"
                                 title="Sync Library"><i data-lucide="refresh-cw" class="w-4.5 h-4.5 sm:w-4 sm:h-4 group-hover:rotate-180 transition-transform duration-500"></i></button>

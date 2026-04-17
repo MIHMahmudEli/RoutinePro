@@ -1464,15 +1464,17 @@ class RoutineController {
         const icon = focusBtn.querySelector('i');
         if (this.model.focusMode) {
             focusBtn.setAttribute('data-active', 'true');
+            focusBtn.setAttribute('title', 'Focus Mode: ON');
             if (icon) {
                 icon.setAttribute('data-lucide', 'minimize-2');
-                icon.classList.add('rotate-90');
+                icon.classList.add('rotate-90', 'scale-110');
             }
         } else {
             focusBtn.removeAttribute('data-active');
+            focusBtn.setAttribute('title', 'Focus Mode: OFF');
             if (icon) {
                 icon.setAttribute('data-lucide', 'maximize-2');
-                icon.classList.remove('rotate-90');
+                icon.classList.remove('rotate-90', 'scale-110');
             }
         }
         lucide.createIcons();
@@ -1485,10 +1487,18 @@ class RoutineController {
         const icon = btn.querySelector('i');
         if (this.model.ramadanMode) {
             btn.setAttribute('data-active', 'true');
-            if (icon) icon.setAttribute('data-lucide', 'sun');
+            btn.setAttribute('title', 'Ramadan Mode: ON');
+            if (icon) {
+                icon.setAttribute('data-lucide', 'sun');
+                icon.classList.add('scale-110');
+            }
         } else {
             btn.removeAttribute('data-active');
-            if (icon) icon.setAttribute('data-lucide', 'moon-star');
+            btn.setAttribute('title', 'Ramadan Mode: OFF');
+            if (icon) {
+                icon.setAttribute('data-lucide', 'moon-star');
+                icon.classList.remove('scale-110');
+            }
         }
         lucide.createIcons();
     }
@@ -1497,10 +1507,15 @@ class RoutineController {
         const btn = document.getElementById('compact-toggle');
         if (!btn) return;
 
+        const icon = btn.querySelector('i');
         if (this.model.compactMode) {
             btn.setAttribute('data-active', 'true');
+            btn.setAttribute('title', 'Compact Mode: ON');
+            if (icon) icon.classList.add('scale-110');
         } else {
             btn.removeAttribute('data-active');
+            btn.setAttribute('title', 'Compact Mode: OFF');
+            if (icon) icon.classList.remove('scale-110');
         }
     }
 
@@ -1686,9 +1701,11 @@ class RoutineController {
         const icon = btn.querySelector('i');
         if (this.model.twentyFourHourMode) {
             btn.setAttribute('data-active', 'true');
+            btn.setAttribute('title', '24-Hour Mode: ON');
             if (icon) icon.classList.add('scale-110');
         } else {
             btn.removeAttribute('data-active');
+            btn.setAttribute('title', '24-Hour Mode: OFF');
             if (icon) icon.classList.remove('scale-110');
         }
         lucide.createIcons();
