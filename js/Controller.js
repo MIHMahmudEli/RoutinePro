@@ -1753,7 +1753,7 @@ class RoutineController {
                                     content: [
                                         {
                                             type: "text",
-                                            text: "EXTRACT REGISTERED COURSES FROM IMAGE.\n\nCRITICAL INSTRUCTIONS:\n1. ONLY extract information that is visually present in the attached screenshot. DO NOT use your general knowledge of university courses.\n2. If you cannot see any registered courses, return an empty array [].\n3. DO NOT hallucinate or guess. Each entry must have a visible Class ID and Title.\n\nFormat for EACH course:\n- classId: 5-digit number.\n- title: The course name (uppercase, remove ID and hyphens).\n- section: The character in [brackets].\n\nReturn ONLY a JSON array of objects: [{\"classId\": \"...\", \"title\": \"...\", \"section\": \"...\"}]. No extra text."
+                                            text: "EXTRACT REGISTERED COURSES FROM IMAGE.\n\nCRITICAL INSTRUCTIONS:\n1. ONLY extract information that is visually present. DO NOT use general knowledge.\n2. If no courses are found, return [].\n\nStructure per course:\n- title: The full course name (Uppercase). Note: If the text is '00733-MOBILE APPLICATION DEVELOPMENT [A]', the title is 'MOBILE APPLICATION DEVELOPMENT'.\n- section: The character inside the square brackets (e.g., A, B, I).\n\nReturn ONLY a JSON array of objects: [{\"title\": \"...\", \"section\": \"...\"}]. No preamble or extra text."
                                         },
                                         {
                                             type: "image_url",
