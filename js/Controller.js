@@ -1739,7 +1739,7 @@ class RoutineController {
                                     content: [
                                         {
                                             type: "text",
-                                            text: "Perform OCR on this AIUB portal screenshot. Extract all courses in the 'Registered' list.\n\nStructure per course:\n- Class ID: 5-digit number (e.g., 00733, 01410).\n- Title: The course name (Uppercase). Note: If the ID and Title are joined by a hyphen (00733-TITLE), remove the ID and hyphen from the title.\n- Section: The letter in square brackets [A].\n\nReturn ONLY a JSON array of objects: [{\"classId\": \"...\", \"title\": \"...\", \"section\": \"...\"}]. No extra text or explanations."
+                                            text: "Perform OCR on this AIUB portal screenshot. Extract all courses in the 'Registered' list.\n\nStructure per course:\n- classId: 5-digit number (e.g., 00733, 01410). This MUST be just numbers.\n- title: The course name (Uppercase). Important: Strip out the leading class id and hyphen from the title name. For example, '00733-MOBILE APPLICATION DEVELOPMENT [A]' becomes just 'MOBILE APPLICATION DEVELOPMENT'. Remove any trailing brackets from the title.\n- section: The letter/character in square brackets at the end of the title (e.g., A, B, I). Exclude the brackets themselves.\n\nReturn ONLY a valid JSON array of objects with keys 'classId', 'title', and 'section': [{\"classId\": \"00733\", \"title\": \"MOBILE APPLICATION DEVELOPMENT\", \"section\": \"A\"}]. No extra text or markdown formatting outside the JSON array."
                                         },
                                         {
                                             type: "image_url",
