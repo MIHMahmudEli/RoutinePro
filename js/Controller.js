@@ -1699,7 +1699,8 @@ class RoutineController {
         if (!file) return;
 
         this.view.showToast("Analyzing Image with AI...", "info");
-        document.getElementById('sync-modal').classList.add('hidden');
+        const aiModal = document.getElementById('ai-modal');
+        if (aiModal) aiModal.classList.add('hidden');
 
         try {
             const coursesFound = await this.processImageWithAI(file);
