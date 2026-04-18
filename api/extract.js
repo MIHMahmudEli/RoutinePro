@@ -27,7 +27,8 @@ export default async function handler(req, res) {
       
       Structure per schedule entry:
       - title: Full course name in UPPERCASE.
-      - section: Section identifier (e.g. A, B, C).
+        Example: If the text is '00733-MOBILE APPLICATION DEVELOPMENT [A]', the title should be 'MOBILE APPLICATION DEVELOPMENT'.
+      - section: The single or double character inside the square brackets (e.g., A, B, CC, K, etc.).
       - days: Array of days (e.g. ["Sunday", "Tuesday"]).
       - start: Start time in "HH:MM AM/PM" format.
       - end: End time in "HH:MM AM/PM" format.
@@ -46,7 +47,7 @@ export default async function handler(req, res) {
       Structure per course:
       - title: The full course name in UPPERCASE. 
         Example: If the text is '00733-MOBILE APPLICATION DEVELOPMENT [A]', the title should be 'MOBILE APPLICATION DEVELOPMENT'.
-      - section: The single character inside the square brackets (e.g., A, B, C, K, etc.).
+      - section: The single or double character inside the square brackets (e.g., A, B, CC, K, etc.).
 
       Return ONLY a clean JSON array of objects in this exact format:
       [{"title": "...", "section": "..."}]
