@@ -1726,6 +1726,10 @@ class RoutineController {
     }
 
     handleAIClick() {
+        // Hide parent modal
+        const aiModal = document.getElementById('ai-modal');
+        if (aiModal) aiModal.classList.add('hidden');
+
         // Get semester from metadata
         const semName = this.model.semester 
             || (this.model.metadata ? this.model.metadata.semester : null)

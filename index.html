@@ -938,6 +938,9 @@
     <!-- AI Semester Confirmation Modal -->
     <div id="ai-confirm-modal" class="hidden fixed inset-0 z-[300] flex items-center justify-center p-4 bg-black/80 backdrop-blur-xl">
         <div class="admin-portal-box max-w-sm w-full p-8 space-y-6 animate-pop border-emerald-500/40 relative overflow-hidden">
+            <button onclick="document.getElementById('ai-confirm-modal').classList.add('hidden')" class="admin-modal-close">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
             <div class="absolute -top-24 -right-24 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl"></div>
             
             <div class="text-center space-y-3 relative z-10">
