@@ -1793,13 +1793,13 @@ class RoutineController {
                 return;
             }
 
+            // Automatically clear existing selections when using AI Maker
+            // so each extraction creates a fresh routine from scratch
+            this.model.selectedCourses = [];
             let addedCount = 0;
             
             if (mode === 'full') {
-                // For non-current semester, we add as MANUAL courses
-                // Clear existing selections to show ONLY what was extracted
-                this.model.selectedCourses = [];
-                
+                // For non-current semester, we add as MANUAL courses                
                 coursesFound.forEach(item => {
                     const success = this.model.addManualCourse({
                         subject: item.title,
@@ -1830,7 +1830,7 @@ class RoutineController {
                 if (addedCount > 0) {
                     this.view.showToast(`AI extracted ${addedCount} courses from portal!`, "success");
                 } else {
-                    this.view.showToast("AI found courses but they are already in queue or missing from library", "info");
+                    this.view.showToast("AI found courses but they are already missing from library", "info");
                 }
                 this.syncWorkspace();
             }
