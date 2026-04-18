@@ -400,4 +400,36 @@ class RoutineView {
             return h * 60 + min;
         } catch (e) { return 0; }
     }
+
+    renderSuggestions(suggestions) {
+        const panel = document.getElementById('ai-suggestions-panel');
+        const list = document.getElementById('suggestions-list');
+        if (!panel || !list) return;
+
+        if (!suggestions || suggestions.length === 0) {
+            panel.classList.add('hidden');
+            return;
+        }
+
+        panel.classList.remove('hidden');
+        list.innerHTML = suggestions.map(s => {
+            const icon = s.type === 'risk' ? 'alert-triangle' : 'zap';
+            const color = s.type === 'risk' ? 'text-rose-400' : 'text-amber-400';
+            const bg = s.type === 'risk' ? 'bg-rose-500/10' : 'bg-amber-500/10';
+
+            return `
+                <div class="flex items-start gap-2.5 p-2 rounded-xl ${bg} border border-white/5 transition-all hover:bg-white/[0.05]">
+                    <div class="mt-0.5 shrink-0">
+                        <i data-lucide="${icon}" class="w-3 h-3 ${color}"></i>
+                    </div>
+                    <div>
+                        <p class="text-[9px] text-white font-bold leading-tight">${s.message}</p>
+                        <p class="text-[8px] text-slate-400 font-medium mt-0.5">${s.action}</p>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        lucide.createIcons();
+    }
 }

@@ -1458,6 +1458,16 @@ class RoutineController {
             const displayTime = this.model.dataSource === 'Local' ? this.model.lastLocalSync : this.model.metadata.lastUpdate;
             this.view.renderLibraryMetadata(this.model.metadata, this.model.dataSource, displayTime);
         }
+
+        // Suggestions System
+        if (currentItems && currentItems.length > 0) {
+            const suggestions = this.model.analyzeScenario(currentItems);
+            // Only show suggestions panel if we are in Explorer Mode or have serious risks
+            const shouldShowSuggestions = isExplorerMode || suggestions.some(s => s.type === 'risk');
+            this.view.renderSuggestions(shouldShowSuggestions ? suggestions : []);
+        } else {
+            this.view.renderSuggestions([]);
+        }
     }
 
     updateFocusToggleUI() {

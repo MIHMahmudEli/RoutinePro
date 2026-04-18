@@ -767,4 +767,77 @@ class RoutineModel {
 
         this.pendingSharedItems = null;
     }
+
+    analyzeScenario(routineItems) {
+        const suggestions = [];
+
+        // 1. Enrollment Probability Check
+        routineItems.forEach(item => {
+            const section = item.section || item.course.sections[item.selectedSectionIndex];
+            const capacity = parseInt(section.capacity) || 0;
+            const count = parseInt(section.count) || 0;
+            const baseTitle = item.courseTitle || item.course.baseTitle;
+
+            if (capacity > 0 && count >= capacity * 0.85) {
+                // High Risk
+                const riskLevel = count >= capacity ? "CRITICAL" : "HIGH";
+
+                // Find better alternative in the same course
+                const course = this.allCourses.find(c => c.baseTitle === baseTitle);
+                let alternative = null;
+                if (course) {
+                    alternative = course.sections
+                        .filter(s => s.section !== section.section && s.status === 'Open')
+                        .sort((a, b) => (parseInt(a.count) / parseInt(a.capacity)) - (parseInt(b.count) / parseInt(b.capacity)))[0];
+                }
+
+                suggestions.push({
+                    type: 'risk',
+                    level: riskLevel,
+                    message: `${baseTitle} [Sec ${section.section}] is ${riskLevel === 'CRITICAL' ? 'FULL' : 'almost full'}.`,
+                    action: alternative ? `Switch to Sec [${alternative.section}] for better success.` : "Consider an alternative course if this is a priority."
+                });
+            }
+        });
+
+        // 2. Time Gap Optimization
+        const dailySchedules = {};
+        routineItems.forEach(item => {
+            const section = item.section || item.course.sections[item.selectedSectionIndex];
+            section.schedules.forEach(sch => {
+                if (!dailySchedules[sch.day]) dailySchedules[sch.day] = [];
+                dailySchedules[sch.day].push(this.getEffectiveTimes(sch));
+            });
+        });
+
+        let totalGaps = 0;
+        Object.values(dailySchedules).forEach(day => {
+            day.sort((a, b) => a.start - b.start);
+            for (let i = 0; i < day.length - 1; i++) {
+                const gap = day[i + 1].start - day[i].end;
+                if (gap > 30) totalGaps += gap;
+            }
+        });
+
+        if (totalGaps > 240) { // More than 4 hours of waiting per week
+            suggestions.push({
+                type: 'optimization',
+                message: `You have ${Math.floor(totalGaps / 60)}h total waiting time per week.`,
+                action: "Try switching sections to consolidate your classes."
+            });
+        }
+
+        // 3. Busy Day Detection
+        Object.entries(dailySchedules).forEach(([day, classes]) => {
+            if (classes.length >= 4) {
+                suggestions.push({
+                    type: 'optimization',
+                    message: `${day} is very busy (${classes.length} classes).`,
+                    action: "Consider moving a course to another day-pair if possible."
+                });
+            }
+        });
+
+        return suggestions;
+    }
 }
