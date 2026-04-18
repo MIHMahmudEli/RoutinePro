@@ -4,6 +4,6 @@
   "description": "Routine Generator App",
   "type": "module",
   "dependencies": {
-    "@vercel/blob": "^0.23.0"
+    "@vercel/blob": "^2.3.3"
   }
 }
