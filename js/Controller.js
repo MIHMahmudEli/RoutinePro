@@ -1797,14 +1797,14 @@ class RoutineController {
             
             if (mode === 'full') {
                 // For non-current semester, we add as MANUAL courses
+                // Clear existing selections to show ONLY what was extracted
+                this.model.selectedCourses = [];
+                
                 coursesFound.forEach(item => {
                     const success = this.model.addManualCourse({
                         subject: item.title,
-                        days: item.days || ["Sunday"],
-                        start: item.start || "08:00 AM",
-                        end: item.end || "09:30 AM",
                         section: item.section || "A",
-                        room: item.room || "TBA"
+                        schedules: item.schedules // Pass the rich schedule structure
                     });
                     if (success) addedCount++;
                 });

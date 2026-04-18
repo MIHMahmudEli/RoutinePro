@@ -186,24 +186,34 @@ class RoutineModel {
     }
 
     addManualCourse(data) {
-        const { subject, days, start, end, section, room } = data;
+        const { subject, days, start, end, section, room, schedules } = data;
+        
+        const manualSchedules = schedules ? schedules.flatMap(s => s.days.map(day => ({
+            day: this.normalizeDay(day),
+            start: this.formatTime(s.start),
+            end: this.formatTime(s.end),
+            room: s.room || "N/A",
+            type: s.type || "Theory",
+            isManual: true
+        }))) : days.map(day => ({
+            day: this.normalizeDay(day),
+            start: this.formatTime(start),
+            end: this.formatTime(end),
+            room: room || "N/A",
+            type: "Theory",
+            isManual: true
+        }));
+
         const manualCourse = {
             baseTitle: subject,
             code: "MANUAL",
             sections: [{
-                id: "M-" + Date.now(),
+                id: "M-" + Date.now() + Math.floor(Math.random() * 1000),
                 section: section || "1",
                 status: "Open",
                 capacity: "99",
                 count: "0",
-                schedules: days.map(day => ({
-                    day: day,
-                    start: start,
-                    end: end,
-                    room: room || "N/A",
-                    type: "Theory",
-                    isManual: true
-                }))
+                schedules: manualSchedules
             }]
         };
 
@@ -213,19 +223,28 @@ class RoutineModel {
 
     updateManualCourse(idx, data) {
         if (this.selectedCourses[idx]) {
-            const { subject, days, start, end, section, room } = data;
+            const { subject, days, start, end, section, room, schedules } = data;
             const course = this.selectedCourses[idx].course;
             course.baseTitle = subject;
             const sec = course.sections[0];
             sec.section = section || "1";
-            sec.schedules = days.map(day => ({
-                day: day,
-                start: start,
-                end: end,
+
+            sec.schedules = schedules ? schedules.flatMap(s => s.days.map(day => ({
+                day: this.normalizeDay(day),
+                start: this.formatTime(s.start),
+                end: this.formatTime(s.end),
+                room: s.room || "N/A",
+                type: s.type || "Theory",
+                isManual: true
+            }))) : days.map(day => ({
+                day: this.normalizeDay(day),
+                start: this.formatTime(start),
+                end: this.formatTime(end),
                 room: room || "N/A",
                 type: "Theory",
                 isManual: true
             }));
+            
             return true;
         }
         return false;
@@ -692,14 +711,19 @@ class RoutineModel {
 
         const data = this.selectedCourses.map(sc => {
             if (sc.course.code === 'MANUAL') {
+                const sec = sc.course.sections[0];
                 return {
                     m: 1, // manual
                     t: sc.course.baseTitle,
-                    s: sc.course.sections[0].section,
-                    r: sc.course.sections[0].schedules[0].room,
-                    sh: sc.course.sections[0].schedules[0].start,
-                    eh: sc.course.sections[0].schedules[0].end,
-                    d: sc.course.sections[0].schedules.map(s => s.day)
+                    s: sec.section,
+                    // Store detailed schedules to support split Theory/Lab
+                    schs: sec.schedules.map(s => ({
+                        d: s.day,
+                        sh: s.start,
+                        eh: s.end,
+                        r: s.room,
+                        ty: s.type
+                    }))
                 };
             } else {
                 let sectionName = sc.course.sections[sc.selectedSectionIndex].section;
@@ -770,14 +794,33 @@ class RoutineModel {
         this.pendingSharedItems.forEach(item => {
             if (item.m) {
                 // Manual Course
-                this.addManualCourse({
-                    subject: item.t,
-                    days: item.d,
-                    start: item.sh,
-                    end: item.eh,
-                    section: item.s,
-                    room: item.r
-                });
+                if (item.schs && Array.isArray(item.schs)) {
+                    // New format with multiple schedules
+                    const groupedSchs = [];
+                    item.schs.forEach(s => {
+                        let existing = groupedSchs.find(g => g.start === s.sh && g.end === s.eh && g.room === s.r && g.type === s.ty);
+                        if (existing) {
+                            existing.days.push(s.d);
+                        } else {
+                            groupedSchs.push({ days: [s.d], start: s.sh, end: s.eh, room: s.r, type: s.ty });
+                        }
+                    });
+                    this.addManualCourse({
+                        subject: item.t,
+                        section: item.s,
+                        schedules: groupedSchs
+                    });
+                } else {
+                    // Legacy single-schedule format
+                    this.addManualCourse({
+                        subject: item.t,
+                        days: Array.isArray(item.d) ? item.d : [item.d],
+                        start: item.sh,
+                        end: item.eh,
+                        section: item.s,
+                        room: item.r
+                    });
+                }
             } else {
                 // Library Course - Try matching by code + title + dept for maximum reliability
                 const course = this.allCourses.find(c => {
