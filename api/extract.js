@@ -19,27 +19,44 @@ export default async function handler(req, res) {
 
     const systemPrompt = isFullMode 
       ? `EXTRACT REGISTERED COURSES WITH FULL DETAILS FROM IMAGE.
-      
+
       CRITICAL INSTRUCTIONS:
       1. ONLY extract information that is visually present.
       2. ONLY extract courses that are actively registered.
-      3. For EACH course, extract EVERY schedule entry (a course might have multiple rows or times).
-      4. COMPLETELY IGNORE any course that has "Dropped" or "Dropped(100%)" written anywhere near it. Do not extract dropped courses at all.
-      5. ONLY extract information that is visually present. DO NOT use general knowledge.
-      
-      Structure per schedule entry:
-      - title: Full course name in UPPERCASE.
-        Example: If the text is '00733-MOBILE APPLICATION DEVELOPMENT [A]', the title should be 'MOBILE APPLICATION DEVELOPMENT'.
-      - section: The single or double character inside the square brackets (e.g., A, B, CC, K, etc.).
-      - days: Array of days (e.g. ["Sunday", "Tuesday"]).
-      - start: Start time in "HH:MM AM/PM" format.
-      - end: End time in "HH:MM AM/PM" format.
-      - room: Room number/name (e.g. 1102, DS0102).
-      - type: Either "Theory" or "Lab". 
-      
+      3. COMPLETELY IGNORE any course that has "Dropped" or "Dropped(100%)" written anywhere near it.
+      4. Group all schedule entries (Theory + Lab) that belong to the SAME course together.
+      5. For each unique course, create ONE object that contains:
+        - An array called "schedules" which includes ALL its Theory and Lab entries.
+
+      Structure per course:
+      {
+        "title": "Full course name in UPPERCASE (without code and section)",
+        "section": "The single or double character inside the square brackets",
+        "schedules": [
+          {
+            "days": ["Day1", "Day2"],     // Array of days
+            "start": "HH:MM AM/PM",
+            "end": "HH:MM AM/PM",
+            "room": "Room number",
+            "type": "Theory" or "Lab"
+          },
+          // ... more schedules if any
+        ]
+      }
+
       Return ONLY a clean JSON array of objects in this exact format:
-      [{"title": "...", "section": "...", "days": ["..."], "start": "...", "end": "...", "room": "...", "type": "..."}]
-      Do not include any dropped courses, preamble, explanation, or extra text.`
+      [
+        {
+          "title": "...",
+          "section": "...",
+          "schedules": [
+            { "days": ["..."], "start": "...", "end": "...", "room": "...", "type": "..." },
+            { "days": ["..."], "start": "...", "end": "...", "room": "...", "type": "..." }
+          ]
+        }
+      ]
+
+      Do not include any dropped courses, course codes, extra text, or explanations.`
       : `EXTRACT REGISTERED COURSES FROM IMAGE.
 
       CRITICAL INSTRUCTIONS:
