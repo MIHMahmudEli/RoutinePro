@@ -936,34 +936,59 @@
     </div>
 
     <!-- AI Semester Confirmation Modal -->
-    <div id="ai-confirm-modal" class="hidden fixed inset-0 z-[300] flex items-center justify-center p-4 bg-black/80 backdrop-blur-xl">
-        <div class="admin-portal-box max-w-sm w-full p-8 space-y-6 animate-pop border-emerald-500/40 relative overflow-hidden">
-            <div class="absolute -top-24 -right-24 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl z-0"></div>
-            
-            <button onclick="document.getElementById('ai-confirm-modal').classList.add('hidden')" class="admin-modal-close !z-50 border border-white/5 bg-black/20 p-2 rounded-lg hover:bg-white/5 transition-all">
+    <div id="ai-confirm-modal" class="hidden fixed inset-0 z-[300] flex items-center justify-center p-4 bg-black/40 backdrop-blur-2xl transition-all duration-500">
+        <div class="relative w-full max-w-[360px] p-8 space-y-8 animate-pop overflow-hidden bg-[#0A0D14]/80 border border-white/5 rounded-[32px] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)]">
+            <!-- Decorative Accents -->
+            <div class="absolute -top-20 -left-20 w-40 h-40 bg-emerald-500/5 rounded-full blur-[80px]"></div>
+            <div class="absolute -bottom-20 -right-20 w-40 h-40 bg-blue-500/5 rounded-full blur-[80px]"></div>
+
+            <button onclick="document.getElementById('ai-confirm-modal').classList.add('hidden')" 
+                class="absolute top-6 right-6 p-2 rounded-xl bg-white/5 border border-white/5 text-slate-500 hover:text-white hover:bg-white/10 transition-all z-50">
                 <i data-lucide="x" class="w-4 h-4"></i>
             </button>
             
-            <div class="text-center space-y-3 relative z-10">
-                <div class="w-16 h-16 bg-emerald-500/10 rounded-2xl flex items-center justify-center border border-emerald-500/20 mx-auto rotate-3">
-                    <i data-lucide="help-circle" class="w-8 h-8 text-emerald-400"></i>
+            <div class="text-center space-y-5 relative z-10">
+                <div class="relative inline-flex mb-2">
+                    <div class="absolute inset-0 bg-emerald-500/20 blur-2xl rounded-full animate-pulse"></div>
+                    <div class="relative w-20 h-20 bg-emerald-500/10 rounded-3xl flex items-center justify-center border border-emerald-500/20 shadow-inner">
+                        <i data-lucide="calendar-check" class="w-10 h-10 text-emerald-400"></i>
+                    </div>
                 </div>
-                <h2 class="text-2xl font-900 tracking-tighter uppercase leading-none mt-4">Semester Check</h2>
-                <p id="ai-confirm-text" class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Is this screenshot for the <span class="text-emerald-400" id="current-sem-display">...</span> semester?</p>
+
+                <div class="space-y-1">
+                    <h2 class="text-2xl font-900 tracking-tight text-white uppercase">Semester Sync</h2>
+                    <p class="text-[9px] font-black text-emerald-500/60 uppercase tracking-[0.3em]">AI Verification Engine</p>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-white/[0.02] border border-white/5">
+                    <p id="ai-confirm-text" class="text-[11px] text-slate-400 font-medium leading-relaxed">
+                        Is this screenshot for the <br>
+                        <span class="text-white font-900 text-xs uppercase tracking-wider block mt-1" id="current-sem-display">...</span> 
+                        semester?
+                    </p>
+                </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-4 relative z-10 pt-2">
-                <button onclick="app.controller.handleConfirmSemester(true)" class="prism-btn !bg-emerald-500 !text-black !py-4 shadow-[0_0_20px_rgba(16,185,129,0.3)]">
-                    <i data-lucide="check-circle" class="w-4 h-4 font-bold"></i>
-                    YES
+            <div class="grid grid-cols-2 gap-3 relative z-10">
+                <button onclick="app.controller.handleConfirmSemester(true)" 
+                    class="group relative h-14 rounded-2xl bg-emerald-500 text-black font-900 text-[10px] uppercase tracking-widest overflow-hidden transition-all hover:scale-[1.02] active:scale-95 shadow-[0_0_20px_rgba(16,185,129,0.2)]">
+                    <div class="flex items-center justify-center gap-2 relative z-10">
+                        <i data-lucide="check" class="w-4 h-4 transition-transform group-hover:scale-110"></i>
+                        Yes
+                    </div>
                 </button>
-                <button onclick="app.controller.handleConfirmSemester(false)" class="w-full py-4 rounded-xl bg-white/5 border border-white/10 text-[10px] font-black text-rose-400 uppercase tracking-widest hover:bg-rose-500/10 hover:text-rose-400 transition-all flex items-center justify-center gap-2">
-                    <i data-lucide="x-circle" class="w-4 h-4"></i>
-                    NO
+                <button onclick="app.controller.handleConfirmSemester(false)" 
+                    class="group relative h-14 rounded-2xl bg-white/5 border border-white/5 text-slate-300 font-900 text-[10px] uppercase tracking-widest overflow-hidden transition-all hover:bg-white/10 hover:text-white active:scale-95">
+                    <div class="flex items-center justify-center gap-2 relative z-10">
+                        <i data-lucide="info" class="w-4 h-4 transition-transform group-hover:rotate-12"></i>
+                        No
+                    </div>
                 </button>
             </div>
             
-            <p class="text-[7px] text-slate-500 font-black uppercase tracking-[0.2em] text-center opacity-60">If "No", AI will perform deep extraction</p>
+            <p class="text-[7px] text-slate-600 font-bold uppercase tracking-[0.25em] text-center opacity-40">
+                Fallback: Deep AI Extraction will trigger if No
+            </p>
         </div>
     </div>
 
