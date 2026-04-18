@@ -1758,6 +1758,10 @@ class RoutineController {
         
         const aiModal = document.getElementById('ai-modal');
         if (aiModal) aiModal.classList.add('hidden');
+        
+        // Ensure confirm modal is also hidden
+        const confirmModal = document.getElementById('ai-confirm-modal');
+        if (confirmModal) confirmModal.classList.add('hidden');
 
         try {
             const coursesFound = await this.processImageWithAI(file, mode);
