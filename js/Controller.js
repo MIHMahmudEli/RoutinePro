@@ -1173,34 +1173,56 @@ class RoutineController {
         this.view.explorerNav.scrollIntoView({ behavior: 'smooth' });
     }
 
-    handleShare() {
+    async handleShare() {
         if (this.model.selectedCourses.length === 0) {
             this.view.showToast("Add some courses before sharing!", "error");
             return;
         }
 
+        const originalText = this.view.shareBtn.innerHTML;
+        this.view.shareBtn.disabled = true;
+        this.view.shareBtn.innerHTML = `<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i> GENERATING...`;
+        lucide.createIcons();
+
         try {
-            const shareData = this.model.getShareableData();
-            const shareUrl = `${window.location.origin}${window.location.pathname}#share=${shareData}`;
+            const payload = this.model.getShareablePayload();
+            const response = await fetch('/api/share', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            let shareUrl;
+            if (response.ok) {
+                const { id } = await response.json();
+                shareUrl = `${window.location.origin}${window.location.pathname}?s=${id}`;
+            } else {
+                // Fallback to legacy long URL if API fails
+                const shareData = this.model.getShareableData();
+                shareUrl = `${window.location.origin}${window.location.pathname}#share=${shareData}`;
+            }
             
             // Try to use Web Share API
             if (navigator.share) {
-                navigator.share({
+                await navigator.share({
                     title: 'My Routine - RoutinePro',
                     text: 'Check out my routine on RoutinePro!',
                     url: shareUrl
-                }).catch(err => {
-                    // Fallback to clipboard
-                    this.copyToClipboard(shareUrl);
                 });
             } else {
-                this.copyToClipboard(shareUrl);
+                await this.copyToClipboard(shareUrl);
             }
 
             window.analytics.trackFeatureToggle('share_routine', true);
         } catch (e) {
             console.error("Sharing failed", e);
-            this.view.showToast("Failed to generate share link", "error");
+            if (e.name !== 'AbortError' && !String(e).includes('cancelled')) {
+                this.view.showToast("Failed to generate share link", "error");
+            }
+        } finally {
+            this.view.shareBtn.disabled = false;
+            this.view.shareBtn.innerHTML = originalText;
+            lucide.createIcons();
         }
     }
 

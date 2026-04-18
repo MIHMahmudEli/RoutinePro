@@ -34,12 +34,15 @@ class RoutineModel {
 
     async loadInitialData() {
         // Load shared routine first if hash exists
+        const urlParams = new URLSearchParams(window.location.search);
+        const shortId = urlParams.get('s');
         const hash = window.location.hash;
-        if (hash && hash.startsWith('#share=')) {
+
+        if (shortId) {
+            await this.loadFromShortId(shortId);
+        } else if (hash && hash.startsWith('#share=')) {
             const sharedData = hash.substring(7);
             this.loadFromSharedData(sharedData);
-            // Clear hash after loading to avoid re-loading on refresh if user wants to change it
-            // window.history.replaceState(null, null, ' ');
         }
 
         // Load cached global data first for instant startup
@@ -663,7 +666,28 @@ class RoutineModel {
         });
     }
 
-    getShareableData() {
+    async loadFromShortId(id) {
+        try {
+            const res = await fetch(`/api/get-share?id=${id}`);
+            if (res.ok) {
+                const payload = await res.json();
+                if (payload && payload.items) {
+                    this.pendingSharedItems = payload.items;
+                    if (payload.config) {
+                        this.ramadanMode = !!payload.config.r;
+                        this.focusMode = !!payload.config.f;
+                        this.twentyFourHourMode = !!payload.config.t;
+                        this.compactMode = !!payload.config.c;
+                        this.wasExplorer = !!payload.config.e;
+                    }
+                }
+            }
+        } catch (e) {
+            console.error("Failed to load short link:", e);
+        }
+    }
+
+    getShareablePayload() {
         const currentRoutine = this.isExplorerMode ? this.possibleRoutines[this.currentRoutineIndex] : null;
 
         const data = this.selectedCourses.map(sc => {
@@ -686,17 +710,22 @@ class RoutineModel {
                     if (item) sectionName = item.section.section;
                 }
 
-                return {
+                const res = {
                     c: sc.course.code,
-                    t: sc.course.baseTitle,
-                    d: sc.course.dept,
                     s: sectionName,
                     p: sc.isPinned ? 1 : 0
                 };
+
+                // Only include title/dept for courses without a valid code (e.g. legacy or malformed data)
+                if (!res.c || res.c === "N/A" || res.c === "nan") {
+                    res.t = sc.course.baseTitle;
+                    res.d = sc.course.dept || "";
+                }
+
+                return res;
             }
         });
 
-        // Add settings
         const settings = {
             r: this.ramadanMode ? 1 : 0,
             f: this.focusMode ? 1 : 0,
@@ -705,7 +734,11 @@ class RoutineModel {
             e: this.isExplorerMode ? 1 : 0
         };
 
-        const payload = { items: data, config: settings };
+        return { items: data, config: settings };
+    }
+
+    getShareableData() {
+        const payload = this.getShareablePayload();
         return btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
     }
 
