@@ -22,8 +22,10 @@ export default async function handler(req, res) {
       
       CRITICAL INSTRUCTIONS:
       1. ONLY extract information that is visually present.
-      2. COMPLETELY IGNORE "Dropped" courses.
+      2. ONLY extract courses that are actively registered.
       3. For EACH course, extract EVERY schedule entry (a course might have multiple rows or times).
+      4. COMPLETELY IGNORE any course that has "Dropped" or "Dropped(100%)" written anywhere near it. Do not extract dropped courses at all.
+      5. ONLY extract information that is visually present. DO NOT use general knowledge.
       
       Structure per schedule entry:
       - title: Full course name in UPPERCASE.
@@ -36,7 +38,8 @@ export default async function handler(req, res) {
       - type: Either "Theory" or "Lab". 
       
       Return ONLY a clean JSON array of objects in this exact format:
-      [{"title": "...", "section": "...", "days": ["..."], "start": "...", "end": "...", "room": "...", "type": "..."}]`
+      [{"title": "...", "section": "...", "days": ["..."], "start": "...", "end": "...", "room": "...", "type": "..."}]
+      Do not include any dropped courses, preamble, explanation, or extra text.`
       : `EXTRACT REGISTERED COURSES FROM IMAGE.
 
       CRITICAL INSTRUCTIONS:
