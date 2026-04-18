@@ -925,13 +925,41 @@
                     </div>
                 </div>
 
-                <div class="relative group admin-upload-zone text-center cursor-pointer flex flex-col items-center justify-center p-4 !py-10 border-dashed border-emerald-500/20 bg-emerald-500/5" onclick="document.getElementById('portal-image-input').click()">
-                    <input type="file" id="portal-image-input" class="hidden" accept="image/*">
+                <div class="relative group admin-upload-zone text-center cursor-pointer flex flex-col items-center justify-center p-4 !py-10 border-dashed border-emerald-500/20 bg-emerald-500/5" onclick="app.controller.handleAIClick()">
                     <i data-lucide="image-plus" class="w-10 h-10 text-emerald-500 mb-3 group-hover:text-emerald-400 animate-pulse"></i>
                     <p class="text-[11px] font-bold text-emerald-400 group-hover:text-white uppercase tracking-wider">Click to Upload Screenshot</p>
                     <p class="text-[8px] text-emerald-500/50 font-black uppercase mt-1 tracking-widest">Your routine will appear instantly</p>
+                    <input type="file" id="portal-image-input" class="hidden" accept="image/*">
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- AI Semester Confirmation Modal -->
+    <div id="ai-confirm-modal" class="hidden fixed inset-0 z-[300] flex items-center justify-center p-4 bg-black/80 backdrop-blur-xl">
+        <div class="admin-portal-box max-w-sm w-full p-8 space-y-6 animate-pop border-emerald-500/40 relative overflow-hidden">
+            <div class="absolute -top-24 -right-24 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl"></div>
+            
+            <div class="text-center space-y-3 relative z-10">
+                <div class="w-16 h-16 bg-emerald-500/10 rounded-2xl flex items-center justify-center border border-emerald-500/20 mx-auto rotate-3">
+                    <i data-lucide="help-circle" class="w-8 h-8 text-emerald-400"></i>
+                </div>
+                <h2 class="text-2xl font-900 tracking-tighter uppercase leading-none mt-4">Semester Check</h2>
+                <p id="ai-confirm-text" class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Is this screenshot for the <span class="text-emerald-400" id="current-sem-display">...</span> semester?</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 relative z-10 pt-2">
+                <button onclick="app.controller.handleConfirmSemester(true)" class="prism-btn !bg-emerald-500 !text-black !py-4 shadow-[0_0_20px_rgba(16,185,129,0.3)]">
+                    <i data-lucide="check-circle" class="w-4 h-4 font-bold"></i>
+                    YES
+                </button>
+                <button onclick="app.controller.handleConfirmSemester(false)" class="w-full py-4 rounded-xl bg-white/5 border border-white/10 text-[10px] font-black text-rose-400 uppercase tracking-widest hover:bg-rose-500/10 hover:text-rose-400 transition-all flex items-center justify-center gap-2">
+                    <i data-lucide="x-circle" class="w-4 h-4"></i>
+                    NO
+                </button>
+            </div>
+            
+            <p class="text-[7px] text-slate-500 font-black uppercase tracking-[0.2em] text-center opacity-60">If "No", AI will perform deep extraction</p>
         </div>
     </div>
 

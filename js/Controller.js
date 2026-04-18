@@ -1725,16 +1725,38 @@ class RoutineController {
         lucide.createIcons();
     }
 
+    handleAIClick() {
+        // Get semester from metadata
+        const semName = this.model.semester 
+            || (this.model.metadata ? this.model.metadata.semester : null)
+            || localStorage.getItem('routine-pro-semester') 
+            || "CURRENT";
+            
+        const semDisplay = document.getElementById('current-sem-display');
+        if (semDisplay) semDisplay.innerText = semName;
+        
+        document.getElementById('ai-confirm-modal').classList.remove('hidden');
+        lucide.createIcons();
+    }
+
+    handleConfirmSemester(isCorrect) {
+        this.aiSyncMode = isCorrect ? 'sync' : 'full';
+        document.getElementById('ai-confirm-modal').classList.add('hidden');
+        document.getElementById('portal-image-input').click();
+    }
+
     async handlePortalImageUpload(e) {
         const file = e.target.files[0];
         if (!file) return;
 
-        this.view.showToast("Analyzing Image with AI...", "info");
+        const mode = this.aiSyncMode || 'sync';
+        this.view.showToast(mode === 'full' ? "AI Performing Deep Extraction..." : "Analyzing Image with AI...", "info");
+        
         const aiModal = document.getElementById('ai-modal');
         if (aiModal) aiModal.classList.add('hidden');
 
         try {
-            const coursesFound = await this.processImageWithAI(file);
+            const coursesFound = await this.processImageWithAI(file, mode);
 
             if (!coursesFound || coursesFound.length === 0) {
                 this.view.showToast("No courses identified in screenshot", "error");
@@ -1742,26 +1764,56 @@ class RoutineController {
             }
 
             let addedCount = 0;
-            coursesFound.forEach(item => {
-                // The AI returns { title: "...", section: "...", classId: "..." }
-                const success = this.handleAddCourse(item.title, null, item.section, item.classId);
-                if (success) addedCount++;
-            });
+            
+            if (mode === 'full') {
+                // For non-current semester, we add as MANUAL courses
+                coursesFound.forEach(item => {
+                    const success = this.model.addManualCourse({
+                        subject: item.title,
+                        days: item.days || ["Sunday"],
+                        start: item.start || "08:00 AM",
+                        end: item.end || "09:30 AM",
+                        section: item.section || "A",
+                        room: item.room || "TBA"
+                    });
+                    if (success) addedCount++;
+                });
 
-            if (addedCount > 0) {
-                this.view.showToast(`AI extracted ${addedCount} courses from portal!`, "success");
+                if (addedCount > 0) {
+                    this.view.showToast(`AI generated ${addedCount} ad-hoc courses!`, "success");
+                    // Sync workspace first to show the manual items
+                    this.syncWorkspace();
+                    
+                    // Automatically generate routine for ad-hoc courses as requested
+                    setTimeout(() => {
+                        this.handleGenerate();
+                        this.view.showToast("Note: These were added and generated as manual entries because they belong to a different semester.", "info");
+                    }, 500);
+                }
             } else {
-                this.view.showToast("AI found courses but they are already in queue or missing from library", "info");
+                // Standard sync with library
+                coursesFound.forEach(item => {
+                    const success = this.handleAddCourse(item.title, null, item.section, item.classId);
+                    if (success) addedCount++;
+                });
+
+                if (addedCount > 0) {
+                    this.view.showToast(`AI extracted ${addedCount} courses from portal!`, "success");
+                } else {
+                    this.view.showToast("AI found courses but they are already in queue or missing from library", "info");
+                }
+                this.syncWorkspace();
             }
         } catch (err) {
             console.error("AI Sync Error:", err);
             this.view.showToast(`Extraction failed: ${err.message}`, "error");
         } finally {
             e.target.value = ''; // Reset input
+            this.aiSyncMode = 'sync';
         }
     }
 
-    async processImageWithAI(file) {
+    async processImageWithAI(file, mode = 'sync') {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.onload = async () => {
@@ -1771,7 +1823,7 @@ class RoutineController {
                     const response = await fetch('/api/extract', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ image: base64Image })
+                        body: JSON.stringify({ image: base64Image, mode })
                     });
 
                     if (!response.ok) {

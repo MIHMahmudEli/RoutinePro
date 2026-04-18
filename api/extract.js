@@ -8,12 +8,50 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { image } = req.body;
+    const { image, mode = 'sync' } = req.body;
     const apiKey = process.env.GROQ_API_KEY;
 
     if (!apiKey) {
       return res.status(500).json({ error: 'Server configuration error: Missing API Key' });
     }
+
+    const isFullMode = mode === 'full';
+
+    const systemPrompt = isFullMode 
+      ? `EXTRACT REGISTERED COURSES WITH FULL DETAILS FROM IMAGE.
+      
+      CRITICAL INSTRUCTIONS:
+      1. ONLY extract information that is visually present.
+      2. COMPLETELY IGNORE "Dropped" courses.
+      3. For EACH course, extract EVERY schedule entry (a course might have multiple rows or times).
+      
+      Structure per schedule entry:
+      - title: Full course name in UPPERCASE.
+      - section: Section identifier (e.g. A, B, C).
+      - days: Array of days (e.g. ["Sunday", "Tuesday"]).
+      - start: Start time in "HH:MM AM/PM" format.
+      - end: End time in "HH:MM AM/PM" format.
+      - room: Room number/name (e.g. 1102, DS0102).
+      - type: Either "Theory" or "Lab". 
+      
+      Return ONLY a clean JSON array of objects in this exact format:
+      [{"title": "...", "section": "...", "days": ["..."], "start": "...", "end": "...", "room": "...", "type": "..."}]`
+      : `EXTRACT REGISTERED COURSES FROM IMAGE.
+
+      CRITICAL INSTRUCTIONS:
+      1. ONLY extract courses that are actively registered.
+      2. COMPLETELY IGNORE any course that has "Dropped" or "Dropped(100%)" written anywhere near it. Do not extract dropped courses at all.
+      3. ONLY extract information that is visually present. DO NOT use general knowledge.
+      
+      Structure per course:
+      - title: The full course name in UPPERCASE. 
+        Example: If the text is '00733-MOBILE APPLICATION DEVELOPMENT [A]', the title should be 'MOBILE APPLICATION DEVELOPMENT'.
+      - section: The single character inside the square brackets (e.g., A, B, C, K, etc.).
+
+      Return ONLY a clean JSON array of objects in this exact format:
+      [{"title": "...", "section": "..."}]
+
+      Do not include any dropped courses, preamble, explanation, or extra text.`;
 
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
@@ -22,30 +60,14 @@ export default async function handler(req, res) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: "meta-llama/llama-4-scout-17b-16e-instruct",
+        model: "meta-llama/llama-3.2-11b-vision-preview",
         messages: [
           {
             role: "user",
             content: [
               {
               type: "text",
-              text: `EXTRACT REGISTERED COURSES FROM IMAGE.
-
-              CRITICAL INSTRUCTIONS:
-              1. ONLY extract courses that are actively registered.
-              2. COMPLETELY IGNORE any course that has "Dropped" or "Dropped(100%)" written anywhere near it. Do not extract dropped courses at all.
-              3. ONLY extract information that is visually present. DO NOT use general knowledge.
-              4. If no active registered courses are found, return [].
-
-              Structure per course:
-              - title: The full course name in UPPERCASE. 
-                Example: If the text is '00733-MOBILE APPLICATION DEVELOPMENT [A]', the title should be 'MOBILE APPLICATION DEVELOPMENT'.
-              - section: The single character inside the square brackets (e.g., A, B, C, K, etc.).
-
-              Return ONLY a clean JSON array of objects in this exact format:
-              [{"title": "...", "section": "..."}]
-
-              Do not include any dropped courses, preamble, explanation, or extra text.`
+              text: systemPrompt
               },
               {
                 type: "image_url",
@@ -57,7 +79,7 @@ export default async function handler(req, res) {
           }
         ],
         temperature: 0.1,
-        max_tokens: 1024
+        max_tokens: 2048
       })
     });
 
