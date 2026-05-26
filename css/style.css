@@ -107,6 +107,15 @@
     scroll-behavior: smooth;
 }
 
+html, body {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+html::-webkit-scrollbar, body::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari and Opera */
+}
+
 body {
     background-color: var(--bg-base);
     color: var(--text-primary);
@@ -119,6 +128,8 @@ body {
     min-height: 100vh;
     transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
