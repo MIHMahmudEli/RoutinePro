@@ -2102,4 +2102,15 @@ input.time-select-modern:hover::-webkit-calendar-picker-indicator {
 .admin-modal-close:hover {
     color: white;
     transform: rotate(90deg);
+}
+
+/* CAPTCHA Reload Button Rotation */
+@keyframes captcha-reload-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+#aiub-modal-reload-captcha-btn.loading svg,
+#aiub-modal-reload-captcha-btn.loading i {
+    animation: captcha-reload-spin 1s linear infinite !important;
 }
