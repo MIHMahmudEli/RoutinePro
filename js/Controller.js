@@ -1996,8 +1996,9 @@ class RoutineController {
             const result = await response.json();
             
             if (result.success && result.captchaImage) {
-                // Display CAPTCHA image
-                document.getElementById('aiub-modal-captcha-image').src = 'data:image/gif;base64,' + result.captchaImage;
+                // Display CAPTCHA image — use dynamic MIME type from backend
+                const mimeType = result.captchaMimeType || 'image/gif';
+                document.getElementById('aiub-modal-captcha-image').src = `data:${mimeType};base64,${result.captchaImage}`;
                 document.getElementById('aiub-modal-captcha-section').classList.remove('hidden');
                 
                 // Store CSRF token and cookies for login
@@ -2019,6 +2020,64 @@ class RoutineController {
             btn.disabled = false;
             btn.innerHTML = originalText;
             lucide.createIcons();
+        }
+    }
+
+    /**
+     * Reload the CAPTCHA image without clearing credentials.
+     * Spins the reload icon while fetching, then updates the image and session tokens.
+     */
+    async handleAIUBReloadCaptchaModal() {
+        const username = document.getElementById('aiub-modal-username').value.trim();
+        const password = document.getElementById('aiub-modal-password').value.trim();
+
+        if (!username || !password) {
+            this.view.showToast("Please enter username and password first", "error");
+            return;
+        }
+
+        const reloadBtn = document.getElementById('aiub-modal-reload-captcha-btn');
+        const icon = reloadBtn.querySelector('i');
+        reloadBtn.disabled = true;
+        icon.classList.add('animate-spin');
+
+        // Clear old captcha text so user must re-enter
+        document.getElementById('aiub-modal-captcha-text').value = '';
+
+        try {
+            const response = await fetch('/api/aiub-scraper-new', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username,
+                    password,
+                    action: 'fetch-captcha'
+                })
+            });
+
+            const result = await response.json();
+
+            if (result.success && result.captchaImage) {
+                const mimeType = result.captchaMimeType || 'image/gif';
+                document.getElementById('aiub-modal-captcha-image').src = `data:${mimeType};base64,${result.captchaImage}`;
+
+                // Refresh session tokens
+                window.aiubSession = {
+                    csrfToken: result.csrfToken,
+                    captchaDeText: result.captchaDeText,
+                    cookies: result.cookies
+                };
+
+                this.view.showToast("CAPTCHA refreshed!", "success");
+            } else {
+                throw new Error(result.error || 'Failed to reload CAPTCHA');
+            }
+        } catch (err) {
+            console.error(err);
+            this.view.showToast(`Failed to reload CAPTCHA: ${err.message}`, "error");
+        } finally {
+            reloadBtn.disabled = false;
+            icon.classList.remove('animate-spin');
         }
     }
 
