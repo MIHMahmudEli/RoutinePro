@@ -2037,9 +2037,9 @@ class RoutineController {
         }
 
         const reloadBtn = document.getElementById('aiub-modal-reload-captcha-btn');
-        const icon = reloadBtn.querySelector('i');
+        const icon = reloadBtn.querySelector('svg, i, .lucide');
         reloadBtn.disabled = true;
-        icon.classList.add('animate-spin');
+        if (icon) icon.classList.add('animate-spin');
 
         // Clear old captcha text so user must re-enter
         document.getElementById('aiub-modal-captcha-text').value = '';
@@ -2077,7 +2077,7 @@ class RoutineController {
             this.view.showToast(`Failed to reload CAPTCHA: ${err.message}`, "error");
         } finally {
             reloadBtn.disabled = false;
-            icon.classList.remove('animate-spin');
+            if (icon) icon.classList.remove('animate-spin');
         }
     }
 
