@@ -825,34 +825,34 @@
 
     <!-- Library Sync Modal -->
     <div id="sync-modal"
-        class="hidden fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-3xl overflow-y-auto">
-        <div class="admin-portal-box max-w-sm w-full p-6 space-y-5 animate-pop">
-            <button onclick="document.getElementById('sync-modal').classList.add('hidden')" class="admin-modal-close">
+        class="hidden fixed inset-0 z-[200] flex items-start md:items-center justify-center p-4 md:p-6 bg-black/60 backdrop-blur-3xl overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        <div class="admin-portal-box max-w-md w-full p-6 md:p-8 space-y-6 my-auto animate-pop shadow-2xl border border-white/10 rounded-2xl bg-slate-900/90 relative">
+            <button onclick="document.getElementById('sync-modal').classList.add('hidden')" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-full transition-all">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
 
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
-                    <i data-lucide="refresh-cw" class="w-5 h-5 text-emerald-400"></i>
+            <div class="flex items-center gap-4 border-b border-white/5 pb-4">
+                <div class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 shadow-inner">
+                    <i data-lucide="refresh-cw" class="w-6 h-6 text-emerald-400"></i>
                 </div>
                 <div>
-                    <h2 class="text-lg font-900 tracking-tighter uppercase">Sync Manager</h2>
-                    <p class="text-[9px] text-slate-500 font-bold uppercase tracking-widest opacity-60">Global Library Update</p>
+                    <h2 class="text-xl font-900 tracking-tight text-white">Sync Manager</h2>
+                    <p class="text-xs text-slate-400 font-medium tracking-wide">Global Library Update</p>
                 </div>
             </div>
 
-            <div class="space-y-4">
-                <div class="minimal-indicator space-y-3">
-                    <div class="flex justify-between items-center text-[9px] font-black uppercase tracking-widest text-emerald-400/50">
+            <div class="space-y-5">
+                <div class="space-y-4 bg-white/[0.02] border border-white/5 p-5 rounded-xl">
+                    <div class="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-emerald-400/60">
                         <span>Database Node</span>
                         <span id="sync-status-badge" class="flex items-center gap-1.5">
-                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
                             Live Now
                         </span>
                     </div>
                     <div class="flex items-baseline justify-between">
-                        <div id="course-count-display" class="text-xl font-900">0 Courses</div>
-                        <div id="last-update-display" class="text-[8px] font-bold text-slate-600 uppercase tracking-wider">Never Synced</div>
+                        <div id="course-count-display" class="text-2xl font-900 text-white">0 Courses</div>
+                        <div id="last-update-display" class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Never Synced</div>
                     </div>
                 </div>
 
@@ -895,7 +895,7 @@
 
     <!-- AIUB Portal Sync Modal (Completely Separate) -->
     <div id="aiub-portal-modal"
-        class="hidden fixed inset-0 z-[200] flex items-start md:items-center justify-center p-4 md:p-6 bg-black/60 backdrop-blur-3xl overflow-y-auto">
+        class="hidden fixed inset-0 z-[200] flex items-start md:items-center justify-center p-4 md:p-6 bg-black/60 backdrop-blur-3xl overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         <div class="admin-portal-box max-w-md w-full p-6 md:p-8 space-y-6 my-auto animate-pop shadow-2xl border border-white/10 rounded-2xl bg-slate-900/90 relative">
             <button onclick="document.getElementById('aiub-portal-modal').classList.add('hidden')" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-full transition-all">
                 <i data-lucide="x" class="w-5 h-5"></i>
