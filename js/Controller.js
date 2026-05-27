@@ -1917,6 +1917,19 @@ class RoutineController {
                     localStorage.setItem('routine-pro-global-courses', JSON.stringify(result.courses));
                     localStorage.removeItem('routine-pro-courses'); // Remove stale local data
                     
+                    // Update metadata locally so "Last Sync" updates instantly
+                    const now = new Date().toISOString();
+                    const semesterName = result.semester || `AIUB Portal Sync - ${new Date().toLocaleDateString()}`;
+                    if (!this.model.metadata) this.model.metadata = {};
+                    this.model.metadata.lastUpdate = now;
+                    this.model.metadata.courseCount = result.courses.length;
+                    this.model.metadata.semester = semesterName;
+                    this.model.semester = semesterName;
+                    
+                    localStorage.setItem('routine-pro-global-metadata', JSON.stringify(this.model.metadata));
+                    localStorage.setItem('routine-pro-global-last-update', now);
+                    localStorage.setItem('routine-pro-semester', semesterName);
+                    
                     // Reset selections
                     this.model.selectedCourses = [];
                     this.model.possibleRoutines = [];
@@ -1924,7 +1937,7 @@ class RoutineController {
                 } else {
                     this.addAIUBLog('[+] Local sync only (global unavailable)');
                     // Save courses locally if global failed
-                    const semester = 'AIUB Portal Sync - ' + new Date().toLocaleDateString();
+                    const semester = result.semester || ('AIUB Portal Sync - ' + new Date().toLocaleDateString());
                     this.model.saveCourses(result.courses, semester);
                 }
 
@@ -2142,6 +2155,19 @@ class RoutineController {
                     localStorage.setItem('routine-pro-global-courses', JSON.stringify(result.courses));
                     localStorage.removeItem('routine-pro-courses'); // Remove stale local data
                     
+                    // Update metadata locally so "Last Sync" updates instantly
+                    const now = new Date().toISOString();
+                    const semesterName = result.semester || `AIUB Portal Sync - ${new Date().toLocaleDateString()}`;
+                    if (!this.model.metadata) this.model.metadata = {};
+                    this.model.metadata.lastUpdate = now;
+                    this.model.metadata.courseCount = result.courses.length;
+                    this.model.metadata.semester = semesterName;
+                    this.model.semester = semesterName;
+                    
+                    localStorage.setItem('routine-pro-global-metadata', JSON.stringify(this.model.metadata));
+                    localStorage.setItem('routine-pro-global-last-update', now);
+                    localStorage.setItem('routine-pro-semester', semesterName);
+                    
                     // Reset selections
                     this.model.selectedCourses = [];
                     this.model.possibleRoutines = [];
@@ -2149,7 +2175,7 @@ class RoutineController {
                 } else {
                     this.addAIUBModalLog('[+] Synced locally');
                     // Save courses locally if global failed
-                    const semester = 'AIUB Portal Sync - ' + new Date().toLocaleDateString();
+                    const semester = result.semester || ('AIUB Portal Sync - ' + new Date().toLocaleDateString());
                     this.model.saveCourses(result.courses, semester);
                 }
 
