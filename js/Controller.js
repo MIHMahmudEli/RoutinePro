@@ -2003,6 +2003,7 @@ class RoutineController {
                 // Store CSRF token and cookies for login
                 window.aiubSession = {
                     csrfToken: result.csrfToken,
+                    captchaDeText: result.captchaDeText,
                     cookies: result.cookies
                 };
                 
@@ -2053,6 +2054,7 @@ class RoutineController {
                     password, 
                     captcha,
                     csrfToken: session.csrfToken,
+                    captchaDeText: session.captchaDeText,
                     cookies: session.cookies
                 })
             });

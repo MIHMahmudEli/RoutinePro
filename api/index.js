@@ -28,9 +28,19 @@ const HANDLERS = {
 };
 
 export default async function handler(req, res) {
-  // Extract action from URL path, e.g. /api/check-auth → "check-auth"
-  const urlPath = (req.url || '').split('?')[0];
-  const action = urlPath.split('/').filter(Boolean).pop();
+  // Extract action from query parameter (passed via vercel.json rewrite) or URL path
+  const url = new URL(req.url || '', `http://${req.headers.host || 'localhost'}`);
+  let action = url.searchParams.get('action');
+
+  if (!action) {
+    const urlPath = url.pathname;
+    action = urlPath.split('/').filter(Boolean).pop();
+  }
+
+  // If the query parser didn't catch a subpath rewrite (e.g. check-auth?t=123)
+  if (action && action.includes('?')) {
+    action = action.split('?')[0];
+  }
 
   if (!action || !HANDLERS[action]) {
     res.status(400).json({ error: `Unknown API route: "${action}"` });
