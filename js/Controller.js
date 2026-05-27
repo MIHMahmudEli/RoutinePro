@@ -1871,4 +1871,241 @@ class RoutineController {
             reader.readAsDataURL(file);
         });
     }
+
+    async handleAIUBLogin() {
+        const username = document.getElementById('aiub-username').value.trim();
+        const password = document.getElementById('aiub-password').value.trim();
+        const captcha = document.getElementById('aiub-captcha-text').value.trim();
+
+        if (!username || !password || !captcha) {
+            this.view.showToast("Please fill in all fields (username, password, and CAPTCHA text)", "error");
+            return;
+        }
+
+        const btn = document.getElementById('aiub-login-btn');
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = `<i data-lucide="loader-2" class="w-3 h-3 animate-spin inline-block mr-1"></i>Processing...`;
+        lucide.createIcons();
+
+        // Show process log
+        document.getElementById('aiub-process-log').classList.remove('hidden');
+        document.getElementById('aiub-log-content').innerHTML = '';
+
+        try {
+            this.addAIUBLog('[+] Starting AIUB Portal authentication...');
+            
+            const response = await fetch('/api/aiub-scraper', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password, captcha })
+            });
+
+            const result = await response.json();
+
+            if (result.success && result.courses && result.courses.length > 0) {
+                this.addAIUBLog(`[+] Successfully scraped ${result.courses.length} courses!`);
+                
+                // Save courses locally
+                const semester = 'AIUB Portal Sync - ' + new Date().toLocaleDateString();
+                this.model.saveCourses(result.courses, semester);
+                
+                this.addAIUBLog('[+] Courses saved to your local storage');
+
+                // Check global sync status
+                if (result.globalSynced) {
+                    this.addAIUBLog('[+] ✓ Synced globally for all users!');
+                } else {
+                    this.addAIUBLog('[+] Local sync only (global unavailable)');
+                }
+
+                this.addAIUBLog('[+] Sync complete! ✓');
+                this.view.showToast(`Successfully synced ${result.courses.length} courses from AIUB!`, "success");
+                
+                // Close modal after delay
+                setTimeout(() => {
+                    document.getElementById('aiub-portal-modal').classList.add('hidden');
+                    this.syncWorkspace();
+                }, 2000);
+
+                window.analytics.trackPortalSync(result.courses.length);
+            } else {
+                const errorMsg = result.error || result.message || 'Failed to scrape courses';
+                throw new Error(errorMsg);
+            }
+        } catch (err) {
+            console.error(err);
+            this.addAIUBLog(`[!] Error: ${err.message}`);
+            this.view.showToast(`AIUB sync failed: ${err.message}`, "error");
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+            lucide.createIcons();
+        }
+    }
+
+    addAIUBLog(message) {
+        const logContent = document.getElementById('aiub-log-content');
+        const timestamp = new Date().toLocaleTimeString();
+        const logLine = document.createElement('div');
+        logLine.textContent = `[${timestamp}] ${message}`;
+        logContent.appendChild(logLine);
+        logContent.parentElement.scrollTop = logContent.parentElement.scrollHeight;
+    }
+
+    openAIUBPortalModal() {
+        const modal = document.getElementById('aiub-portal-modal');
+        if (modal) {
+            modal.classList.remove('hidden');
+            // Clear previous data
+            document.getElementById('aiub-modal-username').value = '';
+            document.getElementById('aiub-modal-password').value = '';
+            document.getElementById('aiub-modal-captcha-text').value = '';
+            document.getElementById('aiub-modal-captcha-section').classList.add('hidden');
+            document.getElementById('aiub-modal-process-log').classList.add('hidden');
+            document.getElementById('aiub-modal-login-btn').classList.add('hidden');
+        }
+    }
+
+    async handleAIUBFetchCaptchaModal() {
+        const username = document.getElementById('aiub-modal-username').value.trim();
+        const password = document.getElementById('aiub-modal-password').value.trim();
+
+        if (!username || !password) {
+            this.view.showToast("Please enter username and password", "error");
+            return;
+        }
+
+        const btn = document.getElementById('aiub-modal-fetch-btn');
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = `<i data-lucide="loader-2" class="w-3 h-3 animate-spin inline-block mr-1"></i>Fetching CAPTCHA...`;
+        lucide.createIcons();
+
+        try {
+            const response = await fetch('/api/aiub-scraper-new', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    username, 
+                    password,
+                    action: 'fetch-captcha'
+                })
+            });
+
+            const result = await response.json();
+            
+            if (result.success && result.captchaImage) {
+                // Display CAPTCHA image
+                document.getElementById('aiub-modal-captcha-image').src = 'data:image/gif;base64,' + result.captchaImage;
+                document.getElementById('aiub-modal-captcha-section').classList.remove('hidden');
+                
+                // Store CSRF token and cookies for login
+                window.aiubSession = {
+                    csrfToken: result.csrfToken,
+                    cookies: result.cookies
+                };
+                
+                document.getElementById('aiub-modal-login-btn').classList.remove('hidden');
+                this.view.showToast("CAPTCHA loaded! Enter the text and click Login.", "success");
+            } else {
+                throw new Error(result.error || 'Failed to fetch CAPTCHA');
+            }
+        } catch (err) {
+            console.error(err);
+            this.view.showToast(`Failed to fetch CAPTCHA: ${err.message}`, "error");
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+            lucide.createIcons();
+        }
+    }
+
+    async handleAIUBLoginModal() {
+        const username = document.getElementById('aiub-modal-username').value.trim();
+        const password = document.getElementById('aiub-modal-password').value.trim();
+        const captcha = document.getElementById('aiub-modal-captcha-text').value.trim();
+
+        if (!username || !password || !captcha) {
+            this.view.showToast("Please fill in all fields", "error");
+            return;
+        }
+
+        const btn = document.getElementById('aiub-modal-login-btn');
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = `<i data-lucide="loader-2" class="w-3 h-3 animate-spin inline-block mr-1"></i>Logging in...`;
+        lucide.createIcons();
+
+        // Show process log
+        document.getElementById('aiub-modal-process-log').classList.remove('hidden');
+        document.getElementById('aiub-modal-log-content').innerHTML = '';
+
+        try {
+            this.addAIUBModalLog('[+] Starting AIUB Portal authentication...');
+            
+            const session = window.aiubSession || {};
+            const response = await fetch('/api/aiub-scraper-new', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    username, 
+                    password, 
+                    captcha,
+                    csrfToken: session.csrfToken,
+                    cookies: session.cookies
+                })
+            });
+
+            const result = await response.json();
+
+            if (result.success && result.courses && result.courses.length > 0) {
+                this.addAIUBModalLog(`[+] Successfully scraped ${result.courses.length} courses!`);
+                
+                // Save courses locally
+                const semester = 'AIUB Portal Sync - ' + new Date().toLocaleDateString();
+                this.model.saveCourses(result.courses, semester);
+                
+                this.addAIUBModalLog('[+] Courses saved to local storage');
+
+                // Check global sync status
+                if (result.globalSynced) {
+                    this.addAIUBModalLog('[+] ✓ Synced globally for ALL users!');
+                } else {
+                    this.addAIUBModalLog('[+] Synced locally');
+                }
+
+                this.addAIUBModalLog('[+] Complete! ✓');
+                this.view.showToast(`Synced ${result.courses.length} courses (Global: ${result.globalSynced ? 'YES' : 'NO'})`, "success");
+                
+                // Close modal after delay
+                setTimeout(() => {
+                    document.getElementById('aiub-portal-modal').classList.add('hidden');
+                    this.syncWorkspace();
+                }, 2000);
+
+                window.analytics.trackPortalSync(result.courses.length);
+            } else {
+                const errorMsg = result.error || 'Failed to scrape courses';
+                throw new Error(errorMsg);
+            }
+        } catch (err) {
+            console.error(err);
+            this.addAIUBModalLog(`[!] Error: ${err.message}`);
+            this.view.showToast(`Sync failed: ${err.message}`, "error");
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+            lucide.createIcons();
+        }
+    }
+
+    addAIUBModalLog(message) {
+        const logContent = document.getElementById('aiub-modal-log-content');
+        const timestamp = new Date().toLocaleTimeString();
+        const logLine = document.createElement('div');
+        logLine.textContent = `[${timestamp}] ${message}`;
+        logContent.appendChild(logLine);
+        logContent.parentElement.scrollTop = logContent.parentElement.scrollHeight;
+    }
 }
