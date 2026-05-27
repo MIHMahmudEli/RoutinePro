@@ -1297,10 +1297,14 @@ class RoutineController {
                         const overlayStyles = "position: absolute; z-index: 100; font-family: inherit; pointer-events: none;";
                         
                         // Top Right: Semester Name
-                        const semName = this.model.semester 
+                        let semName = this.model.semester 
                             || (this.model.metadata ? this.model.metadata.semester : null)
                             || localStorage.getItem('routine-pro-semester') 
                             || "SPRING 24-25";
+                            
+                        if (semName && semName.includes('AIUB Portal Sync')) {
+                            semName = "ROUTINE PRO";
+                        }
 
                         const semEl = clonedDoc.createElement('div');
                         semEl.style.cssText = overlayStyles + "top: 25px; right: 30px; text-align: right;";
@@ -1759,7 +1763,9 @@ class RoutineController {
             || "CURRENT";
             
         const semDisplay = document.getElementById('current-sem-display');
-        if (semDisplay) semDisplay.innerText = semName;
+        if (semDisplay) {
+            semDisplay.innerText = (semName && !semName.includes('AIUB Portal Sync')) ? semName : "CURRENT";
+        }
         
         document.getElementById('ai-confirm-modal').classList.remove('hidden');
         lucide.createIcons();

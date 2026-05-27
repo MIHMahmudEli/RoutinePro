@@ -38,10 +38,12 @@ class RoutineView {
         const sourceColor = dataSource === 'Local' ? 'text-amber-400' : 'text-emerald-400';
         const sourceLabel = dataSource === 'Local' ? 'Local Sync' : 'Global Sync';
 
-        // Add a small badge for local sync if desired
-        const timePart = (dataSource === 'Local' && !displayTime) ? '' : ` · <span class="${sourceColor} font-black">${relativeTime}</span>`;
+        let semesterDisplay = "";
+        if (metadata.semester && !metadata.semester.includes('AIUB Portal Sync')) {
+            semesterDisplay = ` <span class="text-white">${metadata.semester}</span> ·`;
+        }
 
-        this.metadataText.innerHTML = `${sourceLabel}: <span class="text-white">${metadata.semester}</span>${timePart}`;
+        this.metadataText.innerHTML = `${sourceLabel}:${semesterDisplay} <span class="${sourceColor} font-black">${relativeTime}</span>`;
     }
 
     getRelativeTime(date) {
