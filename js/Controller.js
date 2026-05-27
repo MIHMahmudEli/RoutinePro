@@ -1906,17 +1906,26 @@ class RoutineController {
             if (result.success && result.courses && result.courses.length > 0) {
                 this.addAIUBLog(`[+] Successfully scraped ${result.courses.length} courses!`);
                 
-                // Save courses locally
-                const semester = 'AIUB Portal Sync - ' + new Date().toLocaleDateString();
-                this.model.saveCourses(result.courses, semester);
-                
-                this.addAIUBLog('[+] Courses saved to your local storage');
-
                 // Check global sync status
                 if (result.globalSynced) {
                     this.addAIUBLog('[+] ✓ Synced globally for all users!');
+                    
+                    // Keep user in Global mode to instantly see global updates
+                    this.model.allCourses = result.courses;
+                    this.model.dataSource = 'Global';
+                    localStorage.setItem('routine-pro-data-source', 'Global');
+                    localStorage.setItem('routine-pro-global-courses', JSON.stringify(result.courses));
+                    localStorage.removeItem('routine-pro-courses'); // Remove stale local data
+                    
+                    // Reset selections
+                    this.model.selectedCourses = [];
+                    this.model.possibleRoutines = [];
+                    this.model.currentRoutineIndex = 0;
                 } else {
                     this.addAIUBLog('[+] Local sync only (global unavailable)');
+                    // Save courses locally if global failed
+                    const semester = 'AIUB Portal Sync - ' + new Date().toLocaleDateString();
+                    this.model.saveCourses(result.courses, semester);
                 }
 
                 this.addAIUBLog('[+] Sync complete! ✓');
@@ -2122,17 +2131,26 @@ class RoutineController {
             if (result.success && result.courses && result.courses.length > 0) {
                 this.addAIUBModalLog(`[+] Successfully scraped ${result.courses.length} courses!`);
                 
-                // Save courses locally
-                const semester = 'AIUB Portal Sync - ' + new Date().toLocaleDateString();
-                this.model.saveCourses(result.courses, semester);
-                
-                this.addAIUBModalLog('[+] Courses saved to local storage');
-
                 // Check global sync status
                 if (result.globalSynced) {
                     this.addAIUBModalLog('[+] ✓ Synced globally for ALL users!');
+                    
+                    // Keep user in Global mode to instantly see global updates
+                    this.model.allCourses = result.courses;
+                    this.model.dataSource = 'Global';
+                    localStorage.setItem('routine-pro-data-source', 'Global');
+                    localStorage.setItem('routine-pro-global-courses', JSON.stringify(result.courses));
+                    localStorage.removeItem('routine-pro-courses'); // Remove stale local data
+                    
+                    // Reset selections
+                    this.model.selectedCourses = [];
+                    this.model.possibleRoutines = [];
+                    this.model.currentRoutineIndex = 0;
                 } else {
                     this.addAIUBModalLog('[+] Synced locally');
+                    // Save courses locally if global failed
+                    const semester = 'AIUB Portal Sync - ' + new Date().toLocaleDateString();
+                    this.model.saveCourses(result.courses, semester);
                 }
 
                 this.addAIUBModalLog('[+] Complete! ✓');
