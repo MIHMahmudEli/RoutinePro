@@ -1216,6 +1216,45 @@
             </p>
         </div>
     </div>
+
+    <script>
+        // ─── GLOBAL SCROLL LOCK ───────────────────────────────────────────────────
+        // Lock body scroll whenever any modal is open, unlock when all are closed.
+        (function () {
+            const MODAL_IDS = [
+                'sync-modal',
+                'aiub-portal-modal',
+                'ai-confirm-modal',
+                'ramadan-sync-modal',
+                'admin-password-modal',
+            ];
+
+            function updateScrollLock() {
+                const anyOpen = MODAL_IDS.some(function(id) {
+                    var el = document.getElementById(id);
+                    return el && !el.classList.contains('hidden');
+                });
+                document.body.style.overflow = anyOpen ? 'hidden' : '';
+            }
+
+            var observer = new MutationObserver(updateScrollLock);
+
+            function attachObservers() {
+                MODAL_IDS.forEach(function(id) {
+                    var el = document.getElementById(id);
+                    if (el) {
+                        observer.observe(el, { attributes: true, attributeFilter: ['class'] });
+                    }
+                });
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', attachObservers);
+            } else {
+                attachObservers();
+            }
+        })();
+    </script>
 </body>
 
 </html>
