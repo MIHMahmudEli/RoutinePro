@@ -116,7 +116,7 @@ class RoutineView {
                         ${!isExplorerMode ? `<button class="remove-btn text-slate-600 hover:text-rose-500 transition-colors" data-index="${i}"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>` : ''}
                     </div>
                     <h3 class="text-xs font-900 uppercase text-white tracking-tight pr-12">${titleFormatter(sc.course.baseTitle)}</h3>
-                    ${sc.course.dept ? `<p class="text-[8px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">${sc.course.dept}</p>` : ''}
+                    ${sc.course.dept && sc.course.dept !== 'N/A' ? `<p class="text-[8px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">${sc.course.dept}</p>` : ''}
                     
                     <div class="grid grid-cols-4 gap-2 mt-4 py-2 border-y border-white/5">
                         <div class="text-center"><p class="text-[8px] text-slate-600 font-black uppercase">Sec</p><p class="text-[9px] font-bold">${section.section}</p></div>
