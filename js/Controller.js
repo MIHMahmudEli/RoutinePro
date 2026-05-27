@@ -2154,7 +2154,7 @@ class RoutineController {
                 }
 
                 this.addAIUBModalLog('[+] Complete! ✓');
-                this.view.showToast(`Synced ${result.courses.length} courses (Global: ${result.globalSynced ? 'YES' : 'NO'})`, "success");
+                this.view.showToast(`Successfully synced ${result.courses.length} courses!`, "success");
                 
                 // Close modal after delay
                 setTimeout(() => {
