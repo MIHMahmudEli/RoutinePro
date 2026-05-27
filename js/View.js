@@ -356,7 +356,15 @@ class RoutineView {
         const countDisplay = document.getElementById('course-count-display');
         const updateDisplay = document.getElementById('last-update-display');
         if (countDisplay) countDisplay.innerText = `${allCourses.length} Courses`;
-        const lastSync = localStorage.getItem('routine-pro-last-sync');
+        
+        const dataSource = localStorage.getItem('routine-pro-data-source');
+        let lastSync = null;
+        if (dataSource === 'Global') {
+            lastSync = localStorage.getItem('routine-pro-global-last-update');
+        } else {
+            lastSync = localStorage.getItem('routine-pro-last-sync');
+        }
+        
         if (updateDisplay) {
             if (lastSync) {
                 const date = new Date(lastSync);
