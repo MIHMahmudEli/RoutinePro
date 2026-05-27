@@ -24,7 +24,6 @@ const HANDLERS = {
   'update-courses':  () => import('../lib/api-handlers/update-courses.js'),
   'update-ramadan':  () => import('../lib/api-handlers/update-ramadan.js'),
   'aiub-scraper-new':() => import('../lib/api-handlers/aiub-scraper-new.js'),
-  'aiub-scraper':    () => import('../lib/api-handlers/aiub-scraper.js'),
 };
 
 export default async function handler(req, res) {
