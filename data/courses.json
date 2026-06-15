@@ -1463,7 +1463,7 @@
         "section": "B",
         "status": "Open",
         "capacity": "45",
-        "count": "37",
+        "count": "38",
         "schedules": [
           {
             "day": "Sunday",
@@ -7995,7 +7995,7 @@
         "section": "G1",
         "status": "Freshman",
         "capacity": "40",
-        "count": "30",
+        "count": "31",
         "schedules": [
           {
             "day": "Wednesday",
@@ -13476,7 +13476,7 @@
         "section": "C",
         "status": "Open",
         "capacity": "41",
-        "count": "40",
+        "count": "41",
         "schedules": [
           {
             "day": "Sunday",
@@ -13995,7 +13995,7 @@
         "section": "J",
         "status": "Open",
         "capacity": "40",
-        "count": "38",
+        "count": "39",
         "schedules": [
           {
             "day": "Wednesday",
@@ -15202,7 +15202,7 @@
         "section": "I",
         "status": "Open",
         "capacity": "42",
-        "count": "41",
+        "count": "42",
         "schedules": [
           {
             "day": "Tuesday",
@@ -18506,7 +18506,7 @@
         "section": "D",
         "status": "Open",
         "capacity": "41",
-        "count": "41",
+        "count": "40",
         "schedules": [
           {
             "day": "Sunday",
@@ -18620,8 +18620,8 @@
         "id": "00809",
         "section": "I",
         "status": "Open",
-        "capacity": "41",
-        "count": "41",
+        "capacity": "42",
+        "count": "42",
         "schedules": [
           {
             "day": "Monday",
@@ -22109,7 +22109,7 @@
         "section": "A",
         "status": "Open",
         "capacity": "41",
-        "count": "40",
+        "count": "41",
         "schedules": [
           {
             "day": "Monday",
@@ -24067,7 +24067,7 @@
         "section": "T",
         "status": "Open",
         "capacity": "40",
-        "count": "40",
+        "count": "39",
         "schedules": [
           {
             "day": "Monday",
@@ -24594,7 +24594,7 @@
         "section": "N",
         "status": "Open",
         "capacity": "41",
-        "count": "39",
+        "count": "40",
         "schedules": [
           {
             "day": "Monday",
@@ -24732,7 +24732,7 @@
         "section": "T",
         "status": "Open",
         "capacity": "41",
-        "count": "32",
+        "count": "33",
         "schedules": [
           {
             "day": "Monday",
@@ -25407,42 +25407,42 @@
             "type": "Theory"
           },
           {
-            "day": "INTEGRAL CALCULUS & ORD. DIFF EQUATION [U]",
+            "day": "INTEGRAL CALCULUS & ORD. DIFF EQUATION [V]",
             "start": "Closed",
             "end": "40",
             "room": "0",
             "type": "01083"
           },
           {
-            "day": "INTEGRAL CALCULUS & ORD. DIFF EQUATION [V]",
+            "day": "INTEGRAL CALCULUS & ORD. DIFF EQUATION [W]",
             "start": "Closed",
             "end": "40",
             "room": "0",
             "type": "01084"
           },
           {
-            "day": "INTEGRAL CALCULUS & ORD. DIFF EQUATION [W]",
+            "day": "INTEGRAL CALCULUS & ORD. DIFF EQUATION [X]",
             "start": "Closed",
             "end": "40",
             "room": "0",
             "type": "01085"
           },
           {
-            "day": "INTEGRAL CALCULUS & ORD. DIFF EQUATION [X]",
+            "day": "INTEGRAL CALCULUS & ORD. DIFF EQUATION [Y]",
             "start": "Closed",
             "end": "40",
             "room": "0",
             "type": "01086"
           },
           {
-            "day": "INTEGRAL CALCULUS & ORD. DIFF EQUATION [Y]",
+            "day": "INTEGRAL CALCULUS & ORD. DIFF EQUATION [Z]",
             "start": "Closed",
             "end": "40",
             "room": "0",
             "type": "01087"
           },
           {
-            "day": "INTEGRAL CALCULUS & ORD. DIFF EQUATION [Z]",
+            "day": "INTEGRAL CALCULUS & ORD. DIFF EQUATION [AA]",
             "start": "Closed",
             "end": "40",
             "room": "0",
@@ -29876,7 +29876,7 @@
         "section": "B",
         "status": "Open",
         "capacity": "40",
-        "count": "22",
+        "count": "23",
         "schedules": [
           {
             "day": "Monday",
@@ -30212,7 +30212,7 @@
         "section": "B",
         "status": "Open",
         "capacity": "40",
-        "count": "18",
+        "count": "19",
         "schedules": [
           {
             "day": "Sunday",
@@ -30242,7 +30242,7 @@
         "section": "A",
         "status": "Open",
         "capacity": "40",
-        "count": "26",
+        "count": "27",
         "schedules": [
           {
             "day": "Sunday",
@@ -35315,7 +35315,7 @@
         "section": "B",
         "status": "Open",
         "capacity": "40",
-        "count": "33",
+        "count": "34",
         "schedules": [
           {
             "day": "Tuesday",
@@ -36670,7 +36670,7 @@
         "section": "B",
         "status": "Open",
         "capacity": "41",
-        "count": "38",
+        "count": "39",
         "schedules": [
           {
             "day": "Monday",
@@ -36861,7 +36861,7 @@
         "section": "A",
         "status": "Open",
         "capacity": "44",
-        "count": "43",
+        "count": "44",
         "schedules": [
           {
             "day": "Sunday",
@@ -38067,7 +38067,7 @@
         "section": "F",
         "status": "Open",
         "capacity": "42",
-        "count": "40",
+        "count": "41",
         "schedules": [
           {
             "day": "Monday",
@@ -40646,7 +40646,7 @@
         "section": "A",
         "status": "Open",
         "capacity": "40",
-        "count": "11",
+        "count": "12",
         "schedules": [
           {
             "day": "Sunday",
@@ -43340,8 +43340,8 @@
         "id": "01827",
         "section": "B",
         "status": "Open",
-        "capacity": "44",
-        "count": "44",
+        "capacity": "45",
+        "count": "45",
         "schedules": [
           {
             "day": "Monday",
@@ -45026,8 +45026,8 @@
         "id": "01896",
         "section": "B",
         "status": "Open",
-        "capacity": "43",
-        "count": "43",
+        "capacity": "44",
+        "count": "44",
         "schedules": [
           {
             "day": "Sunday",
@@ -45186,8 +45186,8 @@
         "id": "01906",
         "section": "L",
         "status": "Open",
-        "capacity": "43",
-        "count": "43",
+        "capacity": "44",
+        "count": "44",
         "schedules": [
           {
             "day": "Wednesday",
@@ -45234,8 +45234,8 @@
         "id": "01909",
         "section": "O",
         "status": "Open",
-        "capacity": "43",
-        "count": "43",
+        "capacity": "44",
+        "count": "44",
         "schedules": [
           {
             "day": "Tuesday",
@@ -45586,8 +45586,8 @@
         "id": "01923",
         "section": "G",
         "status": "Open",
-        "capacity": "42",
-        "count": "42",
+        "capacity": "43",
+        "count": "43",
         "schedules": [
           {
             "day": "Sunday",
@@ -50964,7 +50964,7 @@
         "section": "E",
         "status": "Open",
         "capacity": "40",
-        "count": "39",
+        "count": "40",
         "schedules": [
           {
             "day": "Monday",
@@ -53845,7 +53845,7 @@
         "section": "J",
         "status": "Open",
         "capacity": "80",
-        "count": "78",
+        "count": "79",
         "schedules": [
           {
             "day": "Monday",
@@ -53891,7 +53891,7 @@
         "section": "L",
         "status": "Open",
         "capacity": "80",
-        "count": "78",
+        "count": "79",
         "schedules": [
           {
             "day": "Monday",
@@ -54452,7 +54452,7 @@
             "day": "THESIS [BSCS] [G24]",
             "start": "Freshman",
             "end": "4",
-            "room": "2",
+            "room": "3",
             "type": "02339"
           },
           {
@@ -55292,7 +55292,7 @@
             "day": "INTERNSHIP [BSCS] [A]",
             "start": "Freshman",
             "end": "400",
-            "room": "377",
+            "room": "378",
             "type": "02459"
           }
         ]
@@ -55502,7 +55502,7 @@
             "day": "INTERNSHIP [MBA] [A]",
             "start": "Open",
             "end": "60",
-            "room": "27",
+            "room": "28",
             "type": "02543"
           }
         ]
