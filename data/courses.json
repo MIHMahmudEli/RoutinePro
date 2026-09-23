@@ -26770,7 +26770,7 @@
         "section": "H",
         "status": "Open",
         "capacity": "40",
-        "count": "40",
+        "count": "39",
         "schedules": [
           {
             "day": "Monday",
@@ -36151,7 +36151,7 @@
         "section": "D",
         "status": "Open",
         "capacity": "40",
-        "count": "36",
+        "count": "37",
         "schedules": [
           {
             "day": "Sunday",
