@@ -1256,7 +1256,7 @@
         "section": "H",
         "status": "Open",
         "capacity": "80",
-        "count": "79",
+        "count": "80",
         "schedules": [
           {
             "day": "Monday",
@@ -1325,7 +1325,7 @@
         "section": "K",
         "status": "Open",
         "capacity": "80",
-        "count": "47",
+        "count": "48",
         "schedules": [
           {
             "day": "Sunday",
@@ -8121,7 +8121,7 @@
         "section": "B",
         "status": "Open",
         "capacity": "40",
-        "count": "39",
+        "count": "40",
         "schedules": [
           {
             "day": "Monday",
@@ -9009,7 +9009,7 @@
         "section": "E",
         "status": "Open",
         "capacity": "40",
-        "count": "39",
+        "count": "40",
         "schedules": [
           {
             "day": "Sunday",
@@ -9474,7 +9474,7 @@
             "day": "Sunday",
             "start": "8:00 AM",
             "end": "10:00 AM",
-            "room": "9410",
+            "room": "3201",
             "type": "Theory"
           }
         ]
@@ -9490,7 +9490,7 @@
             "day": "Monday",
             "start": "10:20 AM",
             "end": "12:20 PM",
-            "room": "9410",
+            "room": "3201",
             "type": "Theory"
           }
         ]
@@ -9538,7 +9538,7 @@
             "day": "Sunday",
             "start": "10:20 AM",
             "end": "12:20 PM",
-            "room": "9410",
+            "room": "3201",
             "type": "Theory"
           }
         ]
@@ -9548,13 +9548,13 @@
         "section": "F",
         "status": "Open",
         "capacity": "41",
-        "count": "40",
+        "count": "41",
         "schedules": [
           {
             "day": "Monday",
             "start": "12:40 PM",
             "end": "2:40 PM",
-            "room": "9410",
+            "room": "3201",
             "type": "Theory"
           }
         ]
@@ -9619,7 +9619,7 @@
         "section": "B",
         "status": "Open",
         "capacity": "40",
-        "count": "40",
+        "count": "39",
         "schedules": [
           {
             "day": "Monday",
@@ -9721,7 +9721,7 @@
             "day": "Sunday",
             "start": "12:40 PM",
             "end": "2:40 PM",
-            "room": "9310",
+            "room": "3201",
             "type": "Theory"
           }
         ]
@@ -9785,7 +9785,7 @@
             "day": "Monday",
             "start": "8:00 AM",
             "end": "10:00 AM",
-            "room": "9410",
+            "room": "3201",
             "type": "Theory"
           }
         ]
@@ -13614,7 +13614,7 @@
         "section": "M",
         "status": "Open",
         "capacity": "40",
-        "count": "36",
+        "count": "35",
         "schedules": [
           {
             "day": "Sunday",
@@ -13989,7 +13989,7 @@
         "section": "B",
         "status": "Open",
         "capacity": "40",
-        "count": "9",
+        "count": "10",
         "schedules": [
           {
             "day": "Monday",
@@ -19952,7 +19952,7 @@
         "section": "H",
         "status": "Open",
         "capacity": "40",
-        "count": "39",
+        "count": "40",
         "schedules": [
           {
             "day": "Monday",
@@ -20748,7 +20748,7 @@
         "section": "H",
         "status": "Open",
         "capacity": "40",
-        "count": "39",
+        "count": "40",
         "schedules": [
           {
             "day": "Sunday",
@@ -22380,7 +22380,7 @@
         "section": "E",
         "status": "Open",
         "capacity": "40",
-        "count": "40",
+        "count": "39",
         "schedules": [
           {
             "day": "Wednesday",
@@ -23550,7 +23550,7 @@
         "section": "F",
         "status": "Open",
         "capacity": "40",
-        "count": "39",
+        "count": "40",
         "schedules": [
           {
             "day": "Tuesday",
@@ -24155,7 +24155,7 @@
         "section": "G",
         "status": "Open",
         "capacity": "41",
-        "count": "41",
+        "count": "40",
         "schedules": [
           {
             "day": "Sunday",
@@ -24468,7 +24468,7 @@
         "section": "K",
         "status": "Open",
         "capacity": "40",
-        "count": "37",
+        "count": "38",
         "schedules": [
           {
             "day": "Wednesday",
@@ -24652,7 +24652,7 @@
         "section": "S",
         "status": "Open",
         "capacity": "40",
-        "count": "38",
+        "count": "39",
         "schedules": [
           {
             "day": "Wednesday",
@@ -25025,7 +25025,7 @@
         "section": "H",
         "status": "Open",
         "capacity": "40",
-        "count": "39",
+        "count": "40",
         "schedules": [
           {
             "day": "Sunday",
@@ -25186,7 +25186,7 @@
         "section": "O",
         "status": "Open",
         "capacity": "40",
-        "count": "39",
+        "count": "40",
         "schedules": [
           {
             "day": "Wednesday",
@@ -25998,8 +25998,8 @@
         "id": "01090",
         "section": "G",
         "status": "Open",
-        "capacity": "40",
-        "count": "40",
+        "capacity": "41",
+        "count": "41",
         "schedules": [
           {
             "day": "Monday",
@@ -26671,7 +26671,7 @@
         "section": "C",
         "status": "Open",
         "capacity": "40",
-        "count": "40",
+        "count": "39",
         "schedules": [
           {
             "day": "Sunday",
@@ -27168,7 +27168,7 @@
         "section": "E",
         "status": "Open",
         "capacity": "40",
-        "count": "40",
+        "count": "39",
         "schedules": [
           {
             "day": "Sunday",
@@ -27595,8 +27595,8 @@
         "id": "01156",
         "section": "K",
         "status": "Open",
-        "capacity": "40",
-        "count": "40",
+        "capacity": "41",
+        "count": "41",
         "schedules": [
           {
             "day": "Wednesday",
@@ -27619,7 +27619,7 @@
         "section": "L",
         "status": "Open",
         "capacity": "40",
-        "count": "40",
+        "count": "39",
         "schedules": [
           {
             "day": "Sunday",
@@ -27872,7 +27872,7 @@
         "section": "W",
         "status": "Open",
         "capacity": "40",
-        "count": "37",
+        "count": "36",
         "schedules": [
           {
             "day": "Monday",
@@ -28254,7 +28254,7 @@
         "section": "F",
         "status": "Open",
         "capacity": "40",
-        "count": "37",
+        "count": "36",
         "schedules": [
           {
             "day": "Monday",
@@ -28330,7 +28330,7 @@
         "section": "B",
         "status": "Open",
         "capacity": "40",
-        "count": "39",
+        "count": "37",
         "schedules": [
           {
             "day": "Sunday",
@@ -28399,7 +28399,7 @@
         "section": "E",
         "status": "Open",
         "capacity": "40",
-        "count": "24",
+        "count": "26",
         "schedules": [
           {
             "day": "Sunday",
@@ -30149,7 +30149,7 @@
         "section": "E",
         "status": "Open",
         "capacity": "41",
-        "count": "39",
+        "count": "40",
         "schedules": [
           {
             "day": "Sunday",
@@ -32250,8 +32250,8 @@
         "id": "01351",
         "section": "A",
         "status": "Open",
-        "capacity": "42",
-        "count": "42",
+        "capacity": "43",
+        "count": "43",
         "schedules": [
           {
             "day": "Sunday",
@@ -33682,7 +33682,7 @@
         "section": "W",
         "status": "Open",
         "capacity": "40",
-        "count": "37",
+        "count": "36",
         "schedules": [
           {
             "day": "Monday",
@@ -34148,8 +34148,8 @@
         "id": "01431",
         "section": "S",
         "status": "Open",
-        "capacity": "40",
-        "count": "40",
+        "capacity": "41",
+        "count": "41",
         "schedules": [
           {
             "day": "Tuesday",
@@ -34752,7 +34752,7 @@
         "section": "B",
         "status": "Open",
         "capacity": "40",
-        "count": "39",
+        "count": "40",
         "schedules": [
           {
             "day": "Sunday",
@@ -36848,7 +36848,7 @@
         "section": "BB",
         "status": "Open",
         "capacity": "40",
-        "count": "40",
+        "count": "39",
         "schedules": [
           {
             "day": "Monday",
@@ -37216,7 +37216,7 @@
         "section": "Q",
         "status": "Open",
         "capacity": "40",
-        "count": "39",
+        "count": "40",
         "schedules": [
           {
             "day": "Monday",
@@ -38209,8 +38209,8 @@
         "id": "01590",
         "section": "H",
         "status": "Open",
-        "capacity": "40",
-        "count": "40",
+        "capacity": "41",
+        "count": "41",
         "schedules": [
           {
             "day": "Monday",
@@ -38279,7 +38279,7 @@
         "section": "K",
         "status": "Open",
         "capacity": "40",
-        "count": "39",
+        "count": "40",
         "schedules": [
           {
             "day": "Sunday",
@@ -38663,7 +38663,7 @@
             "day": "THESIS [BSCS] [G162]",
             "start": "Freshman",
             "end": "4",
-            "room": "0",
+            "room": "4",
             "type": "02843"
           },
           {
@@ -39321,7 +39321,7 @@
         "section": "U",
         "status": "Open",
         "capacity": "40",
-        "count": "38",
+        "count": "39",
         "schedules": [
           {
             "day": "Sunday",
@@ -39390,7 +39390,7 @@
         "section": "X",
         "status": "Open",
         "capacity": "40",
-        "count": "37",
+        "count": "36",
         "schedules": [
           {
             "day": "Monday",
@@ -40805,7 +40805,7 @@
         "section": "D",
         "status": "Open",
         "capacity": "40",
-        "count": "39",
+        "count": "40",
         "schedules": [
           {
             "day": "Monday",
@@ -41173,7 +41173,7 @@
         "section": "L",
         "status": "Open",
         "capacity": "40",
-        "count": "40",
+        "count": "39",
         "schedules": [
           {
             "day": "Monday",
@@ -42045,7 +42045,7 @@
         "section": "C",
         "status": "Open",
         "capacity": "40",
-        "count": "37",
+        "count": "36",
         "schedules": [
           {
             "day": "Tuesday",
@@ -42998,7 +42998,7 @@
         "section": "A",
         "status": "Open",
         "capacity": "60",
-        "count": "59",
+        "count": "60",
         "schedules": [
           {
             "day": "Friday",
@@ -45150,7 +45150,7 @@
         "section": "D",
         "status": "Open",
         "capacity": "40",
-        "count": "37",
+        "count": "36",
         "schedules": [
           {
             "day": "Monday",
@@ -45907,7 +45907,7 @@
         "section": "O",
         "status": "Open",
         "capacity": "40",
-        "count": "38",
+        "count": "39",
         "schedules": [
           {
             "day": "Tuesday",
@@ -46059,7 +46059,7 @@
         "section": "C",
         "status": "Open",
         "capacity": "40",
-        "count": "38",
+        "count": "37",
         "schedules": [
           {
             "day": "Sunday",
@@ -46243,7 +46243,7 @@
         "section": "K",
         "status": "Open",
         "capacity": "40",
-        "count": "39",
+        "count": "40",
         "schedules": [
           {
             "day": "Sunday",
@@ -46915,7 +46915,7 @@
         "section": "C",
         "status": "Open",
         "capacity": "42",
-        "count": "42",
+        "count": "41",
         "schedules": [
           {
             "day": "Sunday",
@@ -47732,7 +47732,7 @@
         "section": "E",
         "status": "Open",
         "capacity": "40",
-        "count": "38",
+        "count": "39",
         "schedules": [
           {
             "day": "Sunday",
@@ -48505,7 +48505,7 @@
         "section": "X",
         "status": "Open",
         "capacity": "41",
-        "count": "40",
+        "count": "41",
         "schedules": [
           {
             "day": "Monday",
@@ -48716,7 +48716,7 @@
         "section": "B",
         "status": "Open",
         "capacity": "40",
-        "count": "40",
+        "count": "39",
         "schedules": [
           {
             "day": "Sunday",
@@ -48972,7 +48972,7 @@
         "section": "R",
         "status": "Open",
         "capacity": "40",
-        "count": "38",
+        "count": "40",
         "schedules": [
           {
             "day": "Tuesday",
@@ -52422,7 +52422,7 @@
         "section": "B",
         "status": "Reserved",
         "capacity": "40",
-        "count": "5",
+        "count": "4",
         "schedules": [
           {
             "day": "Wednesday",
@@ -52788,7 +52788,7 @@
         "section": "M",
         "status": "Open",
         "capacity": "40",
-        "count": "40",
+        "count": "39",
         "schedules": [
           {
             "day": "Monday",
@@ -53456,7 +53456,7 @@
         "section": "A",
         "status": "Open",
         "capacity": "42",
-        "count": "42",
+        "count": "41",
         "schedules": [
           {
             "day": "Sunday",
@@ -56534,7 +56534,7 @@
         "section": "A",
         "status": "Open",
         "capacity": "40",
-        "count": "37",
+        "count": "36",
         "schedules": [
           {
             "day": "Monday",
@@ -56550,7 +56550,7 @@
         "section": "B",
         "status": "Open",
         "capacity": "40",
-        "count": "32",
+        "count": "33",
         "schedules": [
           {
             "day": "Sunday",
